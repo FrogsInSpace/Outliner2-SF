@@ -425,7 +425,8 @@ rollout outliner_options_workflowtools "Workflow Tools Options"
 rollout outliner_options_about "About \x26 Donate"
 (
    label versionLbl "";
-   label bugfixLbl "Max 2017+ fix \xa9 2016, Josef Wienerroither"	
+   label bugfixLbl "Max 2017+ fixes \xa9 2016-2021, Josef Wienerroither"	
+   hyperlink bugfixSiteLbl "frogsinspace.at" address:"http://www.frogsinspace.at/?s=outliner" align:#center offset:[0, -2];
 
    label nameLbl "Copyright \xa9 2011, Pier Janssen"
    

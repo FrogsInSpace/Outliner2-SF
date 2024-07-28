@@ -283,7 +283,7 @@ function openOptionsWindow =
          else 
          (
             CreateDialog outliner_options 320 \
-                                          515 \
+                                          550 \
                                           style:#(#style_toolwindow, #style_sysmenu);
                                           
             outliner_status.optionsOpen = true;

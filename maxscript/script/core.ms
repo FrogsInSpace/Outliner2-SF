@@ -1001,20 +1001,31 @@ function getActiveKbdxFile =
 
 function loadkbdxFile =
 (
-   local kbdxFileClass = dotnetClass "Outliner.KbdxFile";
-   
-   try (
-      kbdxFile = getActiveKbdxFile()
-      kbdxXml = kbdxFileClass.FromXml kbdxFile;
-      addkbdxFileWatch();
-   ) catch (
-      format "** Outliner exception **\n%\n" (getCurrentException());
-      messageBox ("An error occured while trying to load keyboard shortcuts.\n" \
-                  + "See the maxscript listener (F11) for details.\n" \
-                  + "\nContact me through http://outliner.threesixty.nl if the problem persists.") \
-                 title:"Failed to load shortcuts";
-      kbdxXml = dotnetObject "Outliner.KbdxFile";
-   )
+	-- Max2020+ do not use kbdx files any longer, so skip this all
+	if ( ToLower (getFilenameType (actionMan.getKeyboardFile()) ) != ".kbdx") then
+	(
+		kbdxXml = undefined
+	)
+	else
+	(
+		local kbdxFileClass = dotnetClass "Outliner.KbdxFile";
+
+		try 
+		(
+			kbdxFile = getActiveKbdxFile() 	
+			kbdxXml = kbdxFileClass.FromXml kbdxFile;
+			addkbdxFileWatch();
+		) 
+		catch 
+		(
+			format "** Outliner exception **\n%\n" (getCurrentException());
+			messageBox ("An error occured while trying to load keyboard shortcuts.\n" \
+					  + "See the maxscript listener (F11) for details.\n" \
+					  + "\nContact me through http://outliner.threesixty.nl if the problem persists.") \
+					 title:"Failed to load shortcuts";
+			kbdxXml = dotnetObject "Outliner.KbdxFile";
+		)
+	)
 ),
 
 
