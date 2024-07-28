@@ -10,6 +10,7 @@ Thumbs.db
 *.user
 *.vsmdi
 *.testsettings
+*.vs
 
 # Compiled files #
 ##################
