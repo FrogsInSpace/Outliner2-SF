@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 using System.IO;
 using System.Windows.Forms;
 using ManagedServices;
-using System.Security.Permissions;
+
 
 namespace Outliner
 {

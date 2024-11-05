@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using Outliner.DragDropHandlers;
 using Outliner.Scene;
+using Outliner.Resources;
 
 namespace Outliner
 {
@@ -2378,12 +2379,18 @@ namespace Outliner
             _iconSize = Size.Empty;
 
             ResourceSet resSet = null;
-            if (value == IconSet.Max)
-               resSet = MaxIcons.ResourceManager.GetResourceSet(System.Globalization.CultureInfo.CurrentCulture, true, true);
+            if (value == IconSet.Max_16x16)
+               resSet = MaxIcons16x16.ResourceManager.GetResourceSet(System.Globalization.CultureInfo.CurrentCulture, true, true);
+            else if (value == IconSet.Max_32x32)
+               resSet = MaxIcons32x32.ResourceManager.GetResourceSet(System.Globalization.CultureInfo.CurrentCulture, true, true);
             else if (value == IconSet.Maya_16x16)
                resSet = MayaIcons16x16.ResourceManager.GetResourceSet(System.Globalization.CultureInfo.CurrentCulture, true, true);
             else if (value == IconSet.Maya_20x20)
                resSet = MayaIcons20x20.ResourceManager.GetResourceSet(System.Globalization.CultureInfo.CurrentCulture, true, true);
+            else if (value == IconSet.Maya_32x32)
+               resSet = MayaIcons32x32.ResourceManager.GetResourceSet(System.Globalization.CultureInfo.CurrentCulture, true, true);
+            else if (value == IconSet.Maya_40x40)
+               resSet = MayaIcons40x40.ResourceManager.GetResourceSet(System.Globalization.CultureInfo.CurrentCulture, true, true);
 
             if (resSet != null)
             {

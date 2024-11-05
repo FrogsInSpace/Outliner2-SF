@@ -5,6 +5,7 @@ using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
 using Outliner.Scene;
+using Outliner.Resources;
 
 namespace Outliner
 {

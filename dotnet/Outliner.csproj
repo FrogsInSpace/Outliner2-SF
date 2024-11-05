@@ -14,9 +14,6 @@
     <AssemblyName>Outliner</AssemblyName>
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
-    <DefaultClientScript>JScript</DefaultClientScript>
-    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
-    <DefaultTargetSchema>IE50</DefaultTargetSchema>
     <DelaySign>false</DelaySign>
     <OutputType>Library</OutputType>
     <RootNamespace>Outliner</RootNamespace>
@@ -27,7 +24,6 @@
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
-    <OldToolsVersion>3.5</OldToolsVersion>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -69,6 +65,7 @@
     <DebugType>full</DebugType>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -94,9 +91,34 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <BaseAddress>285212672</BaseAddress>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <FileAlignment>4096</FileAlignment>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <BaseAddress>285212672</BaseAddress>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <FileAlignment>4096</FileAlignment>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ManagedServices">
-      <HintPath>..\..\..\..\..\Program Files\Autodesk\3ds Max 2013\ManagedServices.dll</HintPath>
+    <Reference Include="ManagedServices, Version=0.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Refs\ManagedServices.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -107,6 +129,7 @@
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
+    <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing">
       <Name>System.Drawing</Name>
     </Reference>
@@ -135,21 +158,6 @@
     <Compile Include="EventArgs.cs" />
     <Compile Include="KbdxFile.cs" />
     <Compile Include="KbdxShortcut.cs" />
-    <Compile Include="MaxIcons.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MaxIcons.resx</DependentUpon>
-    </Compile>
-    <Compile Include="MayaIcons16x16.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MayaIcons16x16.resx</DependentUpon>
-    </Compile>
-    <Compile Include="MayaIcons20x20.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MayaIcons20x20.resx</DependentUpon>
-    </Compile>
     <Compile Include="MXSFileWatcher.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -160,7 +168,37 @@
     <Compile Include="NodeSorters\TypeSorter.cs" />
     <Compile Include="NodeSorters\VisibilitySorter.cs" />
     <Compile Include="OutlinerFilter.cs" />
-    <Compile Include="OutlinerResources.Designer.cs">
+    <Compile Include="Resources\MaxIcons16x16.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MaxIcons16x16.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\MaxIcons32x32.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MaxIcons32x32.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\MayaIcons16x16.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MayaIcons16x16.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\MayaIcons20x20.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MayaIcons20x20.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\MayaIcons32x32.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MayaIcons32x32.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\MayaIcons40x40.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MayaIcons40x40.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\OutlinerResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>OutlinerResources.resx</DependentUpon>
@@ -202,46 +240,55 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="MaxIcons.resx">
+    <EmbeddedResource Include="Resources\MaxIcons16x16.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>MaxIcons.Designer.cs</LastGenOutput>
+      <LastGenOutput>MaxIcons16x16.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="MayaIcons16x16.resx">
+    <EmbeddedResource Include="Resources\MaxIcons32x32.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MaxIcons32x32.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\MayaIcons16x16.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>MayaIcons16x16.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="MayaIcons20x20.resx">
+    <EmbeddedResource Include="Resources\MayaIcons20x20.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>MayaIcons20x20.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="OutlinerResources.resx">
+    <EmbeddedResource Include="Resources\MayaIcons32x32.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MayaIcons32x32.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\MayaIcons40x40.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MayaIcons40x40.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\OutlinerResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>OutlinerResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="TreeView.resx">
+      <DependentUpon>TreeView.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\max_icons\bone.png" />
-    <EmbeddedResource Include="Resources\max_icons\camera.png" />
-    <EmbeddedResource Include="Resources\max_icons\container.png" />
-    <EmbeddedResource Include="Resources\max_icons\container_closed.png" />
-    <EmbeddedResource Include="Resources\max_icons\geometry.png" />
-    <EmbeddedResource Include="Resources\max_icons\group.png" />
-    <EmbeddedResource Include="Resources\max_icons\helper.png" />
-    <EmbeddedResource Include="Resources\max_icons\layer.png" />
-    <EmbeddedResource Include="Resources\max_icons\layer_active.png" />
-    <EmbeddedResource Include="Resources\max_icons\light.png" />
-    <EmbeddedResource Include="Resources\max_icons\material.png" />
-    <EmbeddedResource Include="Resources\max_icons\particle.png" />
-    <EmbeddedResource Include="Resources\max_icons\spacewarp.png" />
-    <EmbeddedResource Include="Resources\max_icons\unknown.png" />
-    <EmbeddedResource Include="Resources\max_icons\xref.png" />
-    <EmbeddedResource Include="Resources\max_icons\xref_group.png" />
+    <EmbeddedResource Include="Resources\max_icons_16x16\bone.png" />
+    <EmbeddedResource Include="Resources\max_icons_16x16\camera.png" />
+    <EmbeddedResource Include="Resources\max_icons_16x16\container.png" />
+    <EmbeddedResource Include="Resources\max_icons_16x16\container_closed.png" />
+    <EmbeddedResource Include="Resources\max_icons_16x16\geometry.png" />
+    <EmbeddedResource Include="Resources\max_icons_16x16\group.png" />
+    <EmbeddedResource Include="Resources\max_icons_16x16\helper.png" />
+    <EmbeddedResource Include="Resources\max_icons_16x16\layer.png" />
+    <EmbeddedResource Include="Resources\max_icons_16x16\layer_active.png" />
+    <EmbeddedResource Include="Resources\max_icons_16x16\light.png" />
+    <EmbeddedResource Include="Resources\max_icons_16x16\material.png" />
+    <EmbeddedResource Include="Resources\max_icons_16x16\particle.png" />
+    <EmbeddedResource Include="Resources\max_icons_16x16\spacewarp.png" />
+    <EmbeddedResource Include="Resources\max_icons_16x16\unknown.png" />
+    <EmbeddedResource Include="Resources\max_icons_16x16\xref.png" />
+    <EmbeddedResource Include="Resources\max_icons_16x16\xref_group.png" />
     <EmbeddedResource Include="Resources\maya_icons_16x16\bone.png" />
     <EmbeddedResource Include="Resources\maya_icons_16x16\camera.png" />
     <EmbeddedResource Include="Resources\maya_icons_16x16\container.png" />
@@ -280,22 +327,63 @@
     <EmbeddedResource Include="Resources\maya_icons_20x20\xref_group.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\max_icons\nurbs.png" />
+    <EmbeddedResource Include="Resources\max_icons_16x16\nurbs.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\max_icons\shape.png" />
+    <EmbeddedResource Include="Resources\max_icons_16x16\shape.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\max_icons\material_unassigned.png" />
+    <EmbeddedResource Include="Resources\max_icons_16x16\material_unassigned.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\max_icons\material_xref.png" />
+    <EmbeddedResource Include="Resources\max_icons_16x16\material_xref.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\maya_icons_16x16\material_unassigned.png" />
     <EmbeddedResource Include="Resources\maya_icons_16x16\material_xref.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\max_icons_32x32\bone.png" />
+    <Content Include="Resources\max_icons_32x32\camera.png" />
+    <Content Include="Resources\max_icons_32x32\container.png" />
+    <Content Include="Resources\max_icons_32x32\container_closed.png" />
+    <Content Include="Resources\max_icons_32x32\geometry.png" />
+    <Content Include="Resources\max_icons_32x32\group.png" />
+    <Content Include="Resources\max_icons_32x32\helper.png" />
+    <Content Include="Resources\max_icons_32x32\layer.png" />
+    <Content Include="Resources\max_icons_32x32\layer_active.png" />
+    <Content Include="Resources\max_icons_32x32\light.png" />
+    <Content Include="Resources\max_icons_32x32\material.png" />
+    <Content Include="Resources\max_icons_32x32\material_unassigned.png" />
+    <Content Include="Resources\max_icons_32x32\material_xref.png" />
+    <Content Include="Resources\max_icons_32x32\nurbs.png" />
+    <Content Include="Resources\max_icons_32x32\particle.png" />
+    <Content Include="Resources\max_icons_32x32\shape.png" />
+    <Content Include="Resources\max_icons_32x32\shape_default.png" />
+    <Content Include="Resources\max_icons_32x32\spacewarp.png" />
+    <Content Include="Resources\max_icons_32x32\unknown.png" />
+    <Content Include="Resources\max_icons_32x32\xref.png" />
+    <Content Include="Resources\max_icons_32x32\xref_group.png" />
+    <Content Include="Resources\maya_icons_40x40\bone.png" />
+    <Content Include="Resources\maya_icons_40x40\camera.png" />
+    <Content Include="Resources\maya_icons_40x40\container.png" />
+    <Content Include="Resources\maya_icons_40x40\container_closed.png" />
+    <Content Include="Resources\maya_icons_40x40\geometry.png" />
+    <Content Include="Resources\maya_icons_40x40\group.png" />
+    <Content Include="Resources\maya_icons_40x40\helper.png" />
+    <Content Include="Resources\maya_icons_40x40\layer.png" />
+    <Content Include="Resources\maya_icons_40x40\layer_active.png" />
+    <Content Include="Resources\maya_icons_40x40\light.png" />
+    <Content Include="Resources\maya_icons_40x40\material.png" />
+    <Content Include="Resources\maya_icons_40x40\material_unassigned.png" />
+    <Content Include="Resources\maya_icons_40x40\material_xref.png" />
+    <Content Include="Resources\maya_icons_40x40\nurbs.png" />
+    <Content Include="Resources\maya_icons_40x40\particle.png" />
+    <Content Include="Resources\maya_icons_40x40\shape.png" />
+    <Content Include="Resources\maya_icons_40x40\spacewarp.png" />
+    <Content Include="Resources\maya_icons_40x40\unknown.png" />
+    <Content Include="Resources\maya_icons_40x40\xref.png" />
+    <Content Include="Resources\maya_icons_40x40\xref_group.png" />
     <EmbeddedResource Include="Resources\contextmenu_icons\hide.png" />
     <EmbeddedResource Include="Resources\contextmenu_icons\freeze.png" />
     <EmbeddedResource Include="Resources\contextmenu_icons\delete.png" />
@@ -328,7 +416,6 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>xcopy $(ProjectDir)$(OutDir)$(TargetFileName)  "C:\Programs_x64\Render\3dsMax2026\scripts\outliner\"  /Y /R</PostBuildEvent>
   </PropertyGroup>
 </Project>
