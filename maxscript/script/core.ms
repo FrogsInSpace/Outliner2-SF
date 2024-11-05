@@ -9,8 +9,8 @@ ui,
 tree,
 kbdxXml,
 
-
-
+--forward declaration
+function getDotNetVersion = (),
 
 /**
  * .NET HELPER FUNCTIONS
@@ -22,11 +22,19 @@ function loadAssembly dll =
    local AppDomain = dotNetClass "System.AppDomain";
    local AssemblyName = dotNetClass "System.Reflection.AssemblyName";
 
-   AppDomain.CurrentDomain.SetShadowCopyPath dir;
-   AppDomain.CurrentDomain.SetShadowCopyFiles();
-
-   local assemblyName = AssemblyName.GetAssemblyName (dir + dll);
-   AppDomain.CurrentDomain.Load assemblyName;
+	if( (getDotNetVersion())[1] > 5 ) then
+	(
+		--No shadow copying with dotnet framework 5 and higher ( deprecated )
+		dotNet.loadAssembly(dir + dll)
+	)
+	else
+	(	
+		AppDomain.CurrentDomain.SetShadowCopyPath dir;
+		AppDomain.CurrentDomain.SetShadowCopyFiles();
+		
+		local assemblyName = AssemblyName.GetAssemblyName (dir + dll);
+		AppDomain.CurrentDomain.Load assemblyName;
+	)
 ),
 
 
@@ -45,7 +53,12 @@ function getNamesDotNetEnum enumType =
 
 
 
-
+--Return the dotnet framework version as array #( Major, Minor, Build )
+function getDotNetVersion =
+(
+	local ver= ((dotNetClass "System.Environment").version)
+	#(ver.Major, ver.Minor, ver.Build)	
+),
 
 
 

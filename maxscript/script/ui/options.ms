@@ -425,15 +425,17 @@ rollout outliner_options_workflowtools "Workflow Tools Options"
 rollout outliner_options_about "About \x26 Donate"
 (
    label versionLbl "";
-   label bugfixLbl "Max 2017+ fixes \xa9 2016-2021, Josef Wienerroither"	
+   label bugfixLbl "Max 2017+ fixes \xa9 2016-2024, Josef Wienerroither"	
    hyperlink bugfixSiteLbl "frogsinspace.at" address:"http://www.frogsinspace.at/?s=outliner" align:#center offset:[0, -2];
 
-   label nameLbl "Copyright \xa9 2011, Pier Janssen"
+   hyperlink sfDonateLbl "Please donate and buy me a virtual coffee." align:#center offset:[0, -2] address:"https://buymeacoffee.com/frogsinspace";
+
+   label nameLbl "Original copyright \xa9 2011, Pier Janssen" offset:[0, 10]
    
    hyperlink mailLbl "pier@threesixty.nl" address:"mailto:pier@threesixty.nl" align:#center;
    hyperlink siteLbl "outliner.threesixty.nl" address:"http://outliner.threesixty.nl/" align:#center offset:[0, -2];
    
-   hyperlink donateLbl "Cick here to make a donation." align:#center offset:[0, 10] address:"http://script.threesixty.nl/outliner/index.php/donate";
+   hyperlink donateLbl "Cick here to make a donation." align:#center offset:[0, 4] address:"http://script.threesixty.nl/outliner/index.php/donate";
    label donateLbl2 "Doing so will support future development and maintenance." align:#center offset:[0, -4];
    label donateLbl3 "And you'll get the Outliner Workflow Tools in return!" align:#center offset:[0, -4];
    label donateLbl4 "Thank you." align:#center offset:[0, -4];
