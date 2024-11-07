@@ -8,7 +8,7 @@ namespace Outliner.Scene
 {
     public class OutlinerLayer : OutlinerNode, IDisplayable
     {
-        public OutlinerLayer(OutlinerScene scene, Int32 handle, Int32 parentHandle, String name, Boolean isActive, Boolean isHidden, Boolean isFrozen, Boolean boxMode)
+        public OutlinerLayer(OutlinerScene scene, int handle, int parentHandle, string name, bool isActive, bool isHidden, bool isFrozen, bool boxMode)
         {
             Scene = scene;
             Handle = handle;
@@ -70,7 +70,7 @@ namespace Outliner.Scene
             }
         }
 
-        override public String DisplayName
+        override public string DisplayName
         {
             get
             {
@@ -78,7 +78,7 @@ namespace Outliner.Scene
                 return Name;
             }
         }
-        override public Boolean CanEditName
+        override public bool CanEditName
         {
             get
             {
@@ -91,9 +91,9 @@ namespace Outliner.Scene
             get { return !IsDefaultLayer; }
         }
 
-        public Boolean IsActive { get; set; }
+        public bool IsActive { get; set; }
 
-        public Boolean IsDefaultLayer
+        public bool IsDefaultLayer
         {
             get
             {
@@ -105,9 +105,9 @@ namespace Outliner.Scene
 
         #region IDisplayable Members
 
-        public Boolean IsHidden { get; set; }
-        public Boolean IsFrozen { get; set; }
-        public Boolean BoxMode { get; set; }
+        public bool IsHidden { get; set; }
+        public bool IsFrozen { get; set; }
+        public bool BoxMode { get; set; }
 
         #endregion
 

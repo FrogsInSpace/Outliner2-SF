@@ -11,33 +11,33 @@ namespace Outliner
     [XmlRoot("shortcut")]
     public class KbdxShortcut
     {
-        public const Int32 MainTableId = 0;
-        public const Int32 MacroTableId = 647394;
+        public const int MainTableId = 0;
+        public const int MacroTableId = 647394;
 
         [XmlAttribute("fVirt")]
-        public Int32 ModKey;
+        public int ModKey;
 
         [XmlAttribute("accleleratorKey")] //This is not a typo on my side...
-        public Int32 AccelleratorKey;
+        public int AccelleratorKey;
 
         [XmlAttribute("actionID")]
-        public String ActionId;
+        public string ActionId;
 
         [XmlAttribute("actionTableID")]
-        public Int32 TableId;
+        public int TableId;
 
         [XmlIgnore]
-        public UInt32 PersistentId
+        public uint PersistentId
         {
             get
             {
-                try { return UInt32.Parse(this.ActionId); }
+                try { return uint.Parse(this.ActionId); }
                 catch { return 0; }
             }
         }
 
         [XmlIgnore]
-        public String MacroName
+        public string MacroName
         {
             get
             {
@@ -49,7 +49,7 @@ namespace Outliner
         }
 
         [XmlIgnore]
-        public String MacroCategory
+        public string MacroCategory
         {
             get
             {
@@ -74,9 +74,9 @@ namespace Outliner
 
         public KbdxShortcut()
            : this(Keys.None, "0", KbdxShortcut.MainTableId) { }
-        public KbdxShortcut(Keys key, String macroName, String macroCategory)
+        public KbdxShortcut(Keys key, string macroName, string macroCategory)
            : this(key, macroName + "`" + macroCategory, KbdxShortcut.MacroTableId) { }
-        public KbdxShortcut(Keys key, String actionID, Int32 actionTableID)
+        public KbdxShortcut(Keys key, string actionID, int actionTableID)
         {
             this.Key = key;
             this.ActionId = actionID;
@@ -85,17 +85,17 @@ namespace Outliner
 
 
 
-        private Keys keyCodeToKeys(Int32 keyCode)
+        private Keys keyCodeToKeys(int keyCode)
         {
             return (Keys)keyCode;
         }
 
-        private Int32 keysToKeyCode(Keys keys)
+        private int keysToKeyCode(Keys keys)
         {
-            return (Int32)((keys ^ Keys.Modifiers) & Keys.KeyCode);
+            return (int)((keys ^ Keys.Modifiers) & Keys.KeyCode);
         }
 
-        private Keys modKeycodeToKeys(Int32 keycode)
+        private Keys modKeycodeToKeys(int keycode)
         {
             Keys keys = Keys.None;
             if ((keycode & 4) == 4) keys |= Keys.Shift;
@@ -103,9 +103,9 @@ namespace Outliner
             if ((keycode & 16) == 16) keys |= Keys.Alt;
             return keys;
         }
-        private Int32 keysToModKeycode(Keys keys)
+        private int keysToModKeycode(Keys keys)
         {
-            Int32 keycode = 3;
+            int keycode = 3;
             if ((keys & Keys.Shift) == Keys.Shift) keycode += 4;
             if ((keys & Keys.Control) == Keys.Control) keycode += 8;
             if ((keys & Keys.Alt) == Keys.Alt) keycode += 16;

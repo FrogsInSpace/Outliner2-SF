@@ -8,10 +8,10 @@ namespace Outliner.Scene
 {
     public class OutlinerObject : OutlinerNode, IDisplayable
     {
-        public OutlinerObject(OutlinerScene scene, Int32 objectNr, Int32 handle, Int32 parentHandle, Int32 layerHandle, Int32 materialHandle,
-                            String name, String objClass, String objSuperClass,
-                            Boolean isGroupHead, Boolean isGroupMember,
-                            Boolean isHidden, Boolean isFrozen, Boolean boxMode)
+        public OutlinerObject(OutlinerScene scene, int objectNr, int handle, int parentHandle, int layerHandle, int materialHandle,
+                            string name, string objClass, string objSuperClass,
+                            bool isGroupHead, bool isGroupMember,
+                            bool isHidden, bool isFrozen, bool boxMode)
         {
             Scene = scene;
             ObjectNr = objectNr;
@@ -56,7 +56,7 @@ namespace Outliner.Scene
             }
         }
 
-        public Int32 LayerHandle { get; set; }
+        public int LayerHandle { get; set; }
         public OutlinerLayer Layer
         {
             get
@@ -65,7 +65,7 @@ namespace Outliner.Scene
             }
         }
 
-        public Int32 MaterialHandle { get; set; }
+        public int MaterialHandle { get; set; }
         public OutlinerMaterial Material
         {
             get
@@ -75,18 +75,18 @@ namespace Outliner.Scene
         }
 
 
-        override public String DisplayName
+        override public string DisplayName
         {
             get
             {
-                String n = (this.Name != String.Empty) ? this.Name : "-unnamed-";
+                string n = (this.Name != string.Empty) ? this.Name : "-unnamed-";
                 if (Class == OutlinerScene.XrefObjectType && (IsGroupMember || IsGroupHead)) return "{[ " + n + " ]}";
                 if (Class == OutlinerScene.XrefObjectType) return "{ " + n + " }";
                 if (IsGroupMember || IsGroupHead) return "[ " + n + " ]";
                 return n;
             }
         }
-        override public Boolean CanEditName { get { return true; } }
+        override public bool CanEditName { get { return true; } }
 
 
 
@@ -95,22 +95,22 @@ namespace Outliner.Scene
             get { return true; }
         }
 
-        public Int32 ObjectNr { get; private set; }
+        public int ObjectNr { get; private set; }
 
-        public String Class { get; set; }
-        public String SuperClass { get; set; }
+        public string Class { get; set; }
+        public string SuperClass { get; set; }
 
-        public Boolean IsGroupHead { get; set; }
-        public Boolean IsGroupMember { get; set; }
-
-
+        public bool IsGroupHead { get; set; }
+        public bool IsGroupMember { get; set; }
 
 
-        public void SetIsGroupMemberRec(Boolean isGroupMember)
+
+
+        public void SetIsGroupMemberRec(bool isGroupMember)
         {
             SetIsGroupMemberRec(this, isGroupMember);
         }
-        private void SetIsGroupMemberRec(OutlinerObject o, Boolean isGroupMember)
+        private void SetIsGroupMemberRec(OutlinerObject o, bool isGroupMember)
         {
             o.IsGroupMember = isGroupMember;
             foreach (OutlinerNode c in o.ChildNodes)
@@ -122,9 +122,9 @@ namespace Outliner.Scene
 
         #region IDisplayable Members
 
-        public Boolean IsHidden { get; set; }
-        public Boolean IsFrozen { get; set; }
-        public Boolean BoxMode { get; set; }
+        public bool IsHidden { get; set; }
+        public bool IsFrozen { get; set; }
+        public bool BoxMode { get; set; }
 
         #endregion
     }

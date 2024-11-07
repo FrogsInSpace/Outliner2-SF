@@ -9,11 +9,11 @@ namespace Outliner
     public delegate void SelectionChangedEventHandler(object sender, SelectionChangedEventArgs e);
     public class SelectionChangedEventArgs : EventArgs
     {
-        public Int32[] SelectedObjectHandles { get; private set; }
-        public Int32[] SelectedLayerHandles { get; private set; }
-        public Int32[] SelectedMaterialHandles { get; private set; }
+        public int[] SelectedObjectHandles { get; private set; }
+        public int[] SelectedLayerHandles { get; private set; }
+        public int[] SelectedMaterialHandles { get; private set; }
 
-        public SelectionChangedEventArgs(Int32[] selectedObjectHandles, Int32[] selectedLayerHandles, Int32[] selectedMaterialHandles)
+        public SelectionChangedEventArgs(int[] selectedObjectHandles, int[] selectedLayerHandles, int[] selectedMaterialHandles)
         {
             SelectedObjectHandles = selectedObjectHandles;
             SelectedLayerHandles = selectedLayerHandles;
@@ -25,11 +25,11 @@ namespace Outliner
     public delegate void NodePropertyChangedEventHandler(object sender, NodePropertyChangedEventArgs e);
     public class NodePropertyChangedEventArgs : EventArgs
     {
-        public Int32[] Handles { get; private set; }
-        public String PropName { get; private set; }
-        public Object NewValue { get; private set; }
+        public int[] Handles { get; private set; }
+        public string PropName { get; private set; }
+        public object NewValue { get; private set; }
 
-        public NodePropertyChangedEventArgs(Int32[] handles, String propName, Object newValue)
+        public NodePropertyChangedEventArgs(int[] handles, string propName, object newValue)
         {
             Handles = handles;
             PropName = propName;
@@ -41,10 +41,10 @@ namespace Outliner
     public delegate void NodeRenamedEventHandler(object sender, NodeRenamedEventArgs e);
     public class NodeRenamedEventArgs : EventArgs
     {
-        public Int32 Handle { get; private set; }
-        public String Name { get; private set; }
+        public int Handle { get; private set; }
+        public string Name { get; private set; }
 
-        public NodeRenamedEventArgs(Int32 handle, String name)
+        public NodeRenamedEventArgs(int handle, string name)
         {
             Handle = handle;
             this.Name = name;
@@ -55,10 +55,10 @@ namespace Outliner
     public delegate void NodeLinkedEventHandler(object sender, NodeLinkedEventArgs e);
     public class NodeLinkedEventArgs : EventArgs
     {
-        public Int32[] Handles { get; private set; }
-        public Int32 TargetHandle { get; private set; }
+        public int[] Handles { get; private set; }
+        public int TargetHandle { get; private set; }
 
-        public NodeLinkedEventArgs(Int32[] handles, Int32 targetHandle)
+        public NodeLinkedEventArgs(int[] handles, int targetHandle)
         {
             this.Handles = handles;
             this.TargetHandle = targetHandle;
@@ -69,10 +69,10 @@ namespace Outliner
     public delegate void NodeGroupedEventHandler(object sender, NodeGroupedEventArgs e);
     public class NodeGroupedEventArgs : NodeLinkedEventArgs
     {
-        public Boolean IsGroupMember { get; private set; }
-        public Boolean Linked { get; private set; }
+        public bool IsGroupMember { get; private set; }
+        public bool Linked { get; private set; }
 
-        public NodeGroupedEventArgs(Int32[] nodeHandles, Int32 targetHandle, Boolean isGroupMember, Boolean linked) : base(nodeHandles, targetHandle)
+        public NodeGroupedEventArgs(int[] nodeHandles, int targetHandle, bool isGroupMember, bool linked) : base(nodeHandles, targetHandle)
         {
             IsGroupMember = isGroupMember;
             Linked = linked;
@@ -100,20 +100,20 @@ namespace Outliner
     public delegate void DebugEventHandler(object sender, DebugEventArgs e);
     public class DebugEventArgs : EventArgs
     {
-        public String Text1 { get; private set; }
-        public String Text2 { get; private set; }
-        public String Text3 { get; private set; }
+        public string Text1 { get; private set; }
+        public string Text2 { get; private set; }
+        public string Text3 { get; private set; }
 
-        public DebugEventArgs(String text)
+        public DebugEventArgs(string text)
         {
             Text1 = text;
         }
-        public DebugEventArgs(String text, String text2)
+        public DebugEventArgs(string text, string text2)
             : this(text)
         {
             Text2 = text2;
         }
-        public DebugEventArgs(String text, String text2, String text3)
+        public DebugEventArgs(string text, string text2, string text3)
             : this(text, text2)
         {
             Text3 = text3;

@@ -20,11 +20,11 @@ namespace Outliner.DragDropHandlers
 
 
         // Determines whether the node can be dragged.
-        public virtual Boolean AllowDrag { get { return false; } }
+        public virtual bool AllowDrag { get { return false; } }
 
 
         // Called by the dragover event, to check whether the node is a valid drop target for the nodes being dragged.
-        public virtual Boolean IsValidDropTarget(IDataObject dragData)
+        public virtual bool IsValidDropTarget(IDataObject dragData)
         {
             OutlinerNode[] draggedNodes = GetNodesFromDataObject(dragData);
             if (draggedNodes != null)
@@ -39,7 +39,7 @@ namespace Outliner.DragDropHandlers
                 return false;
         }
 
-        protected virtual Boolean IsDroppableNode(OutlinerNode o)
+        protected virtual bool IsDroppableNode(OutlinerNode o)
         {
             return false;
         }
@@ -55,7 +55,7 @@ namespace Outliner.DragDropHandlers
 
 
         // Called when a selection of nodes is dropped onto this node.
-        public virtual Boolean ItemDropped(IDataObject dragData)
+        public virtual bool ItemDropped(IDataObject dragData)
         {
             return false;
         }
@@ -63,9 +63,9 @@ namespace Outliner.DragDropHandlers
 
 
 
-        protected Int32[] getChildHandles(OutlinerNode[] nodes)
+        protected int[] getChildHandles(OutlinerNode[] nodes)
         {
-            List<Int32> handles = new List<Int32>();
+            List<int> handles = new List<int>();
             foreach (OutlinerNode n in nodes)
             {
                 getChildHandles_intern(n, nodes, ref handles);
@@ -73,7 +73,7 @@ namespace Outliner.DragDropHandlers
             return handles.ToArray();
         }
 
-        private void getChildHandles_intern(OutlinerNode n, OutlinerNode[] nodes, ref List<Int32> handles)
+        private void getChildHandles_intern(OutlinerNode n, OutlinerNode[] nodes, ref List<int> handles)
         {
             foreach (OutlinerNode cn in n.ChildNodes)
             {
@@ -83,7 +83,7 @@ namespace Outliner.DragDropHandlers
             }
         }
 
-        private Boolean arrayContains(OutlinerNode[] nodes, OutlinerNode n)
+        private bool arrayContains(OutlinerNode[] nodes, OutlinerNode n)
         {
             EqualityComparer<OutlinerNode> comparer = EqualityComparer<OutlinerNode>.Default;
             for (int i = 0; i < nodes.Length; i++)

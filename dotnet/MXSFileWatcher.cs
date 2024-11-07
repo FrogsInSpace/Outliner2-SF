@@ -5,9 +5,9 @@ namespace Outliner
 {
     public class MXSFileWatcher : FileSystemWatcher
     {
-        public Object MXSObject { get; set; }
+        public object MXSObject { get; set; }
 
-        public void WatchFileChange(String file)
+        public void WatchFileChange(string file)
         {
             if (File.Exists(file))
             {

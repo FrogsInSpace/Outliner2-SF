@@ -186,9 +186,9 @@ namespace Outliner
             tn.ImageKey = GetImageKey((OutlinerNode)tn.Tag);
         }
 
-        private String GetImageKey(OutlinerNode node)
+        private string GetImageKey(OutlinerNode node)
         {
-            String imgKey = "unknown";
+            string imgKey = "unknown";
 
             if (node is OutlinerObject)
                 imgKey = GetObjectImageKey((OutlinerObject)node);
@@ -201,7 +201,7 @@ namespace Outliner
         }
 
 
-        private String GetLayerImageKey(OutlinerLayer layer)
+        private string GetLayerImageKey(OutlinerLayer layer)
         {
             if (layer.IsActive)
                 return "layer_active";
@@ -210,7 +210,7 @@ namespace Outliner
         }
 
 
-        private String GetMaterialImageKey(OutlinerMaterial mat)
+        private string GetMaterialImageKey(OutlinerMaterial mat)
         {
             if (mat.IsUnassigned)
                 return "material_unassigned";
@@ -221,7 +221,7 @@ namespace Outliner
         }
 
 
-        private String GetObjectImageKey(OutlinerObject obj)
+        private string GetObjectImageKey(OutlinerObject obj)
         {
             if (obj.Class == OutlinerScene.XrefObjectType)
                 return (obj.IsGroupHead) ? "xref_group" : "xref";

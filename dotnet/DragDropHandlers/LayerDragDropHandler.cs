@@ -51,8 +51,8 @@ namespace Outliner.DragDropHandlers
             if (IsValidDropTarget(dragData))
             {
                 OutlinerNode[] droppedNodes = GetNodesFromDataObject(dragData);
-                List<Int32> droppedNodeHandles = new List<Int32>();
-                List<Int32> droppedLayerHandles = new List<Int32>();
+                List<int> droppedNodeHandles = new List<int>();
+                List<int> droppedLayerHandles = new List<int>();
 
                 Tree.BeginTimedUpdate();
                 Tree.BeginTimedSort();

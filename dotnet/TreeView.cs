@@ -19,15 +19,15 @@ namespace Outliner
     {
         private Dictionary<OutlinerNode, TreeNode> _treeNodes;
         private HashSet<OutlinerNode> _selectedNodes;
-        private HashSet<Int32> _expandedNodeHandles;
-        private Boolean _restoringExpandedStates;
+        private HashSet<int> _expandedNodeHandles;
+        private bool _restoringExpandedStates;
 
         private Timer _updateTimer;
-        private Boolean _updateWaitingForSort;
+        private bool _updateWaitingForSort;
         private Timer _sortTimer;
         private Timer _ensureSelectionVisibleTimer;
         private EnsureSelectionVisibleAction _ensureSelectionVisibleAction;
-        private Boolean _ensureSelectionVisibleWaitingForSort;
+        private bool _ensureSelectionVisibleWaitingForSort;
 
         public OutlinerScene Scene { get; private set; }
         public TreeStyle Style { get; private set; }
@@ -39,15 +39,15 @@ namespace Outliner
 
         public IconClickAction IconClickAction { get; set; }
 
-        public Boolean ShowNodeIcon
+        public bool ShowNodeIcon
         {
             get { return _icons != null && _icons.Count > 0; }
         }
 
         #region Hide button
 
-        private Boolean _showNodeHideButton;
-        public Boolean ShowNodeHideButton
+        private bool _showNodeHideButton;
+        public bool ShowNodeHideButton
         {
             get { return _showNodeHideButton; }
             set
@@ -67,8 +67,8 @@ namespace Outliner
         }
 
 
-        private Boolean _invertNodeHideButton;
-        public Boolean InvertNodeHideButton
+        private bool _invertNodeHideButton;
+        public bool InvertNodeHideButton
         {
             get { return _invertNodeHideButton; }
             set
@@ -82,8 +82,8 @@ namespace Outliner
 
         #region Freeze button
 
-        private Boolean _showNodeFreezeButton;
-        public Boolean ShowNodeFreezeButton
+        private bool _showNodeFreezeButton;
+        public bool ShowNodeFreezeButton
         {
             get { return _showNodeFreezeButton; }
             set
@@ -106,8 +106,8 @@ namespace Outliner
 
         #region BoxMode button
 
-        private Boolean _showNodeBoxModeButton;
-        public Boolean ShowNodeBoxModeButton
+        private bool _showNodeBoxModeButton;
+        public bool ShowNodeBoxModeButton
         {
             get { return _showNodeBoxModeButton; }
             set
@@ -129,8 +129,8 @@ namespace Outliner
         #endregion
 
         #region Add button
-        private Boolean _showNodeAddButton = true;
-        public Boolean ShowNodeAddButton
+        private bool _showNodeAddButton = true;
+        public bool ShowNodeAddButton
         {
             get { return _showNodeAddButton; }
             set
@@ -150,15 +150,15 @@ namespace Outliner
 
         #endregion
 
-        public Boolean HighlighLastSelectedObject { get; set; }
+        public bool HighlighLastSelectedObject { get; set; }
         public Keys ExpandHierarchyKey { get; set; }
         public MouseButtons DragMouseButton { get; set; }
         public DoubleClickAction DoubleClickAction { get; set; }
 
         #region AutoExpand
 
-        private Boolean _autoExpandHierarchy = false;
-        public Boolean AutoExpandHierarchy
+        private bool _autoExpandHierarchy = false;
+        public bool AutoExpandHierarchy
         {
             get { return _autoExpandHierarchy; }
             set
@@ -167,8 +167,8 @@ namespace Outliner
                 if (value && ListMode == OutlinerListMode.Hierarchy) this.ExpandAll();
             }
         }
-        private Boolean _autoExpandLayer = false;
-        public Boolean AutoExpandLayer
+        private bool _autoExpandLayer = false;
+        public bool AutoExpandLayer
         {
             get { return _autoExpandLayer; }
             set
@@ -177,8 +177,8 @@ namespace Outliner
                 if (value && ListMode == OutlinerListMode.Layer) this.ExpandAll();
             }
         }
-        private Boolean _autoExpandMaterial = false;
-        public Boolean AutoExpandMaterial
+        private bool _autoExpandMaterial = false;
+        public bool AutoExpandMaterial
         {
             get { return _autoExpandMaterial; }
             set
@@ -190,8 +190,8 @@ namespace Outliner
 
         #endregion
 
-        private Boolean _hideGroupMembersLayerMode = true;
-        public Boolean HideGroupMembersLayerMode
+        private bool _hideGroupMembersLayerMode = true;
+        public bool HideGroupMembersLayerMode
         {
             get { return _hideGroupMembersLayerMode; }
             set
@@ -237,7 +237,7 @@ namespace Outliner
 
             _treeNodes = new Dictionary<OutlinerNode, TreeNode>();
             _selectedNodes = new HashSet<OutlinerNode>();
-            _expandedNodeHandles = new HashSet<Int32>();
+            _expandedNodeHandles = new HashSet<int>();
 
             _treeDragDropHandler = new TreeDragDropHandler(this, Scene);
 
@@ -262,7 +262,7 @@ namespace Outliner
 
         }
 
-
+/*
 
 
         // Forward KeyDown events to 3ds Max
@@ -283,7 +283,7 @@ namespace Outliner
             }
         }
 
-
+*/
 
 
 
@@ -326,7 +326,7 @@ namespace Outliner
 
         #region Helper functions
 
-        public Int32 GetNodeCount()
+        public int GetNodeCount()
         {
             return _treeNodes.Count;
         }
@@ -374,7 +374,7 @@ namespace Outliner
                 ExpandAll();
             else
             {
-                foreach (Int32 handle in this._expandedNodeHandles)
+                foreach (int handle in this._expandedNodeHandles)
                 {
                     OutlinerNode n = this.Scene.GetNodeByHandle(handle);
                     if (n != null)
@@ -390,7 +390,7 @@ namespace Outliner
         }
 
 
-        internal Boolean IsNodeSelected(OutlinerNode n)
+        internal bool IsNodeSelected(OutlinerNode n)
         {
             if (n == null)
                 return false;
@@ -398,7 +398,7 @@ namespace Outliner
             return _selectedNodes.Contains(n);
         }
 
-        internal Boolean IsNodeSelected(TreeNode tn)
+        internal bool IsNodeSelected(TreeNode tn)
         {
             if (tn == null || !(tn.Tag is OutlinerNode))
                 return false;
@@ -408,7 +408,7 @@ namespace Outliner
 
 
 
-        internal Boolean IsParentOfSelectedNode(TreeNode tn, Boolean entireHierarchy)
+        internal bool IsParentOfSelectedNode(TreeNode tn, bool entireHierarchy)
         {
             if (tn != null)
             {
@@ -439,7 +439,7 @@ namespace Outliner
 
 
 
-        internal Boolean IsChildOfSelectedNode(TreeNode tn)
+        internal bool IsChildOfSelectedNode(TreeNode tn)
         {
             if (tn != null)
             {
@@ -456,7 +456,7 @@ namespace Outliner
         }
 
 
-        internal Boolean IsChildOfSelectedNode(OutlinerNode n)
+        internal bool IsChildOfSelectedNode(OutlinerNode n)
         {
             if (n == null)
                 return false;
@@ -469,7 +469,7 @@ namespace Outliner
         }
 
 
-        internal Boolean IsChildOfNode(TreeNode cn, TreeNode pn)
+        internal bool IsChildOfNode(TreeNode cn, TreeNode pn)
         {
             if (cn != null && pn != null)
             {
@@ -522,9 +522,9 @@ namespace Outliner
         }
 
 
-        internal List<Int32> getChildNodeHandlesRecursive(OutlinerNode node)
+        internal List<int> getChildNodeHandlesRecursive(OutlinerNode node)
         {
-            List<Int32> childHandles = new List<Int32>();
+            List<int> childHandles = new List<int>();
             foreach (OutlinerNode cn in node.ChildNodes)
             {
                 childHandles.Add(cn.Handle);
@@ -534,7 +534,7 @@ namespace Outliner
         }
 
 
-        private Boolean hasCollapsedParents(TreeNode tn)
+        private bool hasCollapsedParents(TreeNode tn)
         {
             if (tn == null)
                 return false;
@@ -552,7 +552,7 @@ namespace Outliner
 
 
 
-        internal Boolean canAddSelectionToLayer(OutlinerLayer layer)
+        internal bool canAddSelectionToLayer(OutlinerLayer layer)
         {
             if (layer == null)
                 return false;
@@ -628,7 +628,7 @@ namespace Outliner
             if (_dottedLinePen == null)
                 createLinePen();
 
-            Int32 curY = e.ClipRectangle.Y;
+            int curY = e.ClipRectangle.Y;
             while (curY <= e.ClipRectangle.Bottom)
             {
                 TreeNode tn = GetNodeAt(0, curY);
@@ -655,27 +655,27 @@ namespace Outliner
 
         protected void DrawCustomNode(TreeNode tn, Rectangle tnBounds, Graphics graphics)
         {
-            Object tnTag = tn.Tag;
-            Int32 scrlPosX = GetScrollPos(Handle, H_SCROLL);
+            object tnTag = tn.Tag;
+            int scrlPosX = GetScrollPos(Handle, H_SCROLL);
             //Draw vertical line segments for parent nodes with next nodes.
-            Int32 xPos = Indent * tn.Level + _plusMinPadding - scrlPosX;
+            int xPos = Indent * tn.Level + _plusMinPadding - scrlPosX;
             TreeNode parent = tn.Parent;
             while (parent != null)
             {
                 xPos -= Indent;
                 if (parent.NextNode != null)
                 {
-                    Int32 x = xPos + _halfPlusMinSize;
+                    int x = xPos + _halfPlusMinSize;
                     graphics.DrawLine(_dottedLinePen, x, tnBounds.Y, x, tnBounds.Bottom);
                 }
                 parent = parent.Parent;
             }
 
             //Draw L / T shaped line in front of node.
-            Int32 lineX = Indent * tn.Level + _plusMinPadding + _halfPlusMinSize - scrlPosX;
-            Int32 nodeYMid = tnBounds.Y + (int)Math.Ceiling(ItemHeight / 2f) - 1;
-            Int32 vlineStartY;
-            Int32 vlineEndY;
+            int lineX = Indent * tn.Level + _plusMinPadding + _halfPlusMinSize - scrlPosX;
+            int nodeYMid = tnBounds.Y + (int)Math.Ceiling(ItemHeight / 2f) - 1;
+            int vlineStartY;
+            int vlineEndY;
 
             if (tn.Parent == null && tn.Index == 0)
                 vlineStartY = nodeYMid;
@@ -712,7 +712,7 @@ namespace Outliner
             if (ShowNodeIcon)
             {
                 Bitmap img;
-                String imgKey = tn.ImageKey;
+                string imgKey = tn.ImageKey;
                 if (tnTag is OutlinerNode && ((OutlinerNode)tnTag).Filtered)
                 {
                     imgKey += "_filtered";
@@ -749,7 +749,7 @@ namespace Outliner
                 SizeF txtSize = graphics.MeasureString(tn.Text, f);
                 txtBgBounds.Width = (int)txtSize.Width + 1;
 
-                txtLocation.Y += (Int32)((float)ItemHeight - txtSize.Height) / 2 + 1;
+                txtLocation.Y += (int)((float)ItemHeight - txtSize.Height) / 2 + 1;
 
                 Color foreColor;
                 if (tnTag is OutlinerNode && ((OutlinerNode)tnTag).Filtered)
@@ -773,7 +773,7 @@ namespace Outliner
                     if (ShowNodeHideButton)
                     {
                         r = GetHideButtonBounds(tn);
-                        Boolean isHidden = ((IDisplayable)tnTag).IsHidden || (tnTag is OutlinerObject && ((OutlinerObject)tnTag).Layer.IsHidden);
+                        bool isHidden = ((IDisplayable)tnTag).IsHidden || (tnTag is OutlinerObject && ((OutlinerObject)tnTag).Layer.IsHidden);
                         if ((isHidden && !InvertNodeHideButton) || (!isHidden && InvertNodeHideButton))
                             graphics.DrawImage(OutlinerResources.hide_button, r);
                         else
@@ -813,7 +813,7 @@ namespace Outliner
         }
 
 
-        private void DrawPlusMinus(Graphics graphics, Rectangle bounds, Boolean isExpanded)
+        private void DrawPlusMinus(Graphics graphics, Rectangle bounds, bool isExpanded)
         {
             ControlPaint.DrawButton(graphics, bounds, ButtonState.Normal);
 
@@ -830,8 +830,8 @@ namespace Outliner
 
         #region Node Bounds methods
 
-        private Int32 _indent = 12;
-        public new Int32 Indent
+        private int _indent = 12;
+        public new int Indent
         {
             get { return _indent; }
             set { _indent = value; }
@@ -848,11 +848,11 @@ namespace Outliner
                 Indent = _iconSize.Width;
         }
 
-        private const Int32 _plusMinSize = 9;
-        private const Int32 _halfPlusMinSize = _plusMinSize / 2;
-        private Int32 _plusMinPadding = 3;
-        private Int32 _iconSpacing = 1;
-        private Int32 _nodeButtonSpacing = 1;
+        private const int _plusMinSize = 9;
+        private const int _halfPlusMinSize = _plusMinSize / 2;
+        private int _plusMinPadding = 3;
+        private int _iconSpacing = 1;
+        private int _nodeButtonSpacing = 1;
 
 
         protected Rectangle GetNodeBounds(TreeNode tn)
@@ -875,7 +875,7 @@ namespace Outliner
         }
 
 
-        private Rectangle GetPlusMinusBounds(TreeNode tn, Boolean includePadding)
+        private Rectangle GetPlusMinusBounds(TreeNode tn, bool includePadding)
         {
             if (tn == null)
                 return Rectangle.Empty;
@@ -906,7 +906,7 @@ namespace Outliner
             Rectangle r = new Rectangle();
             r.X = GetPlusMinusBounds(tn, true).Right;
             r.Y = tn.Bounds.Y;
-            Int32 buttonsBeforeImage = 0;
+            int buttonsBeforeImage = 0;
             if (tn.Tag is IDisplayable)
             {
                 if (ShowNodeHideButton && NodeHideButtonLocation == NodeButtonsLocation.BeforeNode)
@@ -955,7 +955,7 @@ namespace Outliner
 
 
 
-        private Rectangle GetTextBackgroundBounds(TreeNode tn, Boolean includeIconSpacing)
+        private Rectangle GetTextBackgroundBounds(TreeNode tn, bool includeIconSpacing)
         {
             if (tn == null)
                 return Rectangle.Empty;
@@ -1099,7 +1099,7 @@ namespace Outliner
 
 
 
-        private Boolean IsClickOnImage(TreeNode tn, MouseEventArgs e)
+        private bool IsClickOnImage(TreeNode tn, MouseEventArgs e)
         {
             if (tn == null || !ShowNodeIcon)
                 return false;
@@ -1107,7 +1107,7 @@ namespace Outliner
             return GetImageBounds(tn).Contains(e.Location);
         }
 
-        private Boolean IsClickOnHideButton(TreeNode tn, MouseEventArgs e)
+        private bool IsClickOnHideButton(TreeNode tn, MouseEventArgs e)
         {
             if (tn == null || !ShowNodeHideButton)
                 return false;
@@ -1115,7 +1115,7 @@ namespace Outliner
             return GetHideButtonBounds(tn).Contains(e.Location);
         }
 
-        private Boolean IsClickOnFreezeButton(TreeNode tn, MouseEventArgs e)
+        private bool IsClickOnFreezeButton(TreeNode tn, MouseEventArgs e)
         {
             if (tn == null || !ShowNodeFreezeButton)
                 return false;
@@ -1123,7 +1123,7 @@ namespace Outliner
             return GetFreezeButtonBounds(tn).Contains(e.Location);
         }
 
-        private Boolean IsClickOnBoxModeButton(TreeNode tn, MouseEventArgs e)
+        private bool IsClickOnBoxModeButton(TreeNode tn, MouseEventArgs e)
         {
             if (tn == null || !ShowNodeBoxModeButton)
                 return false;
@@ -1131,7 +1131,7 @@ namespace Outliner
             return GetBoxModeButtonBounds(tn).Contains(e.Location);
         }
 
-        private Boolean IsClickOnAddButton(TreeNode tn, MouseEventArgs e)
+        private bool IsClickOnAddButton(TreeNode tn, MouseEventArgs e)
         {
             if (tn == null || !ShowNodeAddButton || !(tn.Tag is OutlinerLayer))
                 return false;
@@ -1139,7 +1139,7 @@ namespace Outliner
             return GetAddButtonBounds(tn).Contains(e.Location);
         }
 
-        private Boolean IsClickOnText(TreeNode tn, MouseEventArgs e)
+        private bool IsClickOnText(TreeNode tn, MouseEventArgs e)
         {
             if (tn == null)
                 return false;
@@ -1147,7 +1147,7 @@ namespace Outliner
             return GetTextBackgroundBounds(tn, true).Contains(e.Location);
         }
 
-        private Boolean IsClickOnPlusMinus(TreeNode tn, MouseEventArgs e)
+        private bool IsClickOnPlusMinus(TreeNode tn, MouseEventArgs e)
         {
             if (tn == null)
                 return false;
@@ -1157,7 +1157,7 @@ namespace Outliner
 
 
 
-        private Boolean IsDragOnNode(TreeNode tn, Point e)
+        private bool IsDragOnNode(TreeNode tn, Point e)
         {
             if (tn == null)
                 return false;
@@ -1165,12 +1165,12 @@ namespace Outliner
             return GetNodeBounds(tn).Contains(e);
         }
 
-        private Boolean IsDragLeftOfPlusMinus(TreeNode tn, Point e)
+        private bool IsDragLeftOfPlusMinus(TreeNode tn, Point e)
         {
             if (tn == null)
                 return false;
 
-            Int32 boundLeft = Indent * tn.Level + _plusMinPadding - GetScrollPos(Handle, H_SCROLL);
+            int boundLeft = Indent * tn.Level + _plusMinPadding - GetScrollPos(Handle, H_SCROLL);
             if (tn.GetNodeCount(false) == 0)
                 boundLeft += _plusMinSize;
 
@@ -1183,10 +1183,10 @@ namespace Outliner
 
         #region MultiSelect
 
-        private Boolean _handlingMouseClick = false;
-        private Int32 _numMouseClicks = 0;
-        private Boolean _nodeProcessedOnMouseDown = false;
-        private Boolean _selectionChanged = false;
+        private bool _handlingMouseClick = false;
+        private int _numMouseClicks = 0;
+        private bool _nodeProcessedOnMouseDown = false;
+        private bool _selectionChanged = false;
         private TreeNode _mostRecentSelectedNode;
         private OutlinerObject _lastSelectedObject;
 
@@ -1370,7 +1370,7 @@ namespace Outliner
 
         #region Internal selection methods
 
-        internal void SelectNode(OutlinerNode node, Boolean select)
+        internal void SelectNode(OutlinerNode node, bool select)
         {
             if (node == null)
                 return;
@@ -1380,7 +1380,7 @@ namespace Outliner
                 SelectNode(node, tn, select);
         }
 
-        internal void SelectNode(TreeNode tn, Boolean select)
+        internal void SelectNode(TreeNode tn, bool select)
         {
             if (tn == null || (!(tn.Tag is OutlinerNode)))
                 return;
@@ -1388,7 +1388,7 @@ namespace Outliner
             SelectNode((OutlinerNode)tn.Tag, tn, select);
         }
 
-        internal void SelectNode(OutlinerNode node, TreeNode tn, Boolean select)
+        internal void SelectNode(OutlinerNode node, TreeNode tn, bool select)
         {
             if (node == null || tn == null)
                 return;
@@ -1543,7 +1543,7 @@ namespace Outliner
 
         protected override void OnItemDrag(ItemDragEventArgs e)
         {
-            Boolean canDragDrop = true;
+            bool canDragDrop = true;
 
             // If the button pressed isn't the preferred drag-drop button, don't start dragdrop.
             if ((e.Button & DragMouseButton) != DragMouseButton)
@@ -1677,9 +1677,9 @@ namespace Outliner
                 _lastScrollTime = DateTime.Now;
 
             TimeSpan dScrollTime = DateTime.Now - _lastScrollTime;
-            Int32 _scrollBounds = ItemHeight;
+            int _scrollBounds = ItemHeight;
 
-            Int32 scroll = -1;
+            int scroll = -1;
             if (targetPoint.X < _scrollBounds * 2 && dScrollTime > slowScrollSpan)
                 scroll = 0;
             else if (targetPoint.X > Bounds.Width - _scrollBounds * 2 && dScrollTime > slowScrollSpan)
@@ -1759,7 +1759,7 @@ namespace Outliner
 
         #region Expand & Collapse
 
-        private Boolean _internalExpandCollapse = false;
+        private bool _internalExpandCollapse = false;
 
         // Override DefWndProc to block double-click expand if necessary.
         protected override void DefWndProc(ref Message m)
@@ -1790,7 +1790,7 @@ namespace Outliner
         {
             if (!_restoringExpandedStates && e.Node.Tag is OutlinerNode)
             {
-                Int32 handle = ((OutlinerNode)e.Node.Tag).Handle;
+                int handle = ((OutlinerNode)e.Node.Tag).Handle;
                 if (!_expandedNodeHandles.Contains(handle))
                     this._expandedNodeHandles.Add(handle);
             }
@@ -1827,14 +1827,14 @@ namespace Outliner
                     OutlinerLayer layer = (OutlinerLayer)tn.Tag;
                     layer.IsActive = !layer.IsActive;
                     if (LayerActiveChanged != null)
-                        LayerActiveChanged(this, new NodePropertyChangedEventArgs(new Int32[1] { layer.Handle }, "isActive", layer.IsActive));
+                        LayerActiveChanged(this, new NodePropertyChangedEventArgs(new int[1] { layer.Handle }, "isActive", layer.IsActive));
                 }
             }
         }
 
         //Returns true if an IDisplayable of a node can be set. That is, when
         //its property is not overridden by its (parent-)layer.
-        private Boolean canSetProperty(OutlinerNode n, String propName)
+        private bool canSetProperty(OutlinerNode n, string propName)
         {
             IDisplayable objToInspect = null;
             if (n is OutlinerObject)
@@ -1854,8 +1854,8 @@ namespace Outliner
                 return false;
 
             System.Reflection.PropertyInfo propInfo = objToInspect.GetType().GetProperty(propName);
-            if (propInfo.PropertyType == typeof(Boolean))
-                return !(Boolean)propInfo.GetValue(objToInspect, null);
+            if (propInfo.PropertyType == typeof(bool))
+                return !(bool)propInfo.GetValue(objToInspect, null);
             else
                 return false;
         }
@@ -1866,8 +1866,8 @@ namespace Outliner
                 return;
 
             OutlinerNode node = (OutlinerNode)tn.Tag;
-            Boolean hidden = !((IDisplayable)node).IsHidden;
-            List<Int32> handles = new List<Int32>();
+            bool hidden = !((IDisplayable)node).IsHidden;
+            List<int> handles = new List<int>();
 
 
             if ((Control.ModifierKeys & Keys.Control) != Keys.Control && IsNodeSelected(node))
@@ -1919,8 +1919,8 @@ namespace Outliner
                 return;
 
             OutlinerNode node = (OutlinerNode)tn.Tag;
-            Boolean frozen = !((IDisplayable)node).IsFrozen;
-            List<Int32> handles = new List<Int32>();
+            bool frozen = !((IDisplayable)node).IsFrozen;
+            List<int> handles = new List<int>();
 
 
             if ((Control.ModifierKeys & Keys.Control) != Keys.Control && IsNodeSelected(node))
@@ -1972,8 +1972,8 @@ namespace Outliner
                 return;
 
             OutlinerNode node = (OutlinerNode)tn.Tag;
-            Boolean boxMode = !((IDisplayable)node).BoxMode;
-            List<Int32> handles = new List<Int32>();
+            bool boxMode = !((IDisplayable)node).BoxMode;
+            List<int> handles = new List<int>();
 
 
             if ((Control.ModifierKeys & Keys.Control) != Keys.Control && IsNodeSelected(node))
@@ -2018,9 +2018,9 @@ namespace Outliner
         {
             if (tn.Tag is OutlinerLayer)
             {
-                Int32 layerHandle = (tn.Tag as OutlinerLayer).Handle;
-                List<Int32> objectHandles = new List<Int32>();
-                List<Int32> layerHandles = new List<Int32>();
+                int layerHandle = (tn.Tag as OutlinerLayer).Handle;
+                List<int> objectHandles = new List<int>();
+                List<int> layerHandles = new List<int>();
                 foreach (OutlinerNode node in _selectedNodes)
                 {
                     if (node.Handle != layerHandle)
@@ -2083,24 +2083,24 @@ namespace Outliner
 
         private void showContextMenu(Point pos, OutlinerNode clickedNode)
         {
-            Int32 selCount = _selectedNodes.Count;
-            Int32 selObjCount = 0;
-            Int32 selLayerCount = 0;
-            Int32 selMatCount = 0;
-            Boolean showObjectItems = false;
-            Boolean showLayerItems = false;
-            Boolean showMaterialItems = false;
-            Boolean showIDisplayableItems = false;
-            Boolean selHasChildnodes = false;
-            Boolean selContainsActiveLayer = false;
-            Boolean selCanDelete = false;
-            Boolean selAllHidden = true;
-            Boolean selAllUnhidden = true;
-            Boolean selAllFrozen = true;
-            Boolean selAllUnfrozen = true;
-            Boolean selCanUnlink = false;
-            Boolean selCanUngroup = false;
-            Boolean selCanEditMat = false;
+            int selCount = _selectedNodes.Count;
+            int selObjCount = 0;
+            int selLayerCount = 0;
+            int selMatCount = 0;
+            bool showObjectItems = false;
+            bool showLayerItems = false;
+            bool showMaterialItems = false;
+            bool showIDisplayableItems = false;
+            bool selHasChildnodes = false;
+            bool selContainsActiveLayer = false;
+            bool selCanDelete = false;
+            bool selAllHidden = true;
+            bool selAllUnhidden = true;
+            bool selAllFrozen = true;
+            bool selAllUnfrozen = true;
+            bool selCanUnlink = false;
+            bool selCanUngroup = false;
+            bool selCanEditMat = false;
 
             foreach (OutlinerNode n in _selectedNodes)
             {
@@ -2288,7 +2288,7 @@ namespace Outliner
             m_Hook.ReleaseHandle();
 
             OutlinerNode node = (OutlinerNode)e.Node.Tag;
-            Boolean continueEditing = false;
+            bool continueEditing = false;
             if (e.Label != null && e.Label != node.Name)
             {
                 if (e.Label.Length == 0)
@@ -2350,8 +2350,8 @@ namespace Outliner
         [DllImport("user32.dll")]
         private static extern int SendMessage(IntPtr hWnd, int wMsg, int wParam, int lParam);
 
-        private const Int32 H_SCROLL = 0;
-        private const Int32 V_SCROLL = 1;
+        private const int H_SCROLL = 0;
+        private const int V_SCROLL = 1;
 
         private Point GetScrollPosition()
         {
@@ -2375,11 +2375,11 @@ namespace Outliner
         #region IconSet
 
         private IconSet _iconSet;
-        private Dictionary<String, Bitmap> _icons;
+        private Dictionary<string, Bitmap> _icons;
         private Size _iconSize = Size.Empty;
 
-        private Boolean _invertIcons = false;
-        public Boolean InvertIcons
+        private bool _invertIcons = false;
+        public bool InvertIcons
         {
             get { return _invertIcons; }
             set
@@ -2416,7 +2416,7 @@ namespace Outliner
                 {
                     foreach (System.Collections.DictionaryEntry e in resSet)
                     {
-                        if (e.Key is String && e.Value is Bitmap)
+                        if (e.Key is string && e.Value is Bitmap)
                         {
                             if (_iconSize == Size.Empty)
                                 _iconSize = ((Bitmap)e.Value).Size;
@@ -2435,9 +2435,9 @@ namespace Outliner
                             Bitmap b_filtered = new Bitmap(b);
                             BitmapProcessing.Opacity(b_filtered, 50);
 
-                            _icons.Add((String)e.Key, b);
-                            _icons.Add((String)e.Key + "_hidden", b_hidden);
-                            _icons.Add((String)e.Key + "_filtered", b_filtered);
+                            _icons.Add((string)e.Key, b);
+                            _icons.Add((string)e.Key + "_hidden", b_hidden);
+                            _icons.Add((string)e.Key + "_filtered", b_filtered);
                         }
                     }
                 }
@@ -2573,7 +2573,7 @@ namespace Outliner
             }
         }
 
-        new public Boolean Sorted
+        new public bool Sorted
         {
             get { return false; }
             set { }
@@ -2731,7 +2731,7 @@ namespace Outliner
 
 
 
-        public void AddObjectsToTreeNodeCollection(TreeNodeCollection col, List<OutlinerNode> nodes, Boolean addChildNodes)
+        public void AddObjectsToTreeNodeCollection(TreeNodeCollection col, List<OutlinerNode> nodes, bool addChildNodes)
         {
             if (nodes == null || nodes.Count == 0)
                 return;
@@ -2871,7 +2871,7 @@ namespace Outliner
 
         #region RemoveNodeFromTree
 
-        internal void RemoveNodeFromTree(OutlinerNode n, Boolean removeReferences)
+        internal void RemoveNodeFromTree(OutlinerNode n, bool removeReferences)
         {
             if (n == null)
                 return;
@@ -2887,12 +2887,12 @@ namespace Outliner
         }
 
 
-        private void RecursiveRemoveTreeNode(OutlinerNode n, TreeNode tn, Boolean removeReferences)
+        private void RecursiveRemoveTreeNode(OutlinerNode n, TreeNode tn, bool removeReferences)
         {
             RecursiveRemoveTreeNodeIntern(n, tn, removeReferences);
             tn.Remove();
         }
-        private void RecursiveRemoveTreeNodeIntern(OutlinerNode n, TreeNode tn, Boolean removeReferences)
+        private void RecursiveRemoveTreeNodeIntern(OutlinerNode n, TreeNode tn, bool removeReferences)
         {
             //     n.MarkedForDelete = true;
 
@@ -2916,7 +2916,7 @@ namespace Outliner
 
         #region HideNode, FreezeNode, LinkObject, SetObjectMaterial
 
-        internal void HideNode(OutlinerNode n, Boolean hidden)
+        internal void HideNode(OutlinerNode n, bool hidden)
         {
             if (n is IDisplayable && ((IDisplayable)n).IsHidden != hidden)
             {
@@ -2933,7 +2933,7 @@ namespace Outliner
 
 
 
-        internal void HideNodeRecursive(OutlinerNode n, Boolean hidden)
+        internal void HideNodeRecursive(OutlinerNode n, bool hidden)
         {
             HideNode(n, hidden);
             foreach (OutlinerNode cn in n.ChildNodes)
@@ -2942,7 +2942,7 @@ namespace Outliner
             }
         }
 
-        internal void FreezeNode(OutlinerNode n, Boolean frozen)
+        internal void FreezeNode(OutlinerNode n, bool frozen)
         {
             if (n is IDisplayable && ((IDisplayable)n).IsFrozen != frozen)
             {
@@ -2954,7 +2954,7 @@ namespace Outliner
             }
         }
 
-        internal void FreezeNodeRecursive(OutlinerNode n, Boolean frozen)
+        internal void FreezeNodeRecursive(OutlinerNode n, bool frozen)
         {
             FreezeNode(n, frozen);
 
@@ -2963,9 +2963,9 @@ namespace Outliner
         }
 
 
-        internal void ApplyFilter(OutlinerNode n, Boolean recurseObjects, Boolean recurseLayers, Boolean recurseMaterials)
+        internal void ApplyFilter(OutlinerNode n, bool recurseObjects, bool recurseLayers, bool recurseMaterials)
         {
-            Boolean showNode = this.Filter.ShowNode(n);
+            bool showNode = this.Filter.ShowNode(n);
             TreeNode tn;
             _treeNodes.TryGetValue(n, out tn);
 
@@ -2999,7 +2999,7 @@ namespace Outliner
 
 
 
-        internal void SetBoxModeNode(OutlinerNode n, Boolean boxMode)
+        internal void SetBoxModeNode(OutlinerNode n, bool boxMode)
         {
             if (n is IDisplayable)
             {
@@ -3010,7 +3010,7 @@ namespace Outliner
             }
         }
 
-        internal void SetBoxModeNodeRecursive(OutlinerNode n, Boolean boxMode)
+        internal void SetBoxModeNodeRecursive(OutlinerNode n, bool boxMode)
         {
             SetBoxModeNode(n, boxMode);
 
@@ -3019,7 +3019,7 @@ namespace Outliner
         }
 
 
-        internal void LinkObject(OutlinerObject obj, Int32 newParentHandle, Boolean group, Boolean isGroupMember)
+        internal void LinkObject(OutlinerObject obj, int newParentHandle, bool group, bool isGroupMember)
         {
             RemoveNodeFromTree(obj, false);
 
@@ -3047,7 +3047,7 @@ namespace Outliner
         }
 
 
-        internal void SetObjectLayer(OutlinerObject obj, Int32 newLayerHandle)
+        internal void SetObjectLayer(OutlinerObject obj, int newLayerHandle)
         {
             if (ListMode == OutlinerListMode.Layer)
             {
@@ -3073,7 +3073,7 @@ namespace Outliner
         }
 
 
-        internal void SetObjectMaterial(OutlinerObject obj, Int32 newMatHandle)
+        internal void SetObjectMaterial(OutlinerObject obj, int newMatHandle)
         {
             if (ListMode == OutlinerListMode.Material)
             {
@@ -3106,7 +3106,7 @@ namespace Outliner
         }
 
 
-        internal void SetLayerParent(OutlinerLayer layer, Int32 newParentHandle)
+        internal void SetLayerParent(OutlinerLayer layer, int newParentHandle)
         {
             RemoveNodeFromTree(layer, false);
 
@@ -3215,7 +3215,7 @@ namespace Outliner
             if (_selectedNodes.Count == 0 || action == EnsureSelectionVisibleAction.None)
                 return;
 
-            Boolean ensureSelVisible = false;
+            bool ensureSelVisible = false;
 
             if ((action & EnsureSelectionVisibleAction.SelectionChanged) == EnsureSelectionVisibleAction.SelectionChanged)
                 ensureSelVisible = true;
@@ -3254,7 +3254,7 @@ namespace Outliner
 
 
                 _internalExpandCollapse = true;
-                Boolean shouldExpandSelection = true;
+                bool shouldExpandSelection = true;
                 foreach (OutlinerNode n in _selectedNodes)
                 {
                     TreeNode tn;
@@ -3292,7 +3292,7 @@ namespace Outliner
 
                 List<Rectangle> treeNodeBounds = new List<Rectangle>(_selectedNodes.Count);
                 TreeNode highestNode = null;
-                Int32 highestNodeY = Int32.MaxValue;
+                int highestNodeY = int.MaxValue;
                 foreach (TreeNode tn in selectedTreeNodes)
                 {
                     Rectangle bounds = tn.Bounds;
@@ -3308,8 +3308,8 @@ namespace Outliner
                 {
                     highestNode.EnsureVisible();
                     TreeNode lowestNode = null;
-                    Int32 lowestNodeY = Int32.MinValue;
-                    for (Int32 i = 0; i < selectedTreeNodes.Count; i++)
+                    int lowestNodeY = int.MinValue;
+                    for (int i = 0; i < selectedTreeNodes.Count; i++)
                     {
                         TreeNode tn = selectedTreeNodes[i];
                         if (tn != highestNode)
@@ -3341,9 +3341,9 @@ namespace Outliner
         // Selection functions
         #region GetSelectedNodeHandles, SelectedObjectHandles, SelectedLayerHandles, SelectedMaterialHandles, GetSelectedParentObjectHandles
 
-        public Int32[] GetSelectedNodeHandles(Boolean includeObjects, Boolean includeLayers, Boolean includeMaterials)
+        public int[] GetSelectedNodeHandles(bool includeObjects, bool includeLayers, bool includeMaterials)
         {
-            List<Int32> nodeHandles = new List<Int32>();
+            List<int> nodeHandles = new List<int>();
             foreach (OutlinerNode n in _selectedNodes)
             {
                 if (n is OutlinerObject && includeObjects)
@@ -3356,31 +3356,31 @@ namespace Outliner
             return nodeHandles.ToArray();
         }
 
-        public Int32[] SelectedNodeHandles
+        public int[] SelectedNodeHandles
         {
             get { return GetSelectedNodeHandles(true, true, true); }
         }
 
-        public Int32[] SelectedObjectHandles
+        public int[] SelectedObjectHandles
         {
             get { return GetSelectedNodeHandles(true, false, false); }
         }
 
-        public Int32[] SelectedLayerHandles
+        public int[] SelectedLayerHandles
         {
             get { return GetSelectedNodeHandles(false, true, false); }
         }
 
-        public Int32[] SelectedMaterialHandles
+        public int[] SelectedMaterialHandles
         {
             get { return GetSelectedNodeHandles(false, false, true); }
         }
 
-        public Int32[] SelectedLayerHandlesIndirect
+        public int[] SelectedLayerHandlesIndirect
         {
             get
             {
-                List<Int32> layerHandles = new List<Int32>();
+                List<int> layerHandles = new List<int>();
                 foreach (OutlinerNode n in _selectedNodes)
                 {
                     if (n is OutlinerLayer)
@@ -3393,7 +3393,7 @@ namespace Outliner
             }
         }
 
-        private void addChildLayerHandlesRecursive(OutlinerNode layer, ref List<Int32> handles)
+        private void addChildLayerHandlesRecursive(OutlinerNode layer, ref List<int> handles)
         {
             foreach (OutlinerNode n in layer.ChildNodes)
             {
@@ -3406,9 +3406,9 @@ namespace Outliner
         }
 
 
-        public Int32[] GetSelectedParentObjectHandles()
+        public int[] GetSelectedParentObjectHandles()
         {
-            List<Int32> handles = new List<Int32>();
+            List<int> handles = new List<int>();
 
             foreach (OutlinerNode n in _selectedNodes)
             {
@@ -3427,7 +3427,7 @@ namespace Outliner
 
         #region SelectObject, SelectObjectRange, SelectAll
 
-        public void SelectObject(Int32 handle, Boolean select)
+        public void SelectObject(int handle, bool select)
         {
             OutlinerObject obj = this.Scene.GetObjectByHandle(handle);
             if (obj != null)
@@ -3436,9 +3436,9 @@ namespace Outliner
             _selectionChanged = false;
         }
 
-        public void SelectObjectRange(Int32[] handles, Boolean select)
+        public void SelectObjectRange(int[] handles, bool select)
         {
-            foreach (Int32 handle in handles)
+            foreach (int handle in handles)
             {
                 SelectObject(handle, select);
             }
@@ -3446,7 +3446,7 @@ namespace Outliner
             BeginTimedEnsureSelectionVisible(EnsureSelectionVisibleAction.SelectionChanged);
         }
 
-        public void SelectLayer(Int32 handle, Boolean select)
+        public void SelectLayer(int handle, bool select)
         {
             OutlinerLayer layer = Scene.GetLayerByHandle(handle);
             if (layer != null)
@@ -3454,16 +3454,16 @@ namespace Outliner
             _selectionChanged = false;
         }
 
-        public void SelectLayerRange(Int32[] handles, Boolean select)
+        public void SelectLayerRange(int[] handles, bool select)
         {
-            foreach (Int32 handle in handles)
+            foreach (int handle in handles)
             {
                 SelectLayer(handle, select);
             }
             _selectionChanged = false;
         }
 
-        public void SelectAll(Boolean select)
+        public void SelectAll(bool select)
         {
             if (select)
                 SelectAllNodes();
@@ -3484,7 +3484,7 @@ namespace Outliner
             // Deselect all selected nodes.
             UnselectAllNodes();
 
-            if (Filter.NameFilter != String.Empty)
+            if (Filter.NameFilter != string.Empty)
             {
                 RegexOptions options = Filter.NameFilterCaseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase;
                 foreach (KeyValuePair<OutlinerNode, TreeNode> kvp in _treeNodes)
@@ -3504,7 +3504,7 @@ namespace Outliner
 
         #region ExpandedNodeHandles
 
-        public Int32[] ExpandedNodeHandles
+        public int[] ExpandedNodeHandles
         {
             get
             {
@@ -3515,7 +3515,7 @@ namespace Outliner
                 if (!(_autoExpandHierarchy && ListMode == OutlinerListMode.Hierarchy) && !(_autoExpandLayer && ListMode == OutlinerListMode.Layer))
                 {
                     BeginTimedUpdate();
-                    this._expandedNodeHandles = new HashSet<Int32>(value);
+                    this._expandedNodeHandles = new HashSet<int>(value);
                     this.RestoreExpandedStates();
                 }
             }
@@ -3529,7 +3529,7 @@ namespace Outliner
 
         #region EditNodeName
 
-        public void EditNodeName(Int32 handle)
+        public void EditNodeName(int handle)
         {
             OutlinerNode n = Scene.GetNodeByHandle(handle);
             if (n == null)
@@ -3543,7 +3543,7 @@ namespace Outliner
         #endregion
 
         //Function wrapper to avoid having to make 3 function calls from 3dsmax.
-        public void SetNodeDisplayProperties(Int32 handle, Boolean isHidden, Boolean isFrozen, Boolean boxMode)
+        public void SetNodeDisplayProperties(int handle, bool isHidden, bool isFrozen, bool boxMode)
         {
             OutlinerNode n = this.Scene.GetNodeByHandle(handle);
             if (n is IDisplayable)
@@ -3566,13 +3566,13 @@ namespace Outliner
         //Object functions.
         #region AddObjectToTree, DeleteObject
 
-        public void AddObjectToTree(Int32 handle)
+        public void AddObjectToTree(int handle)
         {
             OutlinerObject obj = Scene.GetObjectByHandle(handle);
             AddObjectToTree(obj);
         }
 
-        public void DeleteObject(Int32 handle)
+        public void DeleteObject(int handle)
         {
             OutlinerObject obj = Scene.GetObjectByHandle(handle);
             if (obj != null)
@@ -3601,7 +3601,7 @@ namespace Outliner
 
         #region SetObjectName, SetLayerName
 
-        public void SetObjectName(Int32 handle, String name)
+        public void SetObjectName(int handle, string name)
         {
             OutlinerObject obj = Scene.GetObjectByHandle(handle);
             if (obj == null)
@@ -3623,7 +3623,7 @@ namespace Outliner
 
         #region SetObjectHidden, SetObjectFrozen
 
-        public void SetObjectHidden(Int32 handle, Boolean hidden)
+        public void SetObjectHidden(int handle, bool hidden)
         {
             OutlinerNode n = Scene.GetObjectByHandle(handle);
 
@@ -3638,7 +3638,7 @@ namespace Outliner
         }
 
 
-        public void SetObjectFrozen(Int32 handle, Boolean frozen)
+        public void SetObjectFrozen(int handle, bool frozen)
         {
             OutlinerNode n = Scene.GetObjectByHandle(handle);
 
@@ -3655,7 +3655,7 @@ namespace Outliner
 
         #region SetObjectParent
 
-        public void SetObjectParent(Int32 handle, Int32 newParentHandle)
+        public void SetObjectParent(int handle, int newParentHandle)
         {
             OutlinerObject obj = Scene.GetObjectByHandle(handle);
             if (obj == null)
@@ -3672,7 +3672,7 @@ namespace Outliner
                 Scene.SetObjectParentHandle(obj, newParentHandle);
         }
 
-        public void SetObjectIsGroupMember(Int32 handle, Boolean isGroupMember)
+        public void SetObjectIsGroupMember(int handle, bool isGroupMember)
         {
             OutlinerObject obj = Scene.GetObjectByHandle(handle);
             if (obj == null)
@@ -3701,7 +3701,7 @@ namespace Outliner
 
         #region SetObjectClass
 
-        public void SetObjectClass(Int32 handle, String className, String superClassName)
+        public void SetObjectClass(int handle, string className, string superClassName)
         {
             OutlinerObject obj = Scene.GetObjectByHandle(handle);
             if (obj == null)
@@ -3717,7 +3717,7 @@ namespace Outliner
                 BeginTimedUpdate();
             }
 
-            Boolean showNode = Filter.ShowNode(obj);
+            bool showNode = Filter.ShowNode(obj);
 
             if (showNode && tn == null)
                 AddObjectToTree(obj);
@@ -3730,7 +3730,7 @@ namespace Outliner
 
         #region SetObjectLayer
 
-        public void SetObjectLayer(Int32 handle, Int32 newLayerHandle)
+        public void SetObjectLayer(int handle, int newLayerHandle)
         {
             OutlinerObject n = Scene.GetObjectByHandle(handle);
             if (n == null)
@@ -3745,7 +3745,7 @@ namespace Outliner
 
         #region SetObjectMaterial
 
-        public void SetObjectMaterial(Int32 handle, Int32 materialHandle)
+        public void SetObjectMaterial(int handle, int materialHandle)
         {
             OutlinerObject obj = Scene.GetObjectByHandle(handle);
             if (obj == null)
@@ -3761,14 +3761,14 @@ namespace Outliner
         // Layer functions.
         #region AddLayerToTree, DeleteLayer
 
-        public void AddLayerToTree(Int32 layerHandle)
+        public void AddLayerToTree(int layerHandle)
         {
             OutlinerLayer layer = Scene.GetLayerByHandle(layerHandle);
             if (layer != null)
                 AddLayerToTree(layer);
         }
 
-        public void DeleteLayer(Int32 layerHandle)
+        public void DeleteLayer(int layerHandle)
         {
             OutlinerLayer layer = Scene.GetLayerByHandle(layerHandle);
             if (layer != null)
@@ -3797,7 +3797,7 @@ namespace Outliner
 
         #region SetLayerName
 
-        public void SetLayerName(Int32 layerHandle, String newName)
+        public void SetLayerName(int layerHandle, string newName)
         {
             OutlinerLayer layer = Scene.GetLayerByHandle(layerHandle);
             if (layer == null)
@@ -3827,7 +3827,7 @@ namespace Outliner
 
         #region SetLayerHidden, SetLayerFrozen, SetLayerActive
 
-        public void SetLayerHidden(Int32 layerHandle, Boolean isHidden)
+        public void SetLayerHidden(int layerHandle, bool isHidden)
         {
             OutlinerLayer layer = Scene.GetLayerByHandle(layerHandle);
             if (layer == null || layer.IsHidden == isHidden)
@@ -3849,7 +3849,7 @@ namespace Outliner
             }
         }
 
-        public void SetLayerFrozen(Int32 layerHandle, Boolean isFrozen)
+        public void SetLayerFrozen(int layerHandle, bool isFrozen)
         {
             OutlinerLayer layer = Scene.GetLayerByHandle(layerHandle);
             if (layer == null || layer.IsFrozen == isFrozen)
@@ -3870,7 +3870,7 @@ namespace Outliner
 
 
 
-        public void SetLayerActive(Int32 layerHandle, Boolean isActive)
+        public void SetLayerActive(int layerHandle, bool isActive)
         {
             OutlinerLayer layer = this.Scene.GetLayerByHandle(layerHandle);
             if (layer == null)
@@ -3894,7 +3894,7 @@ namespace Outliner
 
         #region SetLayerParent
 
-        public void SetLayerParent(Int32 layerHandle, Int32 parentLayerHandle)
+        public void SetLayerParent(int layerHandle, int parentLayerHandle)
         {
             OutlinerLayer layer = Scene.GetLayerByHandle(layerHandle);
             if (layer == null)
@@ -3916,7 +3916,7 @@ namespace Outliner
         // Material functions.
         #region AddMaterialToTree
 
-        public void AddMaterialToTree(Int32 materialHandle)
+        public void AddMaterialToTree(int materialHandle)
         {
             OutlinerMaterial mat = Scene.GetMaterialByHandle(materialHandle);
             if (mat != null)
@@ -3928,7 +3928,7 @@ namespace Outliner
 
         #region SetMaterialName
 
-        public void SetMaterialName(Int32 handle, String newName)
+        public void SetMaterialName(int handle, string newName)
         {
             OutlinerMaterial mat = Scene.GetMaterialByHandle(handle);
             if (mat == null)

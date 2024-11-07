@@ -16,10 +16,10 @@ namespace Outliner.DragDropHandlers
         new protected OutlinerObject Data { get; set; }
 
 
-        override public Boolean AllowDrag { get { return true; } }
+        override public bool AllowDrag { get { return true; } }
 
 
-        protected override Boolean IsDroppableNode(OutlinerNode o)
+        protected override bool IsDroppableNode(OutlinerNode o)
         {
             return (o is OutlinerObject);
         }
@@ -49,13 +49,13 @@ namespace Outliner.DragDropHandlers
 
 
             OutlinerNode[] droppedNodes = GetNodesFromDataObject(dragData);
-            Int32[] droppedNodeHandles = new Int32[droppedNodes.Length];
+            int[] droppedNodeHandles = new int[droppedNodes.Length];
 
             Tree.BeginTimedUpdate();
             Tree.BeginTimedSort();
 
-            Boolean dispatchUngroupEvent = false;
-            Int32 i = 0;
+            bool dispatchUngroupEvent = false;
+            int i = 0;
             foreach (OutlinerNode n in droppedNodes)
             {
                 if (((OutlinerObject)n).IsGroupMember)
@@ -70,7 +70,7 @@ namespace Outliner.DragDropHandlers
             if (dispatchUngroupEvent)
             {
                 Tree.RaiseObjectGroupedEvent(new NodeGroupedEventArgs(droppedNodeHandles, Data.Handle, false, true));
-                Int32[] childHandles = getChildHandles(droppedNodes);
+                int[] childHandles = getChildHandles(droppedNodes);
                 if (childHandles.Length > 0)
                     Tree.RaiseObjectGroupedEvent(new NodeGroupedEventArgs(childHandles, Data.Handle, false, false));
             }

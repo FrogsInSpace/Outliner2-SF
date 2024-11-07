@@ -11,7 +11,7 @@ using Autodesk.Max;
 
 namespace Outliner
 {
-
+/*
     public static class ActMan
     {
         private static IIActionManager actMan;
@@ -85,34 +85,33 @@ namespace Outliner
     }
 
 
-
-
+*/
     [XmlRoot("ADSK_KBD")]
     public class KbdxFile : ICollection<KbdxShortcut>
     {
         private List<KbdxShortcut> shortcuts;
 
         [XmlIgnore]
-        public String File;
+        public string File;
 
         public KbdxFile()
         {
             this.shortcuts = new List<KbdxShortcut>();
         }
 
-        public Boolean ContainsShortcut(Keys k)
+        public bool ContainsShortcut(Keys k)
         {
             return this.shortcuts.Exists(a => (a.TableId == KbdxShortcut.MainTableId
                                               || a.TableId == KbdxShortcut.MacroTableId
                                               ) && a.Key == k);
         }
 
-        public Boolean ContainsShortcut(String macroName, String macroCategory)
+        public bool ContainsShortcut(string macroName, string macroCategory)
         {
             return this.shortcuts.Exists(a => a.MacroName == macroName && a.MacroCategory == macroCategory);
         }
 
-        public Boolean ContainsShortcut(String macroName, String macroCategory, Keys k)
+        public bool ContainsShortcut(string macroName, string macroCategory, Keys k)
         {
             return this.shortcuts.Exists(a => a.TableId == KbdxShortcut.MacroTableId &&
                                               a.MacroName == macroName &&
@@ -136,7 +135,7 @@ namespace Outliner
         /// <param name="k">The keys associated with the hotkey assignment.</param>
         /// <param name="replace">Whether to replace an assignment with the same keys if it already exists.</param>
         /// <returns>True if the hotkey assignment was added, false if the exact assignment already existed or if it should not be replaced.</returns>
-        public Boolean AddShortcut(String macroName, String macroCategory, Keys k, Boolean replace)
+        public bool AddShortcut(string macroName, string macroCategory, Keys k, bool replace)
         {
             KbdxShortcut existingAction = this.shortcuts.Find(a => (a.TableId == KbdxShortcut.MainTableId || a.TableId == KbdxShortcut.MacroTableId) && a.Key == k);
             if (existingAction != null)
@@ -160,15 +159,15 @@ namespace Outliner
         /// <param name="macroCategory">The category of the macroscript to be called.</param>
         /// <param name="keys">The keys associated with the hotkey assignment.</param>
         /// <returns>True if the hotkey assignment was added, false if the exact assignment already existed.</returns>
-        public Boolean AddShortcut(String macroName, String macroCategory, Keys keys)
+        public bool AddShortcut(string macroName, string macroCategory, Keys keys)
         {
             return AddShortcut(macroName, macroCategory, keys, true);
         }
 
-        public Int32 RemoveShortcut(String macroCategory)
+        public int RemoveShortcut(string macroCategory)
         {
-            Boolean removedAction = true;
-            Int32 numActionsRemoved = 0;
+            bool removedAction = true;
+            int numActionsRemoved = 0;
             while (removedAction)
             {
                 KbdxShortcut action = this.shortcuts.Find(a => a.MacroCategory.Equals(macroCategory));
@@ -179,10 +178,10 @@ namespace Outliner
             return numActionsRemoved;
         }
 
-        public Int32 RemoveShortcut(String macroName, String macroCategory)
+        public int RemoveShortcut(string macroName, string macroCategory)
         {
-            Boolean removedAction = true;
-            Int32 numActionsRemoved = 0;
+            bool removedAction = true;
+            int numActionsRemoved = 0;
             while (removedAction)
             {
                 KbdxShortcut action = this.shortcuts.Find(a => a.MacroName.Equals(macroName) && a.MacroCategory.Equals(macroCategory));
@@ -192,10 +191,10 @@ namespace Outliner
 
             return numActionsRemoved;
         }
-        public Int32 RemoveShortcut(UInt32 persistentId)
+        public int RemoveShortcut(uint persistentId)
         {
-            Boolean removedAction = true;
-            Int32 numActionsRemoved = 0;
+            bool removedAction = true;
+            int numActionsRemoved = 0;
             while (removedAction)
             {
                 KbdxShortcut action = this.shortcuts.Find(a => a.ActionId == persistentId.ToString());
@@ -206,7 +205,7 @@ namespace Outliner
             return numActionsRemoved;
         }
 
-        public void ToXml(String path)
+        public void ToXml(string path)
         {
             using (FileStream fs = new FileStream(path, FileMode.Create))
             {
@@ -222,7 +221,7 @@ namespace Outliner
             xs.Serialize(str, this, ns);
         }
 
-        public static KbdxFile FromXml(String path)
+        public static KbdxFile FromXml(string path)
         {
             using (FileStream fs = new FileStream(path, FileMode.Open))
             {
@@ -243,7 +242,7 @@ namespace Outliner
         // <summary>
         /// Gets the currently active keyboard actions file from 3dsmax.
         /// </summary>
-        public static String MaxGetActiveKbdxFile()
+        public static string MaxGetActiveKbdxFile()
         {
             try
             {
@@ -252,22 +251,22 @@ namespace Outliner
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return String.Empty;
+                return string.Empty;
             }
         }
 
 
 
-        public static String MaxGetWriteableKbdxFile()
+        public static string MaxGetWriteableKbdxFile()
         {
-            String kbdxFile = MaxscriptSDK.ExecuteStringMaxscriptQuery("actionMan.getKeyboardFile()");
+            string kbdxFile = MaxscriptSDK.ExecuteStringMaxscriptQuery("actionMan.getKeyboardFile()");
             try
             {
                 MaxscriptSDK.ExecuteMaxscriptCommand("actionMan.saveKeyboardFile @\"" + kbdxFile + "\"");
             }
             catch
             {
-                String fileName = Path.GetFileName(kbdxFile);
+                string fileName = Path.GetFileName(kbdxFile);
                 kbdxFile = Path.Combine(PathSDK.GetDirectoryPath(PathSDK.DirectoryID.UI), fileName);
                 MaxscriptSDK.ExecuteMaxscriptCommand("actionMan.saveKeyboardFile @\"" + kbdxFile + "\"");
             }
@@ -288,7 +287,7 @@ namespace Outliner
         /// <summary>
         /// Tells 3dsmax to load the keyboard actions file.
         /// </summary>
-        public Boolean MaxLoadKbdxFile()
+        public bool MaxLoadKbdxFile()
         {
             try
             {
@@ -311,7 +310,7 @@ namespace Outliner
                 if (action.MacroName != null && action.MacroCategory != null)
                     actionItem = MaxActionItemResolver.ResolveMacroItem(action.MacroName, action.MacroCategory);
                 else if (action.PersistentId != 0)
-                    actionItem = MaxActionItemResolver.ResolveNativeItem(action.PersistentId, (UInt32)action.TableId);
+                    actionItem = MaxActionItemResolver.ResolveNativeItem(action.PersistentId, (uint)action.TableId);
 
                 if (actionItem != null && actionItem.IsEnabled())
                     actionItem.Execute();

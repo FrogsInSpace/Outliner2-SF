@@ -8,28 +8,28 @@ namespace Outliner
 {
     public class OutlinerFilter
     {
-        public Boolean Enabled { get; set; }
-        public Boolean AffectLayers { get; set; }
+        public bool Enabled { get; set; }
+        public bool AffectLayers { get; set; }
 
-        public Boolean ShowGeometry { get; set; }
-        public Boolean ShowShapes { get; set; }
-        public Boolean ShowLights { get; set; }
-        public Boolean ShowCameras { get; set; }
-        public Boolean ShowHelpers { get; set; }
-        public Boolean ShowSpaceWarps { get; set; }
-        public Boolean ShowBones { get; set; }
-        public Boolean ShowParticles { get; set; }
-        public Boolean ShowXRefs { get; set; }
-        public Boolean ShowGroups { get; set; }
-        public Boolean ShowHidden { get; set; }
-        public Boolean ShowFrozen { get; set; }
+        public bool ShowGeometry { get; set; }
+        public bool ShowShapes { get; set; }
+        public bool ShowLights { get; set; }
+        public bool ShowCameras { get; set; }
+        public bool ShowHelpers { get; set; }
+        public bool ShowSpaceWarps { get; set; }
+        public bool ShowBones { get; set; }
+        public bool ShowParticles { get; set; }
+        public bool ShowXRefs { get; set; }
+        public bool ShowGroups { get; set; }
+        public bool ShowHidden { get; set; }
+        public bool ShowFrozen { get; set; }
 
         private TreeView _tree;
 
-        private String _nameFilter;
+        private string _nameFilter;
         private RegexOptions _nameFilterOptions;
 
-        public String NameFilter
+        public string NameFilter
         {
             get
             {
@@ -37,7 +37,7 @@ namespace Outliner
             }
             set
             {
-                if (value == String.Empty)
+                if (value == string.Empty)
                     _nameFilter = value;
                 else
                 {
@@ -50,7 +50,7 @@ namespace Outliner
             }
         }
 
-        public Boolean NameFilterCaseSensitive
+        public bool NameFilterCaseSensitive
         {
             get
             {
@@ -70,7 +70,7 @@ namespace Outliner
             _tree = tree;
             Enabled = false;
             AffectLayers = false;
-            NameFilter = String.Empty;
+            NameFilter = string.Empty;
             NameFilterCaseSensitive = false;
 
             ShowGeometry = ShowShapes = ShowLights = ShowCameras = ShowHelpers = ShowSpaceWarps =
@@ -78,12 +78,12 @@ namespace Outliner
         }
 
 
-        public Boolean ShowNode(OutlinerNode node)
+        public bool ShowNode(OutlinerNode node)
         {
             if (node == null)
                 return false;
 
-            Boolean nodeVisible = true;
+            bool nodeVisible = true;
             if (node is OutlinerObject)
                 nodeVisible = ObjectIsVisible((OutlinerObject)node);
             else if (node is OutlinerLayer)
@@ -92,10 +92,10 @@ namespace Outliner
                 nodeVisible = MaterialIsVisible((OutlinerMaterial)node);
 
 
-            Boolean childNodesVisible;
+            bool childNodesVisible;
             if (_tree.ListMode != OutlinerListMode.Hierarchy && node is OutlinerObject)
                 childNodesVisible = false;
-            else if (!Enabled && NameFilter == String.Empty)
+            else if (!Enabled && NameFilter == string.Empty)
                 childNodesVisible = true;
             else
                 childNodesVisible = ShowChildNodes(node);
@@ -105,7 +105,7 @@ namespace Outliner
             return nodeVisible || childNodesVisible;
         }
 
-        private Boolean ShowChildNodes(OutlinerNode node)
+        private bool ShowChildNodes(OutlinerNode node)
         {
             if (node == null || node.ChildNodesCount == 0)
                 return false;
@@ -121,12 +121,12 @@ namespace Outliner
 
 
 
-        private Boolean ObjectIsVisible(OutlinerObject obj)
+        private bool ObjectIsVisible(OutlinerObject obj)
         {
             // If the filter is disabled, all objects are shown.
-            if (!Enabled && NameFilter == String.Empty) return true;
+            if (!Enabled && NameFilter == string.Empty) return true;
 
-            if (NameFilter != String.Empty)
+            if (NameFilter != string.Empty)
             {
                 if (!Regex.IsMatch(obj.Name, NameFilter, _nameFilterOptions))
                     return false;
@@ -169,9 +169,9 @@ namespace Outliner
         }
 
 
-        private Boolean LayerIsVisible(OutlinerLayer layer)
+        private bool LayerIsVisible(OutlinerLayer layer)
         {
-            if (NameFilter != String.Empty && !Regex.IsMatch(layer.Name, NameFilter, _nameFilterOptions))
+            if (NameFilter != string.Empty && !Regex.IsMatch(layer.Name, NameFilter, _nameFilterOptions))
                 return false;
 
             if (AffectLayers)
@@ -184,9 +184,9 @@ namespace Outliner
         }
 
 
-        private Boolean MaterialIsVisible(OutlinerMaterial mat)
+        private bool MaterialIsVisible(OutlinerMaterial mat)
         {
-            if (NameFilter != String.Empty && !Regex.IsMatch(mat.Name, NameFilter, _nameFilterOptions))
+            if (NameFilter != string.Empty && !Regex.IsMatch(mat.Name, NameFilter, _nameFilterOptions))
                 return false;
 
             if (mat.IsUnassigned && mat.ChildNodesCount == 0)

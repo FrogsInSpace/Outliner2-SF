@@ -50,7 +50,7 @@ namespace Outliner.DragDropHandlers
                 return false;
 
             OutlinerNode[] droppedNodes = GetNodesFromDataObject(dragData);
-            Int32[] droppedNodeHandles = new Int32[droppedNodes.Length];
+            int[] droppedNodeHandles = new int[droppedNodes.Length];
 
             Tree.BeginTimedUpdate();
             Tree.BeginTimedSort();
@@ -58,8 +58,8 @@ namespace Outliner.DragDropHandlers
             // Hierarchy mode.
             if (Tree.ListMode == OutlinerListMode.Hierarchy)
             {
-                Boolean dispatchUngroupEvent = false;
-                Int32 i = 0;
+                bool dispatchUngroupEvent = false;
+                int i = 0;
                 foreach (OutlinerNode n in droppedNodes)
                 {
                     if (((OutlinerObject)n).IsGroupMember)
@@ -74,7 +74,7 @@ namespace Outliner.DragDropHandlers
                 if (dispatchUngroupEvent)
                 {
                     Tree.RaiseObjectGroupedEvent(new NodeGroupedEventArgs(droppedNodeHandles, OutlinerScene.RootHandle, false, true));
-                    Int32[] childHandles = getChildHandles(droppedNodes);
+                    int[] childHandles = getChildHandles(droppedNodes);
                     if (childHandles.Length > 0)
                         Tree.RaiseObjectGroupedEvent(new NodeGroupedEventArgs(childHandles, OutlinerScene.RootHandle, false, false));
                 }
@@ -85,7 +85,7 @@ namespace Outliner.DragDropHandlers
             // Layer mode.
             else if (Tree.ListMode == OutlinerListMode.Layer)
             {
-                Int32 i = 0;
+                int i = 0;
                 foreach (OutlinerNode n in droppedNodes)
                 {
                     Tree.SetLayerParent((OutlinerLayer)n, OutlinerScene.RootHandle);
@@ -98,7 +98,7 @@ namespace Outliner.DragDropHandlers
             // Material mode.
             else if (Tree.ListMode == OutlinerListMode.Material)
             {
-                Int32 i = 0;
+                int i = 0;
                 foreach (OutlinerNode n in droppedNodes)
                 {
                     Tree.SetObjectMaterial((OutlinerObject)n, OutlinerScene.UnassignedHandle);

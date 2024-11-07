@@ -92,16 +92,16 @@ namespace Outliner
         #region Show ContextMenu
 
         public static void ShowContextMenu(Point pos, OutlinerNode node,
-                                           Boolean showObjectItems, Boolean showLayerItems,
-                                           Boolean showMaterialItems, Boolean showIDisplayableItems,
-                                           Boolean showDisplayItems, Boolean showRenderItems)
+                                           bool showObjectItems, bool showLayerItems,
+                                           bool showMaterialItems, bool showIDisplayableItems,
+                                           bool showDisplayItems, bool showRenderItems)
         {
-            ActMan.FillShortcuts();
+            //ActMan.FillShortcuts();
 
             if (MainMenu == null)
                 createMainMenu();
 
-            MainMenu.Closed += delegate (Object sender, ToolStripDropDownClosedEventArgs e) { ClosedTicks = DateTime.Now.Ticks; };
+            MainMenu.Closed += delegate (object sender, ToolStripDropDownClosedEventArgs e) { ClosedTicks = DateTime.Now.Ticks; };
 
             ClickedNode = node;
 
