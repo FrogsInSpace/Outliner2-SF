@@ -9,7 +9,7 @@ namespace Outliner.Scene
     public class OutlinerObject : OutlinerNode, IDisplayable
     {
         public OutlinerObject(OutlinerScene scene, Int32 objectNr, Int32 handle, Int32 parentHandle, Int32 layerHandle, Int32 materialHandle,
-                            String name, String objClass, String objSuperClass, 
+                            String name, String objClass, String objSuperClass,
                             Boolean isGroupHead, Boolean isGroupMember,
                             Boolean isHidden, Boolean isFrozen, Boolean boxMode)
         {
@@ -35,12 +35,12 @@ namespace Outliner.Scene
 
         override public OutlinerNode Parent
         {
-            get 
+            get
             {
                 if (ParentHandle == OutlinerScene.RootHandle)
                     return null;
                 else
-                    return Scene.GetObjectByHandle(ParentHandle); 
+                    return Scene.GetObjectByHandle(ParentHandle);
             }
         }
 

@@ -116,12 +116,12 @@ namespace Outliner.DragDropHandlers
                 if (obj.IsGroupHead || obj.IsGroupMember) return new GroupDragDropHandler(tree, obj);
                 if (obj.Class == OutlinerScene.ContainerType) return new ContainerDragDropHandler(tree, obj);
                 if (obj.SuperClass == OutlinerScene.SpacewarpType) return new SpaceWarpDragDropHandler(tree, obj);
-                
+
                 return new ObjectDragDropHandler(tree, obj);
             }
             else if (node is OutlinerMaterial)
                 return new MaterialDragDropHandler(tree, (OutlinerMaterial)node);
-            else if (node is OutlinerLayer) 
+            else if (node is OutlinerLayer)
                 return new LayerDragDropHandler(tree, (OutlinerLayer)node);
 
             return new DragDropHandler(tree, node);

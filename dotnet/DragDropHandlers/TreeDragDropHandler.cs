@@ -9,7 +9,7 @@ namespace Outliner.DragDropHandlers
 {
     public class TreeDragDropHandler : DragDropHandler
     {
-        public TreeDragDropHandler(Outliner.TreeView tree, OutlinerScene data) : base(tree, null) 
+        public TreeDragDropHandler(Outliner.TreeView tree, OutlinerScene data) : base(tree, null)
         {
             Data = data;
         }
@@ -48,13 +48,13 @@ namespace Outliner.DragDropHandlers
         {
             if (!IsValidDropTarget(dragData))
                 return false;
-            
+
             OutlinerNode[] droppedNodes = GetNodesFromDataObject(dragData);
             Int32[] droppedNodeHandles = new Int32[droppedNodes.Length];
 
             Tree.BeginTimedUpdate();
             Tree.BeginTimedSort();
-            
+
             // Hierarchy mode.
             if (Tree.ListMode == OutlinerListMode.Hierarchy)
             {
@@ -81,7 +81,7 @@ namespace Outliner.DragDropHandlers
                 else
                     Tree.RaiseObjectLinkedEvent(new NodeLinkedEventArgs(droppedNodeHandles, OutlinerScene.RootHandle));
             }
-            
+
             // Layer mode.
             else if (Tree.ListMode == OutlinerListMode.Layer)
             {
@@ -94,7 +94,7 @@ namespace Outliner.DragDropHandlers
                 }
                 Tree.RaiseLayerLinkedEvent(new NodeLinkedEventArgs(droppedNodeHandles, OutlinerScene.RootHandle));
             }
-            
+
             // Material mode.
             else if (Tree.ListMode == OutlinerListMode.Material)
             {

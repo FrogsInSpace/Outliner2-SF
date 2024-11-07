@@ -34,7 +34,7 @@ namespace Outliner.NodeSorters
                 }
                 else if ((xTag is OutlinerNode) && (yTag is OutlinerNode))
                     return StrCmpLogicalW(((OutlinerNode)xTag).Name, ((OutlinerNode)yTag).Name);
-                
+
             }
 
             return 0;

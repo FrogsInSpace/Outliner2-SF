@@ -24,12 +24,12 @@ namespace Outliner.DragDropHandlers
             return (o is OutlinerObject);
         }
 
-        public override bool  IsValidDropTarget(IDataObject dragData)
+        public override bool IsValidDropTarget(IDataObject dragData)
         {
             if (Tree == null || Tree.ListMode != OutlinerListMode.Hierarchy)
                 return false;
             else
- 	            return base.IsValidDropTarget(dragData);
+                return base.IsValidDropTarget(dragData);
         }
 
 
@@ -47,7 +47,7 @@ namespace Outliner.DragDropHandlers
             if (!IsValidDropTarget(dragData))
                 return false;
 
-            
+
             OutlinerNode[] droppedNodes = GetNodesFromDataObject(dragData);
             Int32[] droppedNodeHandles = new Int32[droppedNodes.Length];
 
@@ -56,7 +56,7 @@ namespace Outliner.DragDropHandlers
 
             Boolean dispatchUngroupEvent = false;
             Int32 i = 0;
-            foreach(OutlinerNode n in droppedNodes)
+            foreach (OutlinerNode n in droppedNodes)
             {
                 if (((OutlinerObject)n).IsGroupMember)
                     dispatchUngroupEvent = true;

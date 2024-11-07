@@ -8,52 +8,52 @@ namespace Outliner.Scene
     {
         #region Type string constants
 
-        public const String ObjectType          = "Object";
-        public const String XrefObjectType      = "ReferenceTarget";//getClassname for xrefobject returns referencetarget?? "XRefObject";
-        public const String LayerType           = "Layer";
-        public const String MaterialType        = "Material";
-        public const String XrefMaterialType    = "XRef";
+        public const String ObjectType = "Object";
+        public const String XrefObjectType = "ReferenceTarget";//getClassname for xrefobject returns referencetarget?? "XRefObject";
+        public const String LayerType = "Layer";
+        public const String MaterialType = "Material";
+        public const String XrefMaterialType = "XRef";
 
-        public const String BipedType           = "";//getClassName for biped returns empty string?? "Biped_Object";
-        public const String BoneType            = "Bone";
-        public const String CameraType          = "camera";
-        public const String ContainerType       = "Container";
-        public const String GeometryType        = "GeometryClass";
-        public const String HelperType          = "helper";
-        public const String LightType           = "light";
-        public const String NurbsPtSurfType     = "Point Surf";
-        public const String NurbsCvSurfType     = "CV Surf";
-        public const String PatchEditableType   = "PatchObject";
-        public const String PatchQuadType       = "QuadPatchObject";
-        public const String PatchTriType        = "TriPatchObject";
-        public const String PArrayType          = "PArray";
-        public const String PBlizzardType       = "Blizzard";
-        public const String PCloudType          = "PCloud";
-        public const String PfSourceType        = "PF Source";
-        public const String PSnowType           = "Snow";
-        public const String PSprayType          = "Spray";
-        public const String PSuperSprayType     = "SuperSpray";
-        public const String PBirthTextureType   = "Birth Texture";
-        public const String PSpeedByIconType    = "SpeedByIcon";
+        public const String BipedType = "";//getClassName for biped returns empty string?? "Biped_Object";
+        public const String BoneType = "Bone";
+        public const String CameraType = "camera";
+        public const String ContainerType = "Container";
+        public const String GeometryType = "GeometryClass";
+        public const String HelperType = "helper";
+        public const String LightType = "light";
+        public const String NurbsPtSurfType = "Point Surf";
+        public const String NurbsCvSurfType = "CV Surf";
+        public const String PatchEditableType = "PatchObject";
+        public const String PatchQuadType = "QuadPatchObject";
+        public const String PatchTriType = "TriPatchObject";
+        public const String PArrayType = "PArray";
+        public const String PBlizzardType = "Blizzard";
+        public const String PCloudType = "PCloud";
+        public const String PfSourceType = "PF Source";
+        public const String PSnowType = "Snow";
+        public const String PSprayType = "Spray";
+        public const String PSuperSprayType = "SuperSpray";
+        public const String PBirthTextureType = "Birth Texture";
+        public const String PSpeedByIconType = "SpeedByIcon";
         public const String PGroupSelectionType = "Group Select";
-        public const String PFindTargetType     = "Find Target";
-        public const String PInitialStateType   = "Initial State";
-        public const String ParticlePaintType   = "Particle Paint";
-        public const String ShapeType           = "shape";
-        public const String SpacewarpType       = "SpacewarpObject";
-        public const String TargetType          = "Target";
+        public const String PFindTargetType = "Find Target";
+        public const String PInitialStateType = "Initial State";
+        public const String ParticlePaintType = "Particle Paint";
+        public const String ShapeType = "shape";
+        public const String SpacewarpType = "SpacewarpObject";
+        public const String TargetType = "Target";
         public const String PowerNurbsPrefixType = "Pwr_";
 
         public const String ThreeDxConnexionCamName = "3DxStudio Perspective";
-        private readonly HashSet<String> hidden_particle_classes = new HashSet<String>() 
-        { 
-            "Age Test", "Birth", "Birth Paint", "Birth Script", "Cache", "Collision", "Collision Spawn", 
-            "DeleteParticles", "DisplayParticles", "Event", "Force", "Go To Rotation", "Group Operator", 
-            "Keep Apart", "Lock/Bond", "Mapping", "Material Dynamic", "Material Frequency", "Mapping Object", 
+        private readonly HashSet<String> hidden_particle_classes = new HashSet<String>()
+        {
+            "Age Test", "Birth", "Birth Paint", "Birth Script", "Cache", "Collision", "Collision Spawn",
+            "DeleteParticles", "DisplayParticles", "Event", "Force", "Go To Rotation", "Group Operator",
+            "Keep Apart", "Lock/Bond", "Mapping", "Material Dynamic", "Material Frequency", "Mapping Object",
             "Material Static", "Notes", "Particle_Bitmap", "Particle View", "ParticleGroup", "PFArrow", "PFEngine",
             "PFActionListPool", "Placement Paint", "Position Icon", "Position Object", "PView_Manager", "Rotation", "RenderParticles",
-            "ScaleParticles", "Scale Test", "Script Operator", "Script Test", "Send Out", "Shape Facing", "Shape Instance", 
-            "ShapeLibrary", "Shape Mark", "shapeStandard", "Spawn", "Speed", "Speed By Surface", "Speed Test", "Spin", 
+            "ScaleParticles", "Scale Test", "Script Operator", "Script Test", "Send Out", "Shape Facing", "Shape Instance",
+            "ShapeLibrary", "Shape Mark", "shapeStandard", "Spawn", "Speed", "Speed By Surface", "Speed Test", "Spin",
             "Split Amount", "Split Group", "Split Selected", "Split Source"
         };
 
@@ -101,7 +101,7 @@ namespace Outliner.Scene
             objects.Clear();
             layers.Clear();
             ClearMaterials();
-            
+
             objects_by_parentHandle.Clear();
             objects_by_layerHandle.Clear();
             objects_by_materialHandle.Clear();
@@ -261,9 +261,9 @@ namespace Outliner.Scene
 
         private Boolean CanAddObject(OutlinerObject obj)
         {
-           return !objects.ContainsKey(obj.Handle)
-               && (obj.Name != ThreeDxConnexionCamName || obj.SuperClass != CameraType)
-               && !hidden_particle_classes.Contains(obj.Class);
+            return !objects.ContainsKey(obj.Handle)
+                && (obj.Name != ThreeDxConnexionCamName || obj.SuperClass != CameraType)
+                && !hidden_particle_classes.Contains(obj.Class);
         }
 
         public void AddObject(OutlinerObject obj)
@@ -283,8 +283,8 @@ namespace Outliner.Scene
                               Boolean isGroupHead, Boolean isGroupMember,
                               Boolean isHidden, Boolean isFrozen, Boolean boxMode)
         {
-           OutlinerObject obj = new OutlinerObject(this, ++objectCounter, handle, parentHandle, layerHandle, materialHandle, name, objClass, objSuperClass, isGroupHead, isGroupMember, isHidden, isFrozen, boxMode);
-           this.AddObject(obj);
+            OutlinerObject obj = new OutlinerObject(this, ++objectCounter, handle, parentHandle, layerHandle, materialHandle, name, objClass, objSuperClass, isGroupHead, isGroupMember, isHidden, isFrozen, boxMode);
+            this.AddObject(obj);
         }
 
 

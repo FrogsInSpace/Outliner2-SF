@@ -25,7 +25,7 @@ namespace Outliner
             get { return _frozenFont; }
         }
 
-        public Color BackColor 
+        public Color BackColor
         {
             get { return _tree.BackColor; }
             set { _tree.BackColor = value; }

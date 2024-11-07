@@ -29,7 +29,7 @@ namespace Outliner
         private String _nameFilter;
         private RegexOptions _nameFilterOptions;
 
-        public String NameFilter 
+        public String NameFilter
         {
             get
             {
@@ -43,7 +43,7 @@ namespace Outliner
                 {
                     // Escape the filter value.
                     _nameFilter = "^" + Regex.Escape(value);
-                    
+
                     // Replace all escaped occurrences of * with [\w\s-]*.
                     _nameFilter = Regex.Replace(_nameFilter, @"(\\\*)", @"[\w\s-]*");
                 }
@@ -172,7 +172,7 @@ namespace Outliner
         private Boolean LayerIsVisible(OutlinerLayer layer)
         {
             if (NameFilter != String.Empty && !Regex.IsMatch(layer.Name, NameFilter, _nameFilterOptions))
-               return false;
+                return false;
 
             if (AffectLayers)
             {

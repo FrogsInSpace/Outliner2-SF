@@ -72,7 +72,7 @@ namespace Outliner
         public Boolean IsGroupMember { get; private set; }
         public Boolean Linked { get; private set; }
 
-        public NodeGroupedEventArgs(Int32[] nodeHandles, Int32 targetHandle, Boolean isGroupMember, Boolean linked) : base (nodeHandles, targetHandle)
+        public NodeGroupedEventArgs(Int32[] nodeHandles, Int32 targetHandle, Boolean isGroupMember, Boolean linked) : base(nodeHandles, targetHandle)
         {
             IsGroupMember = isGroupMember;
             Linked = linked;
