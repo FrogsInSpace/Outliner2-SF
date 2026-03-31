@@ -115,10 +115,17 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autodesk.Max, Version=15.6.164.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Refs\Autodesk.Max.dll</HintPath>
+    </Reference>
+    <Reference Include="CSharpUtilities, Version=15.6.164.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Refs\CSharpUtilities.dll</HintPath>
+    </Reference>
     <Reference Include="ManagedServices, Version=0.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Refs\ManagedServices.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -416,6 +423,6 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>xcopy $(ProjectDir)$(OutDir)$(TargetFileName)  "C:\Programs_x64\Render\3dsMax2026\scripts\outliner\"  /Y /R</PostBuildEvent>
+    <PostBuildEvent>xcopy $(ProjectDir)$(OutDir)$(TargetFileName)  "C:\Programs_x64\Render\3dsMax2025\scripts\outliner\"  /Y /R</PostBuildEvent>
   </PropertyGroup>
 </Project>

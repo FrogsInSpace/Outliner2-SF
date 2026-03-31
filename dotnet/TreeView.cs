@@ -15,6 +15,7 @@ using Outliner.Resources;
 
 namespace Outliner
 {
+
     public partial class TreeView : System.Windows.Forms.TreeView
     {
         private Dictionary<OutlinerNode, TreeNode> _treeNodes;
@@ -28,6 +29,20 @@ namespace Outliner
         private Timer _ensureSelectionVisibleTimer;
         private EnsureSelectionVisibleAction _ensureSelectionVisibleAction;
         private bool _ensureSelectionVisibleWaitingForSort;
+
+
+
+        // Import SendMessage function from user32.dll
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        private static extern IntPtr SetFocus(IntPtr hWnd);
+
+        private IntPtr maxMainHandle;
+
+        private const int WM_KEYDOWN = 0x0100;
+        private const int WM_KEYUP = 0x0101;
 
         public OutlinerScene Scene { get; private set; }
         public TreeStyle Style { get; private set; }
@@ -257,33 +272,53 @@ namespace Outliner
             _ensureSelectionVisibleAction = EnsureSelectionVisibleAction.None;
             _ensureSelectionVisibleWaitingForSort = false;
 
-
-
-
+            // Retrieve the 3ds Max main window handle using the SDK
+            maxMainHandle = ManagedServices.AppSDK.GetMaxHWND();
         }
 
-/*
+        //protected override void OnGotFocus( EventArgs e)
+        //{
+        //    base.OnGotFocus(e);
+
+        //    SetFocus(ManagedServices.AppSDK.GetActiveViewportHwnd());
+        //}
+        //protected override void WndProc(ref Message m)
+        //{
+        //    base.WndProc(ref m);
 
 
-        // Forward KeyDown events to 3ds Max
-        private void MyForm_KeyDown(object sender, KeyEventArgs e)
+        // this is working somewhat
+        //    //if (m.Msg == WM_KEYDOWN)
+        //        ManagedServices.AppSDK.TranslateAndDispatchMessageToApplication( ref m );
+
+        ////        SendMessage(maxMainHandle, m.Msg, m.WParam, m.LParam);
+        //}
+
+        //Forward KeyDown events to 3ds Max
+        protected override void OnKeyDown(KeyEventArgs e)
         {
-            if (maxMainHandle != IntPtr.Zero)
-            {
-                SendMessage(maxMainHandle, WM_KEYDOWN, (IntPtr)e.KeyCode, IntPtr.Zero);
-            }
+            base.OnKeyDown(e);
+
+            // not working
+            // ManagedServices.AppSDK.TranslateAndDispatchMessageToApplication(CSharpUtilities.RoutedKeyEventArgs.KeyEvent.KeyPress, (IntPtr)e.KeyCode, IntPtr.Zero);
+
+            //if (maxMainHandle != IntPtr.Zero)
+            //{
+            //    SendMessage(maxMainHandle, WM_KEYDOWN, (IntPtr)e.KeyCode, IntPtr.Zero);
+            //}
         }
 
-        // Forward KeyUp events to 3ds Max
-        private void MyForm_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (maxMainHandle != IntPtr.Zero)
-            {
-                SendMessage(maxMainHandle, WM_KEYUP, (IntPtr)e.KeyCode, IntPtr.Zero);
-            }
-        }
+        //// Forward KeyUp events to 3ds Max
+        //protected override void OnKeyUp( KeyEventArgs e)
+        //{
+        //    base.OnKeyDown(e);
 
-*/
+        //    if (maxMainHandle != IntPtr.Zero)
+        //    {
+        //        SendMessage(maxMainHandle, WM_KEYUP, (IntPtr)e.KeyCode, IntPtr.Zero);
+        //    }
+        //}
+
 
 
 

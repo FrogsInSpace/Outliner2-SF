@@ -1,7 +1,11 @@
 @ECHO OFF
 
 ::Adjust the value of MaxDir to match your local 3dsmax installation directory.
-SET MaxDir=C:\Program Files\Autodesk\3ds Max 2013\
+IF "%ADSK_3DSMAX_x64_2021%"=="" (
+    SET "MaxDir=C:\Program Files\Autodesk\3ds Max 2021\"
+) ELSE (
+    SET "MaxDir=%ADSK_3DSMAX_x64_2021%\"
+)
 
 CALL :GetMsBuild MSBuild 4.0
 IF "%MSBuild%"=="" goto :PathError "Could not find MSBuild.exe for .NET 4.0."
@@ -37,3 +41,5 @@ goto :error
 :error
 PAUSE
 EXIT /B %ERRORLEVEL%
+
+pause
