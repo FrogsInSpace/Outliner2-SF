@@ -5,9 +5,8 @@ using System.Text;
 using System.Xml.Serialization;
 using System.IO;
 using System.Windows.Forms;
-using ManagedServices;
 
-using Autodesk.Max;
+using ManagedServices;
 
 namespace Outliner
 {

@@ -15,7 +15,6 @@ using Outliner.Resources;
 
 namespace Outliner
 {
-
     public partial class TreeView : System.Windows.Forms.TreeView
     {
         private Dictionary<OutlinerNode, TreeNode> _treeNodes;
@@ -30,11 +29,6 @@ namespace Outliner
         private EnsureSelectionVisibleAction _ensureSelectionVisibleAction;
         private bool _ensureSelectionVisibleWaitingForSort;
 
-
-
-        // Import SendMessage function from user32.dll
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         private static extern IntPtr SetFocus(IntPtr hWnd);
@@ -175,7 +169,7 @@ namespace Outliner
         private bool _autoExpandHierarchy = false;
         public bool AutoExpandHierarchy
         {
-            get { return _autoExpandHierarchy; }
+            get => _autoExpandHierarchy;
             set
             {
                 _autoExpandHierarchy = value;
@@ -185,7 +179,7 @@ namespace Outliner
         private bool _autoExpandLayer = false;
         public bool AutoExpandLayer
         {
-            get { return _autoExpandLayer; }
+            get => _autoExpandLayer;
             set
             {
                 _autoExpandLayer = value;
@@ -217,8 +211,7 @@ namespace Outliner
         }
 
 
-        public TreeView()
-        {
+        public TreeView()        {
             InitializeComponent();
 
             this.SetStyle(ControlStyles.UserPaint, true);
@@ -276,55 +269,24 @@ namespace Outliner
             maxMainHandle = ManagedServices.AppSDK.GetMaxHWND();
         }
 
-        //protected override void OnGotFocus( EventArgs e)
-        //{
-        //    base.OnGotFocus(e);
-
-        //    SetFocus(ManagedServices.AppSDK.GetActiveViewportHwnd());
-        //}
-        //protected override void WndProc(ref Message m)
-        //{
-        //    base.WndProc(ref m);
-
-
-        // this is working somewhat
-        //    //if (m.Msg == WM_KEYDOWN)
-        //        ManagedServices.AppSDK.TranslateAndDispatchMessageToApplication( ref m );
-
-        ////        SendMessage(maxMainHandle, m.Msg, m.WParam, m.LParam);
-        //}
-
-        //Forward KeyDown events to 3ds Max
-        protected override void OnKeyDown(KeyEventArgs e)
+        protected override void WndProc(ref Message m)
         {
-            base.OnKeyDown(e);
+            //base.WndProc(ref m);
 
-            // not working
-            // ManagedServices.AppSDK.TranslateAndDispatchMessageToApplication(CSharpUtilities.RoutedKeyEventArgs.KeyEvent.KeyPress, (IntPtr)e.KeyCode, IntPtr.Zero);
 
-            //if (maxMainHandle != IntPtr.Zero)
-            //{
-            //    SendMessage(maxMainHandle, WM_KEYDOWN, (IntPtr)e.KeyCode, IntPtr.Zero);
-            //}
+            const int WM_KEYDOWN = 0x0100;
+            const int WM_KEYUP = 0x0101;
+
+            if(m.Msg == WM_KEYDOWN || m.Msg == WM_KEYUP)
+            {
+                ManagedServices.AppSDK.TranslateAndDispatchMessageToApplication(ref m);
+                SetFocus(this.Handle);
+            }
+            base.WndProc(ref m);
         }
 
-        //// Forward KeyUp events to 3ds Max
-        //protected override void OnKeyUp( KeyEventArgs e)
-        //{
-        //    base.OnKeyDown(e);
 
-        //    if (maxMainHandle != IntPtr.Zero)
-        //    {
-        //        SendMessage(maxMainHandle, WM_KEYUP, (IntPtr)e.KeyCode, IntPtr.Zero);
-        //    }
-        //}
-
-
-
-
-
-        public TreeView(IContainer container)
-         : this()
+        public TreeView(IContainer container) : this()
         {
             container.Add(this);
         }
@@ -354,10 +316,6 @@ namespace Outliner
                 return parms;
             }
         }
-
-
-
-
 
         #region Helper functions
 
@@ -683,10 +641,6 @@ namespace Outliner
                 curY += ItemHeight;
             }
         }
-
-
-
-
 
         protected void DrawCustomNode(TreeNode tn, Rectangle tnBounds, Graphics graphics)
         {
@@ -2264,9 +2218,6 @@ namespace Outliner
         #region LabelEdit
 
         private const int TVM_GETEDITCONTROL = 0x110F;
-        /** SendMessage already imported for scroll position**/
-        //[DllImport("user32.dll", CharSet = CharSet.Auto)]
-        //private static extern IntPtr SendMessage(IntPtr hWnd, int msg, int wParam, int lParam);
 
         private class LabelEditWindowHook : NativeWindow
         {
@@ -2598,7 +2549,7 @@ namespace Outliner
         }
 
         private IComparer _treeViewNodeSorter;
-        new public IComparer TreeViewNodeSorter
+        public new IComparer TreeViewNodeSorter
         {
             get { return null; }
             set
@@ -2608,13 +2559,13 @@ namespace Outliner
             }
         }
 
-        new public bool Sorted
+        public new bool Sorted
         {
             get { return false; }
             set { }
         }
 
-        new public void Sort()
+        public new void Sort()
         {
             sortTimer_Tick(this, new EventArgs());
         }
