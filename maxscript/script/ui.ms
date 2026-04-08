@@ -155,7 +155,7 @@ function openOutliner =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -231,7 +231,7 @@ function openFilterConfigWindow =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -265,7 +265,7 @@ function openSortModeWindow =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -292,7 +292,7 @@ function openOptionsWindow =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -306,7 +306,7 @@ function openLayerProperties layers =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 )
 

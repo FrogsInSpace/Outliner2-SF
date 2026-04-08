@@ -188,7 +188,7 @@ function onUpdateDownloadCompleted s e =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -241,7 +241,7 @@ function checkUpdateAuto =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 

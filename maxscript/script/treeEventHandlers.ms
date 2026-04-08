@@ -64,7 +64,7 @@ function SelectionChanged e =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -103,7 +103,7 @@ function NodeHidden e =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -141,7 +141,7 @@ function NodeFrozen e =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -175,7 +175,7 @@ function NodeBoxModeChanged e =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -212,7 +212,7 @@ function NodeRenamed e =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -254,7 +254,7 @@ function ObjectMaterialChanged e =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -288,7 +288,7 @@ function SpaceWarpBound e =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -315,7 +315,7 @@ function ObjectAddedToContainer e =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -360,7 +360,7 @@ function ObjectLayerChanged e =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -418,7 +418,7 @@ function ObjectLinked e =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -493,7 +493,7 @@ function ObjectGrouped e =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -522,7 +522,7 @@ function LayerLinked e =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -550,7 +550,7 @@ function LayerActiveChanged e =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -605,7 +605,7 @@ function setContextMenuMaterialSlotNames =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -723,7 +723,7 @@ function ContextMenuOpened e =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -948,7 +948,7 @@ function ContextMenuItemClicked e =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 )
 

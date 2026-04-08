@@ -190,7 +190,7 @@ function pushSceneToTree =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -238,7 +238,7 @@ function switchListMode listMode =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -274,7 +274,7 @@ function switchSortMode sortMode =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -386,7 +386,7 @@ function handleGroupOpeningClosing selnodes selectedInOutliner =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -460,7 +460,7 @@ function deleteLayer layer =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -479,7 +479,7 @@ function setActiveLayer layer =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -493,7 +493,7 @@ function setActiveLayerSelected =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -520,7 +520,7 @@ function setPropertyOnAllSelectedLayerObjects prop value =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -551,7 +551,7 @@ function setPropertyOnSelection prop value includeObjects:false \
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -589,7 +589,7 @@ function deleteSelection =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -620,7 +620,7 @@ function hideSelection hide =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -652,7 +652,7 @@ function freezeSelection freeze =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -682,7 +682,7 @@ function unlinkSelection =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -749,7 +749,7 @@ function moveSelectionToLayer targetLayer =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -775,7 +775,7 @@ function addSelectionToNewLayer =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -797,7 +797,7 @@ function addSelectionToNewContainer =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -819,7 +819,7 @@ function addSelectionToNewGroup =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -1106,7 +1106,7 @@ function init =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
       
       success = false;
    )

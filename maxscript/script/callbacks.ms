@@ -241,7 +241,7 @@ function selectionChanged evt handles =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
    
@@ -269,7 +269,7 @@ function nodesAdded evt handles =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -288,7 +288,7 @@ function nodesNameChanged evt handles =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -317,7 +317,7 @@ function nodesLinked evt handles =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -339,7 +339,7 @@ function nodesGroupChanged evt handles =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -361,7 +361,7 @@ function nodesLayerChanged evt handles =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -389,7 +389,7 @@ function modelStructured evt handles =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -414,7 +414,7 @@ function displayPropertiesChanged evt handles =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -445,7 +445,7 @@ function nodeLinkedIntern linkedNode =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -474,7 +474,7 @@ function nodePreDelete =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -522,7 +522,7 @@ function nodePostMaterial =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -538,7 +538,7 @@ function materialNameSet mat =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -558,7 +558,7 @@ function nodeLayerChangedIntern node layer =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -585,7 +585,7 @@ function layerCreated =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -604,7 +604,7 @@ function layerDeletedIntern layer =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -634,7 +634,7 @@ function layerParametersChanged layer =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 

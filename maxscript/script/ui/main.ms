@@ -489,7 +489,7 @@ on outliner_main open do
 	)
 	catch
 	(
-	  fileIn "crash_report.ms";
+	  fileIn (outliner.dir + "crash_report.ms")
 	)
 )
 

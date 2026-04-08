@@ -194,7 +194,7 @@ function getCA =
    (
       custAttributes.get (refs.dependents rootnode)[1] outlinerNestedLayersCA;
    )
-   catch fileIn "crash_report.ms";
+   catch fileIn (outliner.dir + "crash_report.ms")
 ),
 
 --Adds the CustomAttributes set to the rootNode if it isn't on there already.
@@ -211,7 +211,7 @@ function addCA =
       )
       ca;
    )
-   catch fileIn "crash_report.ms";
+   catch fileIn (outliner.dir + "crash_report.ms")
 ),
 
 
@@ -241,7 +241,7 @@ function getParent layer =
       
       parentLayer;
    )
-   catch fileIn "crash_report.ms";
+   catch fileIn (outliner.dir + "crash_report.ms")
 ),
 
 
@@ -285,7 +285,7 @@ mapped function setParent layer parentLayer =
       
       ok;
    )
-   catch fileIn "crash_report.ms";
+   catch fileIn (outliner.dir + "crash_report.ms")
 ),
 
 
@@ -323,7 +323,7 @@ function getChildren layer recursive:false =
       --Return children array.
       children;
    )
-   catch fileIn "crash_report.ms";
+   catch fileIn (outliner.dir + "crash_report.ms")
 ),
 
 
@@ -352,7 +352,7 @@ function getLayerProperty layer prop =
          
       value;
    )
-   catch fileIn "crash_report.ms";
+   catch fileIn (outliner.dir + "crash_report.ms")
 ),
 
 
@@ -399,7 +399,7 @@ mapped function setLayerProperty layer prop value isSetByParent:false =
       
       ok;
    )
-   catch fileIn "crash_report.ms";
+   catch fileIn (outliner.dir + "crash_report.ms")
 ),
 
 
@@ -430,7 +430,7 @@ function updateLayerProperties layer =
       
       ok;
    )
-   catch fileIn "crash_report.ms";
+   catch fileIn (outliner.dir + "crash_report.ms")
 ),
 
 --Sets the properties of the layer to those stored in the CA.
@@ -447,7 +447,7 @@ function resetLayerProperties layer =
                   
       ok;
    )
-   catch fileIn "crash_report.ms";
+   catch fileIn (outliner.dir + "crash_report.ms")
 )
 
 )--End struct.
