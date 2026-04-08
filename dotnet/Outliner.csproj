@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
     <ProductVersion>9.0.30729</ProductVersion>
@@ -118,14 +118,17 @@
     <Reference Include="Autodesk.Max, Version=15.6.164.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Refs\Autodesk.Max.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="CSharpUtilities, Version=15.6.164.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Refs\CSharpUtilities.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="ManagedServices, Version=0.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Refs\ManagedServices.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -223,28 +226,6 @@
     <Compile Include="TreeView.Designer.cs">
       <DependentUpon>TreeView.cs</DependentUpon>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
-      <Visible>False</Visible>
-      <ProductName>Windows Installer 3.1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\MaxIcons16x16.resx">
@@ -371,6 +352,8 @@
     <Content Include="Resources\max_icons_32x32\unknown.png" />
     <Content Include="Resources\max_icons_32x32\xref.png" />
     <Content Include="Resources\max_icons_32x32\xref_group.png" />
+    <Content Include="Resources\maya_icons_20x20\material_unassigned.png" />
+    <Content Include="Resources\maya_icons_20x20\material_xref.png" />
     <Content Include="Resources\maya_icons_40x40\bone.png" />
     <Content Include="Resources\maya_icons_40x40\camera.png" />
     <Content Include="Resources\maya_icons_40x40\container.png" />
@@ -405,8 +388,6 @@
     <EmbeddedResource Include="Resources\contextmenu_icons\childnodes.png" />
     <EmbeddedResource Include="Resources\contextmenu_icons\layer.png" />
     <EmbeddedResource Include="Resources\contextmenu_icons\advrename.png" />
-    <Content Include="Resources\maya_icons_20x20\material_unassigned.png" />
-    <Content Include="Resources\maya_icons_20x20\material_xref.png" />
     <EmbeddedResource Include="Resources\node_buttons\add_button_disabled.png" />
     <EmbeddedResource Include="Resources\node_buttons\add_button.png" />
     <EmbeddedResource Include="Resources\node_buttons\boxmode_button.png" />
@@ -416,13 +397,8 @@
     <EmbeddedResource Include="Resources\node_buttons\hide_button.png" />
     <EmbeddedResource Include="Resources\node_buttons\hide_button_disabled.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
-    <PostBuildEvent>xcopy $(ProjectDir)$(OutDir)$(TargetFileName)  "C:\Programs_x64\Render\3dsMax2025\scripts\outliner\"  /Y /R</PostBuildEvent>
+    <PostBuildEvent>xcopy $(ProjectDir)$(OutDir)$(TargetFileName)  "C:\Programs_x64\Render\3dsMax2027\scripts\outliner\"  /Y /R</PostBuildEvent>
   </PropertyGroup>
 </Project>
