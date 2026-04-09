@@ -1,147 +1,31 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <ProjectType>Local</ProjectType>
-    <ProjectGuid>{A02C1D54-2F34-4B35-992D-F8B6A1664884}</ProjectGuid>
-    <AssemblyName>Outliner</AssemblyName>
-    <DelaySign>false</DelaySign>
+    <TargetFramework>net40</TargetFramework>
+    <PlatformTarget>x64</PlatformTarget>	
+    <Platforms>x64</Platforms>
+    <Deterministic>False</Deterministic>
     <OutputType>Library</OutputType>
-    <RootNamespace>Outliner</RootNamespace>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <MapFileExtensions>true</MapFileExtensions>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x64\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <FileAlignment>4096</FileAlignment>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
+    <Deterministic>False</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>bin\x64\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Optimize>true</Optimize>
     <FileAlignment>4096</FileAlignment>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
+    <Deterministic>False</Deterministic>
+  </PropertyGroup> 
   <ItemGroup>
-    <Compile Include="AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="BitmapProcessing.cs" />
-    <Compile Include="ContextMenus.cs" />
-    <Compile Include="DragDropHandlers\ContainerDragDropHandler.cs" />
-    <Compile Include="DragDropHandlers\DragDropHandler.cs" />
-    <Compile Include="DragDropHandlers\GroupDragDropHandler.cs" />
-    <Compile Include="DragDropHandlers\LayerDragDropHandler.cs" />
-    <Compile Include="DragDropHandlers\MaterialDragDropHandler.cs" />
-    <Compile Include="DragDropHandlers\ObjectDragDropHandler.cs" />
-    <Compile Include="DragDropHandlers\SpaceWarpDragDropHandler.cs" />
-    <Compile Include="DragDropHandlers\TreeDragDropHandler.cs" />
-    <Compile Include="Enums.cs" />
-    <Compile Include="EventArgs.cs" />
-    <Compile Include="KbdxFile.cs" />
-    <Compile Include="KbdxShortcut.cs" />
-    <Compile Include="MXSFileWatcher.cs">
+    <Compile Update="MXSFileWatcher.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="NodeSorters\ChronologicalSorter.cs" />
-    <Compile Include="NodeSorters\LayerSorter.cs" />
-    <Compile Include="NodeSorters\MaterialSorter.cs" />
-    <Compile Include="NodeSorters\AlphabeticalSorter.cs" />
-    <Compile Include="NodeSorters\TypeSorter.cs" />
-    <Compile Include="NodeSorters\VisibilitySorter.cs" />
-    <Compile Include="OutlinerFilter.cs" />
-    <Compile Include="Resources\MaxIcons16x16.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MaxIcons16x16.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\MaxIcons32x32.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MaxIcons32x32.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\MayaIcons16x16.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MayaIcons16x16.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\MayaIcons20x20.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MayaIcons20x20.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\MayaIcons32x32.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MayaIcons32x32.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\MayaIcons40x40.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MayaIcons40x40.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\OutlinerResources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>OutlinerResources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Scene\IDisplayable.cs" />
-    <Compile Include="Scene\OutlinerMaterial.cs" />
-    <Compile Include="Scene\OutlinerNode.cs" />
-    <Compile Include="Scene\OutlinerLayer.cs" />
-    <Compile Include="Scene\OutlinerObject.cs" />
-    <Compile Include="Scene\OutlinerScene.cs" />
-    <Compile Include="TreeStyle.cs" />
-    <Compile Include="TreeView.cs">
+    <Compile Update="TreeView.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="TreeView.Designer.cs">
-      <DependentUpon>TreeView.cs</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\MaxIcons16x16.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>MaxIcons16x16.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\MaxIcons32x32.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>MaxIcons32x32.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\MayaIcons16x16.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>MayaIcons16x16.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\MayaIcons20x20.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>MayaIcons20x20.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\MayaIcons32x32.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>MayaIcons32x32.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\MayaIcons40x40.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>MayaIcons40x40.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\OutlinerResources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>OutlinerResources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TreeView.resx">
-      <DependentUpon>TreeView.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\max_icons_16x16\bone.png" />
@@ -296,13 +180,14 @@
       <HintPath>Refs\ManagedServices.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.XML" />
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>xcopy $(ProjectDir)$(OutDir)$(TargetFileName)  "C:\Programs_x64\Render\3dsMax2027\scripts\outliner\"  /Y /R</PostBuildEvent>
-  </PropertyGroup>
+  <ItemGroup Label="Compile items now included by globbing that were not in the original project file">
+    <Compile Remove="SelectedNodesCollection.cs" />
+  </ItemGroup>
+  <ItemGroup Label="EmbeddedResource items now included by globbing that were not in the original project file">
+    <EmbeddedResource Remove="NodeContextMenu.resx" />
+  </ItemGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy &quot;$(SolutionDir)$(OutDir)$(AssemblyName).dll&quot; &quot;c:/Programs_x64/Render/3dsMax2027/Scripts/Outliner&quot; /Y /R" />
+  </Target>
 </Project>
