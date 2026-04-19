@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
-using System.Resources;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -2384,47 +2383,44 @@ namespace Outliner
                 _icons = new Dictionary<string, Bitmap>();
                 _iconSize = Size.Empty;
 
-                ResourceSet resSet = null;
+                IEnumerable<KeyValuePair<string, Bitmap>> bitmaps = null;
                 if (value == IconSet.Max_16x16)
-                    resSet = MaxIcons16x16.ResourceManager.GetResourceSet(System.Globalization.CultureInfo.CurrentCulture, true, true);
+                    bitmaps = MaxIcons16x16.GetBitmaps();
                 else if (value == IconSet.Max_32x32)
-                    resSet = MaxIcons32x32.ResourceManager.GetResourceSet(System.Globalization.CultureInfo.CurrentCulture, true, true);
+                    bitmaps = MaxIcons32x32.GetBitmaps();
                 else if (value == IconSet.Maya_16x16)
-                    resSet = MayaIcons16x16.ResourceManager.GetResourceSet(System.Globalization.CultureInfo.CurrentCulture, true, true);
+                    bitmaps = MayaIcons16x16.GetBitmaps();
                 else if (value == IconSet.Maya_20x20)
-                    resSet = MayaIcons20x20.ResourceManager.GetResourceSet(System.Globalization.CultureInfo.CurrentCulture, true, true);
+                    bitmaps = MayaIcons20x20.GetBitmaps();
                 else if (value == IconSet.Maya_32x32)
-                    resSet = MayaIcons32x32.ResourceManager.GetResourceSet(System.Globalization.CultureInfo.CurrentCulture, true, true);
+                    bitmaps = MayaIcons32x32.GetBitmaps();
                 else if (value == IconSet.Maya_40x40)
-                    resSet = MayaIcons40x40.ResourceManager.GetResourceSet(System.Globalization.CultureInfo.CurrentCulture, true, true);
+                    bitmaps = MayaIcons40x40.GetBitmaps();
 
-                if (resSet != null)
+                if (bitmaps != null)
                 {
-                    foreach (System.Collections.DictionaryEntry e in resSet)
+                    foreach (KeyValuePair<string, Bitmap> entry in bitmaps)
                     {
-                        if (e.Key is string && e.Value is Bitmap)
+                        if (_iconSize == Size.Empty)
+                            _iconSize = entry.Value.Size;
+
+                        Bitmap b = entry.Value;
+                        if (InvertIcons)
                         {
-                            if (_iconSize == Size.Empty)
-                                _iconSize = ((Bitmap)e.Value).Size;
-
-                            Bitmap b = (Bitmap)e.Value;
-                            if (InvertIcons)
-                            {
-                                BitmapProcessing.Desaturate(b);
-                                BitmapProcessing.Invert(b);
-                                BitmapProcessing.Brightness(b, 101);
-                            }
-
-                            Bitmap b_hidden = new Bitmap(b);
-                            BitmapProcessing.Opacity(b_hidden, 100);
-
-                            Bitmap b_filtered = new Bitmap(b);
-                            BitmapProcessing.Opacity(b_filtered, 50);
-
-                            _icons.Add((string)e.Key, b);
-                            _icons.Add((string)e.Key + "_hidden", b_hidden);
-                            _icons.Add((string)e.Key + "_filtered", b_filtered);
+                            BitmapProcessing.Desaturate(b);
+                            BitmapProcessing.Invert(b);
+                            BitmapProcessing.Brightness(b, 101);
                         }
+
+                        Bitmap b_hidden = new Bitmap(b);
+                        BitmapProcessing.Opacity(b_hidden, 100);
+
+                        Bitmap b_filtered = new Bitmap(b);
+                        BitmapProcessing.Opacity(b_filtered, 50);
+
+                        _icons.Add(entry.Key, b);
+                        _icons.Add(entry.Key + "_hidden", b_hidden);
+                        _icons.Add(entry.Key + "_filtered", b_filtered);
                     }
                 }
 

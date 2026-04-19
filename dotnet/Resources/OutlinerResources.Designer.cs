@@ -65,8 +65,7 @@ namespace Outliner.Resources {
         /// </summary>
         internal static System.Drawing.Bitmap activelayer {
             get {
-                object obj = ResourceManager.GetObject("activelayer", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return EmbeddedBitmapResources.Load("contextmenu_icons", "activelayer");
             }
         }
         
@@ -75,8 +74,7 @@ namespace Outliner.Resources {
         /// </summary>
         internal static System.Drawing.Bitmap add_button {
             get {
-                object obj = ResourceManager.GetObject("add_button", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return EmbeddedBitmapResources.Load("node_buttons", "add_button");
             }
         }
         
@@ -85,8 +83,7 @@ namespace Outliner.Resources {
         /// </summary>
         internal static System.Drawing.Bitmap add_button_disabled {
             get {
-                object obj = ResourceManager.GetObject("add_button_disabled", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return EmbeddedBitmapResources.Load("node_buttons", "add_button_disabled");
             }
         }
         
@@ -95,8 +92,7 @@ namespace Outliner.Resources {
         /// </summary>
         internal static System.Drawing.Bitmap advrename {
             get {
-                object obj = ResourceManager.GetObject("advrename", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return EmbeddedBitmapResources.Load("contextmenu_icons", "advrename");
             }
         }
         
@@ -105,8 +101,7 @@ namespace Outliner.Resources {
         /// </summary>
         internal static System.Drawing.Bitmap boxmode_button {
             get {
-                object obj = ResourceManager.GetObject("boxmode_button", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return EmbeddedBitmapResources.Load("node_buttons", "boxmode_button");
             }
         }
         
@@ -115,8 +110,7 @@ namespace Outliner.Resources {
         /// </summary>
         internal static System.Drawing.Bitmap boxmode_button_disabled {
             get {
-                object obj = ResourceManager.GetObject("boxmode_button_disabled", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return EmbeddedBitmapResources.Load("node_buttons", "boxmode_button_disabled");
             }
         }
         
@@ -125,8 +119,7 @@ namespace Outliner.Resources {
         /// </summary>
         internal static System.Drawing.Bitmap childnodes {
             get {
-                object obj = ResourceManager.GetObject("childnodes", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return EmbeddedBitmapResources.Load("contextmenu_icons", "childnodes");
             }
         }
         
@@ -477,8 +470,7 @@ namespace Outliner.Resources {
         /// </summary>
         internal static System.Drawing.Bitmap delete {
             get {
-                object obj = ResourceManager.GetObject("delete", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return EmbeddedBitmapResources.Load("contextmenu_icons", "delete");
             }
         }
         
@@ -487,8 +479,7 @@ namespace Outliner.Resources {
         /// </summary>
         internal static System.Drawing.Bitmap freeze {
             get {
-                object obj = ResourceManager.GetObject("freeze", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return EmbeddedBitmapResources.Load("contextmenu_icons", "freeze");
             }
         }
         
@@ -497,8 +488,7 @@ namespace Outliner.Resources {
         /// </summary>
         internal static System.Drawing.Bitmap freeze_button {
             get {
-                object obj = ResourceManager.GetObject("freeze_button", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return EmbeddedBitmapResources.Load("node_buttons", "freeze_button");
             }
         }
         
@@ -507,8 +497,7 @@ namespace Outliner.Resources {
         /// </summary>
         internal static System.Drawing.Bitmap freeze_button_disabled {
             get {
-                object obj = ResourceManager.GetObject("freeze_button_disabled", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return EmbeddedBitmapResources.Load("node_buttons", "freeze_button_disabled");
             }
         }
         
@@ -517,8 +506,7 @@ namespace Outliner.Resources {
         /// </summary>
         internal static System.Drawing.Bitmap hide {
             get {
-                object obj = ResourceManager.GetObject("hide", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return EmbeddedBitmapResources.Load("contextmenu_icons", "hide");
             }
         }
         
@@ -527,8 +515,7 @@ namespace Outliner.Resources {
         /// </summary>
         internal static System.Drawing.Bitmap hide_button {
             get {
-                object obj = ResourceManager.GetObject("hide_button", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return EmbeddedBitmapResources.Load("node_buttons", "hide_button");
             }
         }
         
@@ -537,8 +524,7 @@ namespace Outliner.Resources {
         /// </summary>
         internal static System.Drawing.Bitmap hide_button_disabled {
             get {
-                object obj = ResourceManager.GetObject("hide_button_disabled", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return EmbeddedBitmapResources.Load("node_buttons", "hide_button_disabled");
             }
         }
         
@@ -583,8 +569,7 @@ namespace Outliner.Resources {
         /// </summary>
         internal static System.Drawing.Bitmap layer {
             get {
-                object obj = ResourceManager.GetObject("layer", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return EmbeddedBitmapResources.Load("contextmenu_icons", "layer");
             }
         }
         
@@ -593,8 +578,7 @@ namespace Outliner.Resources {
         /// </summary>
         internal static System.Drawing.Bitmap newcontainer {
             get {
-                object obj = ResourceManager.GetObject("newcontainer", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return EmbeddedBitmapResources.Load("contextmenu_icons", "newcontainer");
             }
         }
         
@@ -603,8 +587,7 @@ namespace Outliner.Resources {
         /// </summary>
         internal static System.Drawing.Bitmap newgroup {
             get {
-                object obj = ResourceManager.GetObject("newgroup", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return EmbeddedBitmapResources.Load("contextmenu_icons", "newgroup");
             }
         }
         
@@ -613,8 +596,7 @@ namespace Outliner.Resources {
         /// </summary>
         internal static System.Drawing.Bitmap newlayer {
             get {
-                object obj = ResourceManager.GetObject("newlayer", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return EmbeddedBitmapResources.Load("contextmenu_icons", "newlayer");
             }
         }
         
@@ -623,8 +605,7 @@ namespace Outliner.Resources {
         /// </summary>
         internal static System.Drawing.Bitmap properties {
             get {
-                object obj = ResourceManager.GetObject("properties", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return EmbeddedBitmapResources.Load("contextmenu_icons", "properties");
             }
         }
         
@@ -633,8 +614,7 @@ namespace Outliner.Resources {
         /// </summary>
         internal static System.Drawing.Bitmap rename {
             get {
-                object obj = ResourceManager.GetObject("rename", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return EmbeddedBitmapResources.Load("contextmenu_icons", "rename");
             }
         }
         
@@ -652,8 +632,7 @@ namespace Outliner.Resources {
         /// </summary>
         internal static System.Drawing.Bitmap ungroup {
             get {
-                object obj = ResourceManager.GetObject("ungroup", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return EmbeddedBitmapResources.Load("contextmenu_icons", "ungroup");
             }
         }
         
@@ -662,8 +641,7 @@ namespace Outliner.Resources {
         /// </summary>
         internal static System.Drawing.Bitmap unlink {
             get {
-                object obj = ResourceManager.GetObject("unlink", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return EmbeddedBitmapResources.Load("contextmenu_icons", "unlink");
             }
         }
     }
