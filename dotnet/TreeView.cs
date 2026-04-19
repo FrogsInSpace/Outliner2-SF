@@ -2384,19 +2384,43 @@ namespace Outliner
                 _iconSize = Size.Empty;
 
                 IEnumerable<KeyValuePair<string, Bitmap>> bitmaps = null;
+
+                switch(value)
+                {
+                    default:
+                    case IconSet.Max_16x16:
+                        bitmaps = MaxIcons16x16.GetBitmaps();
+                        break;
+                    case IconSet.Max_32x32:
+                        bitmaps = MaxIcons32x32.GetBitmaps();
+                        break;
+                    case IconSet.Maya_16x16:
+                        bitmaps = MayaIcons16x16.GetBitmaps();
+                        break;
+                    case IconSet.Maya_20x20:
+                        bitmaps = MayaIcons20x20.GetBitmaps();
+                        break;
+                    case IconSet.SceneExplorer_16x16:
+                        bitmaps = SceneExplorerIcons16x16.GetBitmaps();
+                        break;
+                    case IconSet.SceneExplorer_32x32:
+                        bitmaps = SceneExplorerIcons32x32.GetBitmaps();
+                        break;
+                };
+                /*
                 if (value == IconSet.Max_16x16)
                     bitmaps = MaxIcons16x16.GetBitmaps();
                 else if (value == IconSet.Max_32x32)
-                    bitmaps = MaxIcons32x32.GetBitmaps();
+                    bitmaps = MaxIcons.GetBitmaps();
                 else if (value == IconSet.Maya_16x16)
                     bitmaps = MayaIcons16x16.GetBitmaps();
                 else if (value == IconSet.Maya_20x20)
                     bitmaps = MayaIcons20x20.GetBitmaps();
-                else if (value == IconSet.Maya_32x32)
-                    bitmaps = MayaIcons32x32.GetBitmaps();
-                else if (value == IconSet.Maya_40x40)
-                    bitmaps = MayaIcons40x40.GetBitmaps();
-
+                else if (value == IconSet.Maya_20x20)
+                    bitmaps = MayaIcons20x20.GetBitmaps();
+                else if (value == IconSet.Maya_20x20)
+                    bitmaps = MayaIcons20x20.GetBitmaps();
+                    */
                 if (bitmaps != null)
                 {
                     foreach (KeyValuePair<string, Bitmap> entry in bitmaps)

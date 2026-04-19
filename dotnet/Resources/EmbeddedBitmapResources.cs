@@ -20,17 +20,17 @@ namespace Outliner.Resources
             return LoadByKey(folderName + "." + resourceName + ".png");
         }
 
-        internal static IEnumerable<KeyValuePair<string, Bitmap>> LoadSet(string folderName)
+        internal static IEnumerable<KeyValuePair<string, Bitmap>> LoadSet(string folderName, string postfix = ".png" )
         {
             string prefix = folderName + ".";
             List<string> keys = ManifestNames.Keys
-                .Where(key => key.StartsWith(prefix, StringComparison.OrdinalIgnoreCase) && key.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
+                .Where(key => key.StartsWith(prefix, StringComparison.OrdinalIgnoreCase) && key.EndsWith(postfix, StringComparison.OrdinalIgnoreCase))
                 .OrderBy(key => key, StringComparer.OrdinalIgnoreCase)
                 .ToList();
 
             foreach (string key in keys)
             {
-                string resourceName = key.Substring(prefix.Length, key.Length - prefix.Length - 4);
+                string resourceName = key.Substring(prefix.Length, key.Length - prefix.Length - postfix.Length);
                 yield return new KeyValuePair<string, Bitmap>(resourceName, LoadByKey(key));
             }
         }

@@ -39,8 +39,8 @@ namespace Outliner
         Max_32x32,
         Maya_16x16,
         Maya_20x20,
-        Maya_32x32,
-        Maya_40x40
+        SceneExplorer_16x16,
+        SceneExplorer_32x32,
     }
 
     public enum ExpandPolicy

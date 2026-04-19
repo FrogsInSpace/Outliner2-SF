@@ -6,7 +6,7 @@ local marginX = 10;
 local marginY = 5;
 local chkbxDY = 21;
 
-local drpDwnW = 110;
+local drpDwnW = 140;
 local drpDwnLblX = marginX + drpDwnW + 6;
 
 local getPrefFn;
@@ -109,7 +109,7 @@ rollout outliner_options_visual "User Interface"
    label colorSchemeLbl "Color Scheme" pos:[drpDwnLblX, marginY + chkbxDY * 2 + 4];
    dropdownList iconset "" width:drpDwnW pos:[marginX, marginY + chkbxDY * 3];
    label iconsetLbl "Icon Set" pos:[drpDwnLblX, marginY + chkbxDY * 3 + 4];
-   checkbox invertIcons "Invert" pos:[marginX + 170, marginY + chkbxDY * 3 + 4];
+   checkbox invertIcons "Invert" pos:[marginX + 190, marginY + chkbxDY * 3 + 2];
    
    
    dropdownList nodeIconClickAction "" items:#("Hide", "Freeze", "Set Layer Active") width:drpDwnW pos:[marginX, marginY + chkbxDY * 4 + 5];

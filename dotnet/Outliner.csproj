@@ -5,7 +5,6 @@
     <Platforms>x64</Platforms>
     <Deterministic>False</Deterministic>
     <OutputType>Library</OutputType>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
@@ -18,16 +17,39 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <FileAlignment>4096</FileAlignment>
     <Deterministic>False</Deterministic>
-  </PropertyGroup> 
+  </PropertyGroup>
   <ItemGroup>
     <Compile Update="MXSFileWatcher.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Update="TreeView.cs">
       <SubType>Component</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\contextmenu_icons\activelayer.png" />
+    <EmbeddedResource Include="Resources\contextmenu_icons\advrename.png" />
+    <EmbeddedResource Include="Resources\contextmenu_icons\childnodes.png" />
+    <EmbeddedResource Include="Resources\contextmenu_icons\delete.png" />
+    <EmbeddedResource Include="Resources\contextmenu_icons\freeze.png" />
+    <EmbeddedResource Include="Resources\contextmenu_icons\layer.png" />
+    <EmbeddedResource Include="Resources\contextmenu_icons\newcontainer.png" />
+    <EmbeddedResource Include="Resources\contextmenu_icons\newgroup.png" />
+    <EmbeddedResource Include="Resources\contextmenu_icons\newlayer.png" />
+    <EmbeddedResource Include="Resources\contextmenu_icons\properties.png" />
+    <EmbeddedResource Include="Resources\contextmenu_icons\rename.png" />
+    <EmbeddedResource Include="Resources\contextmenu_icons\ungroup.png" />
+    <EmbeddedResource Include="Resources\contextmenu_icons\unlink.png" />
     <EmbeddedResource Include="Resources\max_icons_16x16\bone.png" />
     <EmbeddedResource Include="Resources\max_icons_16x16\camera.png" />
     <EmbeddedResource Include="Resources\max_icons_16x16\container.png" />
@@ -39,11 +61,81 @@
     <EmbeddedResource Include="Resources\max_icons_16x16\layer_active.png" />
     <EmbeddedResource Include="Resources\max_icons_16x16\light.png" />
     <EmbeddedResource Include="Resources\max_icons_16x16\material.png" />
+    <EmbeddedResource Include="Resources\max_icons_16x16\material_unassigned.png" />
+    <EmbeddedResource Include="Resources\max_icons_16x16\material_xref.png" />
+    <EmbeddedResource Include="Resources\max_icons_16x16\nurbs.png" />
     <EmbeddedResource Include="Resources\max_icons_16x16\particle.png" />
+    <EmbeddedResource Include="Resources\max_icons_16x16\shape.png" />
     <EmbeddedResource Include="Resources\max_icons_16x16\spacewarp.png" />
     <EmbeddedResource Include="Resources\max_icons_16x16\unknown.png" />
     <EmbeddedResource Include="Resources\max_icons_16x16\xref.png" />
     <EmbeddedResource Include="Resources\max_icons_16x16\xref_group.png" />
+    <EmbeddedResource Include="Resources\max_icons_32x32\bone.png" />
+    <EmbeddedResource Include="Resources\max_icons_32x32\camera.png" />
+    <EmbeddedResource Include="Resources\max_icons_32x32\container.png" />
+    <EmbeddedResource Include="Resources\max_icons_32x32\container_closed.png" />
+    <EmbeddedResource Include="Resources\max_icons_32x32\geometry.png" />
+    <EmbeddedResource Include="Resources\max_icons_32x32\group.png" />
+    <EmbeddedResource Include="Resources\max_icons_32x32\helper.png" />
+    <EmbeddedResource Include="Resources\max_icons_32x32\layer.png" />
+    <EmbeddedResource Include="Resources\max_icons_32x32\layer_active.png" />
+    <EmbeddedResource Include="Resources\max_icons_32x32\light.png" />
+    <EmbeddedResource Include="Resources\max_icons_32x32\material.png" />
+    <EmbeddedResource Include="Resources\max_icons_32x32\material_unassigned.png" />
+    <EmbeddedResource Include="Resources\max_icons_32x32\material_xref.png" />
+    <EmbeddedResource Include="Resources\max_icons_32x32\nurbs.png" />
+    <EmbeddedResource Include="Resources\max_icons_32x32\particle.png" />
+    <EmbeddedResource Include="Resources\max_icons_32x32\shape.png" />
+    <EmbeddedResource Include="Resources\max_icons_32x32\shape_default.png" />
+    <EmbeddedResource Include="Resources\max_icons_32x32\spacewarp.png" />
+    <EmbeddedResource Include="Resources\max_icons_32x32\unknown.png" />
+    <EmbeddedResource Include="Resources\max_icons_32x32\xref.png" />
+    <EmbeddedResource Include="Resources\max_icons_32x32\xref_group.png" />
+    <EmbeddedResource Include="Resources\maya_icons_20x20\material_unassigned.png" />
+    <EmbeddedResource Include="Resources\maya_icons_20x20\material_xref.png" />
+    <EmbeddedResource Include="Resources\contextmenu_icons\hide.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\bone_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\bone_32.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\camera_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\camera_32.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\container_24.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\container_30.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\container_closed_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\container_closed_32.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\geometry_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\geometry_32.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\group_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\group_32.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\helper_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\helper_32.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\layer_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\layer_32.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\layer_active_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\layer_active_32.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\light_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\light_32.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\material_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\material_32.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\material_unassigned_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\material_unassigned_32.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\material_xref_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\material_xref_32.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\nurbs_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\nurbs_32.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\particle_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\particle_32.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\shape_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\shape_32.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\shape_default_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\shape_default_32.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\spacewarp_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\spacewarp_32.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\unknown_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\unknown_32.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\xref_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\xref_32.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\xref_group_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\xref_group_32.png" />
     <EmbeddedResource Include="Resources\maya_icons_16x16\bone.png" />
     <EmbeddedResource Include="Resources\maya_icons_16x16\camera.png" />
     <EmbeddedResource Include="Resources\maya_icons_16x16\container.png" />
@@ -55,6 +147,8 @@
     <EmbeddedResource Include="Resources\maya_icons_16x16\layer_active.png" />
     <EmbeddedResource Include="Resources\maya_icons_16x16\light.png" />
     <EmbeddedResource Include="Resources\maya_icons_16x16\material.png" />
+    <EmbeddedResource Include="Resources\maya_icons_16x16\material_unassigned.png" />
+    <EmbeddedResource Include="Resources\maya_icons_16x16\material_xref.png" />
     <EmbeddedResource Include="Resources\maya_icons_16x16\nurbs.png" />
     <EmbeddedResource Include="Resources\maya_icons_16x16\particle.png" />
     <EmbeddedResource Include="Resources\maya_icons_16x16\shape.png" />
@@ -80,103 +174,8 @@
     <EmbeddedResource Include="Resources\maya_icons_20x20\unknown.png" />
     <EmbeddedResource Include="Resources\maya_icons_20x20\xref.png" />
     <EmbeddedResource Include="Resources\maya_icons_20x20\xref_group.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\max_icons_16x16\nurbs.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\max_icons_16x16\shape.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\max_icons_16x16\material_unassigned.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\max_icons_16x16\material_xref.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\maya_icons_16x16\material_unassigned.png" />
-    <EmbeddedResource Include="Resources\maya_icons_16x16\material_xref.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\max_icons_32x32\bone.png" />
-    <EmbeddedResource Include="Resources\max_icons_32x32\camera.png" />
-    <EmbeddedResource Include="Resources\max_icons_32x32\container.png" />
-    <EmbeddedResource Include="Resources\max_icons_32x32\container_closed.png" />
-    <EmbeddedResource Include="Resources\max_icons_32x32\geometry.png" />
-    <EmbeddedResource Include="Resources\max_icons_32x32\group.png" />
-    <EmbeddedResource Include="Resources\max_icons_32x32\helper.png" />
-    <EmbeddedResource Include="Resources\max_icons_32x32\layer.png" />
-    <EmbeddedResource Include="Resources\max_icons_32x32\layer_active.png" />
-    <EmbeddedResource Include="Resources\max_icons_32x32\light.png" />
-    <EmbeddedResource Include="Resources\max_icons_32x32\material.png" />
-    <EmbeddedResource Include="Resources\max_icons_32x32\material_unassigned.png" />
-    <EmbeddedResource Include="Resources\max_icons_32x32\material_xref.png" />
-    <EmbeddedResource Include="Resources\max_icons_32x32\nurbs.png" />
-    <EmbeddedResource Include="Resources\max_icons_32x32\particle.png" />
-    <EmbeddedResource Include="Resources\max_icons_32x32\shape.png" />
-    <EmbeddedResource Include="Resources\max_icons_32x32\shape_default.png" />
-    <EmbeddedResource Include="Resources\max_icons_32x32\spacewarp.png" />
-    <EmbeddedResource Include="Resources\max_icons_32x32\unknown.png" />
-    <EmbeddedResource Include="Resources\max_icons_32x32\xref.png" />
-    <EmbeddedResource Include="Resources\max_icons_32x32\xref_group.png" />
-    <EmbeddedResource Include="Resources\maya_icons_20x20\material_unassigned.png" />
-    <EmbeddedResource Include="Resources\maya_icons_20x20\material_xref.png" />
-    <EmbeddedResource Include="Resources\maya_icons_32x32\bone.png" />
-    <EmbeddedResource Include="Resources\maya_icons_32x32\camera.png" />
-    <EmbeddedResource Include="Resources\maya_icons_32x32\container.png" />
-    <EmbeddedResource Include="Resources\maya_icons_32x32\container_closed.png" />
-    <EmbeddedResource Include="Resources\maya_icons_32x32\geometry.png" />
-    <EmbeddedResource Include="Resources\maya_icons_32x32\group.png" />
-    <EmbeddedResource Include="Resources\maya_icons_32x32\helper.png" />
-    <EmbeddedResource Include="Resources\maya_icons_32x32\layer.png" />
-    <EmbeddedResource Include="Resources\maya_icons_32x32\layer_active.png" />
-    <EmbeddedResource Include="Resources\maya_icons_32x32\light.png" />
-    <EmbeddedResource Include="Resources\maya_icons_32x32\material.png" />
-    <EmbeddedResource Include="Resources\maya_icons_32x32\material_unassigned.png" />
-    <EmbeddedResource Include="Resources\maya_icons_32x32\material_xref.png" />
-    <EmbeddedResource Include="Resources\maya_icons_32x32\nurbs.png" />
-    <EmbeddedResource Include="Resources\maya_icons_32x32\particle.png" />
-    <EmbeddedResource Include="Resources\maya_icons_32x32\shape.png" />
-    <EmbeddedResource Include="Resources\maya_icons_32x32\spacewarp.png" />
-    <EmbeddedResource Include="Resources\maya_icons_32x32\unknown.png" />
-    <EmbeddedResource Include="Resources\maya_icons_32x32\xref.png" />
-    <EmbeddedResource Include="Resources\maya_icons_32x32\xref_group.png" />
-    <EmbeddedResource Include="Resources\maya_icons_40x40\bone.png" />
-    <EmbeddedResource Include="Resources\maya_icons_40x40\camera.png" />
-    <EmbeddedResource Include="Resources\maya_icons_40x40\container.png" />
-    <EmbeddedResource Include="Resources\maya_icons_40x40\container_closed.png" />
-    <EmbeddedResource Include="Resources\maya_icons_40x40\geometry.png" />
-    <EmbeddedResource Include="Resources\maya_icons_40x40\group.png" />
-    <EmbeddedResource Include="Resources\maya_icons_40x40\helper.png" />
-    <EmbeddedResource Include="Resources\maya_icons_40x40\layer.png" />
-    <EmbeddedResource Include="Resources\maya_icons_40x40\layer_active.png" />
-    <EmbeddedResource Include="Resources\maya_icons_40x40\light.png" />
-    <EmbeddedResource Include="Resources\maya_icons_40x40\material.png" />
-    <EmbeddedResource Include="Resources\maya_icons_40x40\material_unassigned.png" />
-    <EmbeddedResource Include="Resources\maya_icons_40x40\material_xref.png" />
-    <EmbeddedResource Include="Resources\maya_icons_40x40\nurbs.png" />
-    <EmbeddedResource Include="Resources\maya_icons_40x40\particle.png" />
-    <EmbeddedResource Include="Resources\maya_icons_40x40\shape.png" />
-    <EmbeddedResource Include="Resources\maya_icons_40x40\spacewarp.png" />
-    <EmbeddedResource Include="Resources\maya_icons_40x40\unknown.png" />
-    <EmbeddedResource Include="Resources\maya_icons_40x40\xref.png" />
-    <EmbeddedResource Include="Resources\maya_icons_40x40\xref_group.png" />
-    <EmbeddedResource Include="Resources\contextmenu_icons\hide.png" />
-    <EmbeddedResource Include="Resources\contextmenu_icons\freeze.png" />
-    <EmbeddedResource Include="Resources\contextmenu_icons\delete.png" />
-    <EmbeddedResource Include="Resources\contextmenu_icons\properties.png" />
-    <EmbeddedResource Include="Resources\contextmenu_icons\rename.png" />
-    <EmbeddedResource Include="Resources\contextmenu_icons\newlayer.png" />
-    <EmbeddedResource Include="Resources\contextmenu_icons\newcontainer.png" />
-    <EmbeddedResource Include="Resources\contextmenu_icons\newgroup.png" />
-    <EmbeddedResource Include="Resources\contextmenu_icons\activelayer.png" />
-    <EmbeddedResource Include="Resources\contextmenu_icons\unlink.png" />
-    <EmbeddedResource Include="Resources\contextmenu_icons\ungroup.png" />
-    <EmbeddedResource Include="Resources\contextmenu_icons\childnodes.png" />
-    <EmbeddedResource Include="Resources\contextmenu_icons\layer.png" />
-    <EmbeddedResource Include="Resources\contextmenu_icons\advrename.png" />
-    <EmbeddedResource Include="Resources\node_buttons\add_button_disabled.png" />
     <EmbeddedResource Include="Resources\node_buttons\add_button.png" />
+    <EmbeddedResource Include="Resources\node_buttons\add_button_disabled.png" />
     <EmbeddedResource Include="Resources\node_buttons\boxmode_button.png" />
     <EmbeddedResource Include="Resources\node_buttons\boxmode_button_disabled.png" />
     <EmbeddedResource Include="Resources\node_buttons\freeze_button.png" />
@@ -204,36 +203,17 @@
   <ItemGroup Label="Compile items now included by globbing that were not in the original project file">
     <Compile Remove="SelectedNodesCollection.cs" />
   </ItemGroup>
-  <ItemGroup Label="EmbeddedResource items now included by globbing that were not in the original project file">
-    <EmbeddedResource Remove="NodeContextMenu.resx" />
-    <EmbeddedResource Remove="Resources\MaxIcons16x16.resx" />
-    <EmbeddedResource Remove="Resources\MaxIcons32x32.resx" />
-    <EmbeddedResource Remove="Resources\MayaIcons16x16.resx" />
-    <EmbeddedResource Remove="Resources\MayaIcons20x20.resx" />
-    <EmbeddedResource Remove="Resources\MayaIcons32x32.resx" />
-    <EmbeddedResource Remove="Resources\MayaIcons40x40.resx" />
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Remove="Resources\maya_icons_32x32\bone.png" />
-    <None Remove="Resources\maya_icons_32x32\camera.png" />
-    <None Remove="Resources\maya_icons_32x32\container.png" />
-    <None Remove="Resources\maya_icons_32x32\container_closed.png" />
-    <None Remove="Resources\maya_icons_32x32\geometry.png" />
-    <None Remove="Resources\maya_icons_32x32\group.png" />
-    <None Remove="Resources\maya_icons_32x32\helper.png" />
-    <None Remove="Resources\maya_icons_32x32\layer.png" />
-    <None Remove="Resources\maya_icons_32x32\layer_active.png" />
-    <None Remove="Resources\maya_icons_32x32\light.png" />
-    <None Remove="Resources\maya_icons_32x32\material.png" />
-    <None Remove="Resources\maya_icons_32x32\material_unassigned.png" />
-    <None Remove="Resources\maya_icons_32x32\material_xref.png" />
-    <None Remove="Resources\maya_icons_32x32\nurbs.png" />
-    <None Remove="Resources\maya_icons_32x32\particle.png" />
-    <None Remove="Resources\maya_icons_32x32\shape.png" />
-    <None Remove="Resources\maya_icons_32x32\spacewarp.png" />
-    <None Remove="Resources\maya_icons_32x32\unknown.png" />
-    <None Remove="Resources\maya_icons_32x32\xref.png" />
-    <None Remove="Resources\maya_icons_32x32\xref_group.png" />
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="xcopy &quot;$(SolutionDir)$(OutDir)$(AssemblyName).dll&quot; &quot;c:/Programs_x64/Render/3dsMax2027/Scripts/Outliner&quot; /Y /R" />
