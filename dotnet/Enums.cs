@@ -40,6 +40,7 @@ namespace Outliner
         Maya_16x16,
         Maya_20x20,
         SceneExplorer_16x16,
+        SceneExplorer_20x20,
         SceneExplorer_32x32,
     }
 

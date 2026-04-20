@@ -94,46 +94,67 @@
     <EmbeddedResource Include="Resources\max_icons\xref_group_16.png" />
     <EmbeddedResource Include="Resources\max_icons\xref_group_32.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\bone_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\bone_20.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\bone_32.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\camera_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\camera_20.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\camera_32.png" />
-    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\container_24.png" />
-    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\container_30.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\container_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\container_20.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\container_32.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\container_closed_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\container_closed_20.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\container_closed_32.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\geometry_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\geometry_20.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\geometry_32.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\group_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\group_20.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\group_32.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\helper_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\helper_20.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\helper_32.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\layer_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\layer_20.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\layer_32.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\layer_active_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\layer_active_20.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\layer_active_32.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\light_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\light_20.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\light_32.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\material_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\material_20.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\material_32.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\material_unassigned_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\material_unassigned_20.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\material_unassigned_32.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\material_xref_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\material_xref_20.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\material_xref_32.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\nurbs_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\nurbs_20.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\nurbs_32.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\particle_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\particle_20.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\particle_32.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\shape_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\shape_20.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\shape_32.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\shape_default_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\shape_default_20.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\shape_default_32.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\spacewarp_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\spacewarp_20.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\spacewarp_32.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\unknown_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\unknown_20.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\unknown_32.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\xref_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\xref_20.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\xref_32.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\xref_group_16.png" />
+    <EmbeddedResource Include="Resources\max_sceneexplorer_icons\xref_group_20.png" />
     <EmbeddedResource Include="Resources\max_sceneexplorer_icons\xref_group_32.png" />
     <EmbeddedResource Include="Resources\maya_icons\bone_16.png" />
     <EmbeddedResource Include="Resources\maya_icons\bone_20.png" />
@@ -200,9 +221,6 @@
       <HintPath>Refs\ManagedServices.dll</HintPath>
       <Private>False</Private>
     </Reference>
-  </ItemGroup>
-  <ItemGroup Label="Compile items now included by globbing that were not in the original project file">
-    <Compile Remove="SelectedNodesCollection.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="Properties\Resources.resx">
