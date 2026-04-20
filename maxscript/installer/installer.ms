@@ -95,20 +95,44 @@ private function setIsWorkflowToolsInstalled i =
    setINISetting product_info_file #General #workflowtoolsinstalled (i as string);
 ),
 
-
---Load an assembly with shadow-copy enabled.
-private function loadAssembly dll =
+--Return the dotnet framework version as array #( Major, Minor, Build )
+function getDotNetVersion =
 (
-   local AppDomain    = dotNetClass "System.AppDomain";
-   local AssemblyName = dotNetClass "System.Reflection.AssemblyName";
-
-   AppDomain.CurrentDomain.SetShadowCopyPath (GetDir #temp);
-   AppDomain.CurrentDomain.SetShadowCopyFiles();
-
-   local assemblyName = AssemblyName.GetAssemblyName dll;
-   AppDomain.CurrentDomain.Load assemblyName;
+	local ver= ((dotNetClass "System.Environment").version)
+	#(ver.Major, ver.Minor, ver.Build)	
 ),
 
+--Load an assembly with shadow-copy enabled.
+function loadAssembly dll =
+(
+   local AppDomain = dotNetClass "System.AppDomain";
+   local AssemblyName = dotNetClass "System.Reflection.AssemblyName";
+
+	if( (getDotNetVersion())[1] > 5 ) then
+	(
+		--No shadow copying with dotnet framework 5 and higher ( deprecated )
+		dotNet.loadAssembly(dll)
+	)
+	else
+	(	
+	   AppDomain.CurrentDomain.SetShadowCopyPath (GetDir #temp);
+	   AppDomain.CurrentDomain.SetShadowCopyFiles();
+
+	   local assemblyName = AssemblyName.GetAssemblyName dll;
+	   AppDomain.CurrentDomain.Load assemblyName;
+	)
+),
+
+private function canModifyHotkeys =
+(
+	-- Max2020.1+ do not use kbdx files any longer, so skip this all
+	local mVer = maxVersion()
+	if( mVer[4] >= 22 AND mVer[5] >= 1) do
+		return false
+		
+	if ( ToLower (getFilenameType (actionMan.getKeyboardFile()) ) != ".kbdx") do
+		return false
+),
 
 --Closes the Outliner if it's still opened.
 private function closeOutliner =
@@ -286,9 +310,6 @@ private function removeWorkflowTools =
    success;
 ),
 
-
-
-
 private function removePreferencesFile =
 (
    success = true
@@ -304,35 +325,35 @@ private function removePreferencesFile =
    success
 ),
 
-
-
 private function removeHotkeys =
 (
-   local success = true;
-   try
-   (
-      local kbdxFileClass = dotnetClass "Outliner.KbdxFile";
-      local kbdxFile      = getActiveKbdFile(); --kbdxFileClass.MaxGetWriteableKbdxFile();
-      local kbdxXml       = kdbxFileClass.FromXml kbdxFile;
-      
-      if ((kbdxXml.RemoveShortcut "Outliner") > 0) do
-      (
-         kbdxXml.ToXml(kbdxFile);
-         actionMan.loadKeyboardFile kbdxFile;
-      )
-   )
-   catch 
-   (
-      printException "removeHotkeys" (getCurrentException());
-      success = false;
-   )
-   
-   success;
+   local success = false;
+	
+	-- Max2020+ do not use kbdx files any longer, so skip this all
+
+	if( canModifyHotkeys() ) do
+	(
+	   try
+	   (
+		  local kbdxFileClass = dotnetClass "Outliner.KbdxFile";
+		  local kbdxFile      = getActiveKbdFile(); --kbdxFileClass.MaxGetWriteableKbdxFile();
+		  local kbdxXml       = kdbxFileClass.FromXml kbdxFile;
+		  
+		  if ((kbdxXml.RemoveShortcut "Outliner") > 0) do
+		  (
+			 kbdxXml.ToXml(kbdxFile);
+			 actionMan.loadKeyboardFile kbdxFile;
+		  )
+		  success = true
+	   )
+	   catch 
+	   (
+		  printException "removeHotkeys" (getCurrentException());
+		  success = false;
+	   )
+    )
+    success;
 ),
-
-
-
-
 
 /**
  * INSTALL FUNCTIONS
@@ -351,7 +372,6 @@ private function checkMaxVersion =
     
    (actual_version >= min_version) AND (actual_version <= max_version)
 ),
-
 
 --Returns true if the .NET Framework 3.5 registry key could be opened.
 private function checkDotNetVersion =
@@ -374,8 +394,6 @@ private function checkDotNetVersion =
    
    success;
 ),
-
-
 
 private function updatePreferencesFile =
 (
@@ -474,8 +492,6 @@ private function updatePreferencesFile =
    true;
 ),
 
-
-
 private function copyDirectory sourceDir targetDir =
 (
    local Directory    = dotNetClass "System.IO.Directory";
@@ -494,8 +510,6 @@ private function copyDirectory sourceDir targetDir =
       File.Copy sourceFile targetFile;
    )
 ),
-
-
 
 private function copyScriptFiles = 
 (
@@ -536,9 +550,6 @@ private function copyScriptFiles =
    success;
 ),
 
-
-
-
 private function loadMacroScripts =
 (
    local success = true;
@@ -558,12 +569,6 @@ private function loadMacroScripts =
    
    success;
 ),
-
-
-
-
-
-
 
 private function containsHotkeyAction macroName macroCategory =
 (
@@ -604,29 +609,32 @@ private function getHotkeyAction =
    action;
 ),
 
-
 private function assignHotkey = 
 (
-   local success = true;
-   try
-   (  
-      local keysClass     = dotnetClass "System.Windows.Forms.Keys";
-      local kbdxFileClass = dotnetClass "Outliner.KbdxFile";
-      local kbdxFile      = getActiveKbdFile(); --kbdxFileClass.MaxGetWriteableKbdxFile();
-      local kbdxXml       = kbdxFileClass.FromXml kbdxFile;
-      
-      if (kbdxXml.AddShortcut "toggleOutliner" "Outliner" keysClass.H) do
-      (
-         kbdxXml.ToXml kbdxFile;
-         actionMan.loadKeyboardFile kbdxFile;
-      )
-   )
-   catch
-   (
-      printException "assignHotkey" (getCurrentException());
-      success = false;
-   )
+   local success = false;
    
+   if( canModifyHotkeys() ) do
+   (
+	   try
+	   (  
+		  local keysClass     = dotnetClass "System.Windows.Forms.Keys";
+		  local kbdxFileClass = dotnetClass "Outliner.KbdxFile";
+		  local kbdxFile      = getActiveKbdFile(); --kbdxFileClass.MaxGetWriteableKbdxFile();
+		  local kbdxXml       = kbdxFileClass.FromXml kbdxFile;
+		  
+		  if (kbdxXml.AddShortcut "toggleOutliner" "Outliner" keysClass.H) do
+		  (
+			 kbdxXml.ToXml kbdxFile;
+			 actionMan.loadKeyboardFile kbdxFile;
+		  )
+		  success = true;
+	   )
+	   catch
+	   (
+		  printException "assignHotkey" (getCurrentException());
+		  success = false;
+	   )
+   )
    success;
 ),
 
@@ -781,18 +789,21 @@ public function uninstall silent:false =
    
    
    --Remove hotkey.
-   addStatusText (getString #remHotkeys);
-   if (removeHotkeys()) then
-      addStatusText (getString #done) newline:false progress:progressDelta;
-   else
-   (
-      addStatusText (getString #failed) newline:false;
-      installation_failed (getString #uninst) \
-                          (getString #remHotkeys section:#Error) \
-                           silent:silent;
-      return false;
+   -- skip that on Max2020+, as they do not use kbdx files any longer
+	if ( ToLower (getFilenameType (actionMan.getKeyboardFile()) ) == ".kbdx") then
+	(  
+	   addStatusText (getString #remHotkeys);
+	   if (removeHotkeys()) then
+		  addStatusText (getString #done) newline:false progress:progressDelta;
+	   else
+	   (
+		  addStatusText (getString #failed) newline:false;
+		  installation_failed (getString #uninst) \
+							  (getString #remHotkeys section:#Error) \
+							   silent:silent;
+		  return false;
+	   )
    )
-   
    
    --Remove preferences.
    addStatusText (getString #remPrefsFile);
@@ -922,7 +933,7 @@ public function install silent:false =
    --Assign hotkey.
    addStatusText (getString #assignHotkey);
    local showHelp = false;
-   if (not (containsHotkeyAction "toggleOutliner" "Outliner")) then
+   if ( canModifyHotkeys() AND not (containsHotkeyAction "toggleOutliner" "Outliner")) then
    (
       local queryStr   = getString #assignHotkey section:#Queries;
       local queryTitle = getString #assignHotkeyTitle section:#Queries

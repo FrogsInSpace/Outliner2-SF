@@ -10,6 +10,21 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <FileAlignment>4096</FileAlignment>
     <Deterministic>False</Deterministic>
+	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendPlatformToOutputPath>false</AppendPlatformToOutputPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
+  </PropertyGroup>    
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>portable</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Compile Update="MXSFileWatcher.cs">
@@ -202,6 +217,6 @@
     </None>
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="Exists('$(ADSK_3DSMAX_x64_2027)Scripts\Outliner')">
-    <Exec Command="xcopy &quot;$(SolutionDir)$(OutDir)$(AssemblyName).dll&quot; &quot;$(ADSK_3DSMAX_x64_2027)Scripts/Outliner&quot; /Y /R" />
+    <Exec Command="xcopy $(ProjectDir)$(OutDir)$(AssemblyName).dll $(ADSK_3DSMAX_x64_2027)Scripts\Outliner /Y /I" />
   </Target>
 </Project>

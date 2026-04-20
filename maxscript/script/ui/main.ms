@@ -419,7 +419,15 @@ on outliner_main open do
 		searchField.Font = (dotNetObject "System.Drawing.Font" "Sans Serif" 7.5);
 
 		outliner.setTreeColorScheme (getPrefFn #Visual #colorscheme);
-		tree.IconSet = outliner.parseDotNetEnum "Outliner.IconSet" (getPrefFn #Visual #iconSet);
+		try
+		(
+			tree.IconSet = outliner.parseDotNetEnum "Outliner.IconSet" (getPrefFn #Visual #iconSet);
+		)
+		catch
+		(
+			setPrefFn #Visual #iconSet "Max_16x16"
+			tree.IconSet = outliner.parseDotNetEnum "Outliner.IconSet" (getPrefFn #Visual #iconSet);
+		)
 
 		tree.TreeViewNodeSorter = dotNetObject ("Outliner.NodeSorters." + (getPrefFn #Tree #sortMode) + "Sorter");  
 
