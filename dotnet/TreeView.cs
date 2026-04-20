@@ -2391,9 +2391,6 @@ namespace Outliner
                     case IconSet.Max_16x16:
                         bitmaps = MaxIcons16x16.GetBitmaps();
                         break;
-                    case IconSet.Max_32x32:
-                        bitmaps = MaxIcons32x32.GetBitmaps();
-                        break;
                     case IconSet.Maya_16x16:
                         bitmaps = MayaIcons16x16.GetBitmaps();
                         break;
