@@ -1,10 +1,10 @@
 @ECHO OFF
 
 ::Adjust the value of MaxDir to match your local 3dsmax installation directory.
-IF "%ADSK_3DSMAX_x64_2021%"=="" (
-    SET "MaxDir=C:\Program Files\Autodesk\3ds Max 2021\"
+IF "%ADSK_3DSMAX_x64_2027%"=="" (
+    SET "MaxDir=C:\Program Files\Autodesk\3ds Max 2027\"
 ) ELSE (
-    SET "MaxDir=%ADSK_3DSMAX_x64_2021%\"
+    SET "MaxDir=%ADSK_3DSMAX_x64_2027%\"
 )
 
 CALL :GetMsBuild MSBuild 4.0
