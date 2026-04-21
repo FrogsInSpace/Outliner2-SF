@@ -4,6 +4,7 @@ maxV           = (maxVersion())[1] / 1000,
 dir            = pathConfig.appendPath (GetDir #userScripts) "outliner\\",
 prefs,
 product_info,
+build_info,
 ui,
 
 tree,
@@ -11,11 +12,12 @@ kbdxXml,
 
 --forward declaration
 function getDotNetVersion = (),
+function getAssemblyVersion = (),
 
 /**
  * .NET HELPER FUNCTIONS
  */
- 
+
 --Load an assembly with shadow-copy enabled.
 function loadAssembly dll =
 (
@@ -28,10 +30,10 @@ function loadAssembly dll =
 		dotNet.loadAssembly(dir + dll)
 	)
 	else
-	(	
+	(
 		AppDomain.CurrentDomain.SetShadowCopyPath dir;
 		AppDomain.CurrentDomain.SetShadowCopyFiles();
-		
+
 		local assemblyName = AssemblyName.GetAssemblyName (dir + dll);
 		AppDomain.CurrentDomain.Load assemblyName;
 	)
@@ -57,9 +59,14 @@ function getNamesDotNetEnum enumType =
 function getDotNetVersion =
 (
 	local ver= ((dotNetClass "System.Environment").version)
-	#(ver.Major, ver.Minor, ver.Build)	
+	#(ver.Major, ver.Minor, ver.Build)
 ),
 
+function getAssemblyVersion ass=
+(
+   local ver = (ass.GetName()).Version
+   #(ver.Major, ver.Minor, ver.Build, ver.Revision )
+),
 
 
 /**
@@ -87,7 +94,7 @@ function setTreeInst t =
 ),
 
 
---Add an object to the Scene in the treeview. 
+--Add an object to the Scene in the treeview.
 --(doesn't add it to the tree nodes itself though!)
 function addObjectToTree o layerHandle: =
 (
@@ -95,7 +102,7 @@ function addObjectToTree o layerHandle: =
    (
       if (layerHandle == unsupplied) do
          layerHandle = GetHandleByAnim o.layer.layerAsRefTarg;
-         
+
       local parentHandle = if (o.parent != undefined) then (GetHandleByAnim o.parent) else -1;
       local matHandle = if (o.material != undefined) then (GetHandleByAnim o.material) else -1;
       tree_Scene_AddObjectFn (GetHandleByAnim o) \
@@ -114,16 +121,16 @@ function addObjectToTree o layerHandle: =
 ),
 
 
---Add a layer to the Scene in the treeview. 
+--Add a layer to the Scene in the treeview.
 --(doesn't add it to the tree nodes itself though!)
-function addLayerToTree layer layerHandle: = 
+function addLayerToTree layer layerHandle: =
 (
    if (layerHandle == unsupplied) do
       layerHandle = GetHandleByAnim layer.layerAsRefTarg;
-      
+
    local parentLayer = outlinerNestedLayers.getParent layer;
    local parentHandle = if (parentLayer != undefined) then (GetHandleByAnim parentLayer) else -1;
-      
+
    tree_Scene_AddLayerFn layerHandle \
                          parentHandle \
                          layer.name \
@@ -139,11 +146,11 @@ function addMaterialToTree mat parentHandle =
    tree_Scene_AddMaterialFn (GetHandleByAnim mat) \
                             parentHandle mat.name \
                             (getClassName mat);
-   
+
    /*
-   for m = 1 to (getNumSubMtls mat) do 
+   for m = 1 to (getNumSubMtls mat) do
       addMaterialToTree (getSubMtl mat m) (GetHandleByAnim mat);
-         
+
    for m = 1 to (getNumSubTexmaps mat) do
    (
       if ((getSubTexMap mat m) != undefined) do
@@ -173,16 +180,16 @@ function pushSceneToTree =
       (
          local layer = LayerManager.getLayer i;
          local layerHandle = GetHandleByAnim layer.layerAsRefTarg;
-         
+
          addLayerToTree layer layerHandle:layerHandle;
-         
+
          --Add all objects on this layer
          local nodes;
          layer.nodes &nodes;
          for n in nodes do
             addObjectToTree n layerHandle:layerHandle;
       )
-      
+
       --Add materials to tree if necessary.
       if ((prefs.getValue #Tree #listMode) == "Material" OR \
           (prefs.getValue #Tree #sortMode) == "Material") do
@@ -202,7 +209,7 @@ function refresh =
    (
       pushSceneToTree();
       tree.FillTree();
-   
+
       if (outliner_callbacks != undefined) do
          outliner_callbacks.selectionChanged #selectionChanged #();
    )
@@ -222,7 +229,7 @@ function switchListMode listMode =
             outliner_callbacks.createLayerChangeHandlers();
          else
             outliner_callbacks.removeLayerChangeHandlers();
-            
+
          if (listMode == "Material" OR (prefs.getValue #Tree #sortMode) == "Material") then
          (
             pushMaterialsToTree();
@@ -253,12 +260,12 @@ function switchSortMode sortMode =
    try
    (
       outliner.prefs.setValue #Tree #sortmode sortMode;
-      
+
       if ((prefs.getValue #Tree #listMode) == "Layer" OR sortMode == "Layer") then
          outliner_callbacks.createLayerChangeHandlers();
       else
          outliner_callbacks.removeLayerChangeHandlers();
-         
+
       if ((prefs.getValue #Tree #listMode) == "Material" OR sortMode == "Material") then
       (
          pushMaterialsToTree();
@@ -266,10 +273,10 @@ function switchSortMode sortMode =
       )
       else
          outliner_callbacks.removeMaterialChangeHandlers();
-            
+
       local sorterClass = "Outliner.NodeSorters." + sortMode + "Sorter";
       outliner.tree.TreeViewNodeSorter = dotNetObject sorterClass;
-      
+
       outliner_main.setSortModeBtnImages();
    )
    catch
@@ -288,9 +295,9 @@ function getFilterEnabled =
 function setFilterEnabled enabled =
 (
    prefs.setValue #Tree #objFilterEnabled enabled;
-   
+
    outliner_main.setHideByCategory();
-   
+
    outliner_main.filter_enabled.checked = enabled;
    tree.Filter.Enabled = enabled;
    tree.FillTree();
@@ -304,23 +311,23 @@ function getObjectFilter i =
 function setObjectFilter i enabled =
 (
    (outliner.prefs.getValue #Tree #objFilter)[i] = enabled;
-   
+
    if (getFilterEnabled()) do
    (
-      local filter_enum = #(&tree.Filter.showGeometry, &tree.Filter.showShapes, 
+      local filter_enum = #(&tree.Filter.showGeometry, &tree.Filter.showShapes,
                             &tree.Filter.showLights,   &tree.Filter.showCameras,
-                            &tree.Filter.showHelpers,  &tree.Filter.showSpaceWarps, 
+                            &tree.Filter.showHelpers,  &tree.Filter.showSpaceWarps,
                             &tree.Filter.showBones,    &tree.Filter.showParticles,
                             &tree.Filter.showXRefs,    &tree.Filter.showGroups,
                             &tree.Filter.showHidden,   &tree.Filter.showFrozen);
 
       *filter_enum[i] = enabled;
       outliner.tree.FillTree();
-      
+
       if (outliner.prefs.getValue #Tree #objFilterAffectVpt) do
          outliner_main.setHideByCategory();
    )
-   
+
    outliner.prefs.savePreferences();
 ),
 
@@ -329,8 +336,8 @@ function setObjectFilter i enabled =
 /**
  * HANDLE AUTOMATIC GROUP OPENING/CLOSING
  *
- * This function will open any groups containing nodes from the passed selnodes 
- * array. It will also close any groups opened previously that no longer need 
+ * This function will open any groups containing nodes from the passed selnodes
+ * array. It will also close any groups opened previously that no longer need
  * to remain opened.
  */
 openGroupHeads = #{},
@@ -347,7 +354,7 @@ function handleGroupOpeningClosing selnodes selectedInOutliner =
          (
             if (isGroupMember n) do
             (
-               --Find any groupheads that have to be opened. 
+               --Find any groupheads that have to be opened.
                --Groups can be nested, so loop until root is reached.
                local n_parent = n.parent;
                while (isValidNode n_parent) do
@@ -366,7 +373,7 @@ function handleGroupOpeningClosing selnodes selectedInOutliner =
                         newOpenGroupHeads[groupHeadHandle] = true;
                      )
                   )
-   
+
                   n_parent = n_parent.parent;
                )
             )
@@ -378,7 +385,7 @@ function handleGroupOpeningClosing selnodes selectedInOutliner =
       for groupHandle in groupHeadsToClose do
       (
          local groupHead = GetAnimByHandle groupHandle;
-         if (isValidNode groupHead AND isGroupHead groupHead) do 
+         if (isValidNode groupHead AND isGroupHead groupHead) do
             setGroupOpen groupHead false;
       )
 
@@ -408,22 +415,22 @@ function handleGroupOpeningClosing selnodes selectedInOutliner =
 function createNewLayer parentLayer =
 (
    local layer = (LayerManager.NewLayer()).layerAsRefTarg;
-   --Set new layer's parent. 
+   --Set new layer's parent.
    --(either clicked layer or layer of clicked node).
    if (parentLayer != undefined) do
       outlinerNestedLayers.setParent layer parentLayer;
-      
+
    --Set layer active.
    if (prefs.getValue #Tree #setNewLayerActive) do
       outliner.setActiveLayer layer;
-   
+
    --Edit name of new layer.
    if (prefs.getValue #Tree #editNewLayerName) do
       outliner.tree.EditNodeName (GetHandleByAnim layer);
 ),
 
 
-function deleteLayer layer = 
+function deleteLayer layer =
 (
    try
    (
@@ -432,16 +439,16 @@ function deleteLayer layer =
       layer.nodes &nodes;
 
       local result = #yes;
-      
+
       if (nodes.count > 0) do
       (
          local msg = "Delete objects on layer " + layer.name + " too?\n" + \
                      "If you choose 'no', the objects will be moved to layer 0."
          result = yesNoCancelBox msg title:"Delete objects on layer?";
-         
+
          if (result == #no) then
          (
-            for n in nodes do 
+            for n in nodes do
             (
                outliner_callbacks.nodeLayerChangedIntern n defLayer;
                defLayer.addNode n;
@@ -450,7 +457,7 @@ function deleteLayer layer =
          else
             delete nodes;
       )
-      
+
       if (result != #cancel) do
       (
          if (layer.current) do defLayer.current = true;
@@ -570,7 +577,7 @@ function deleteSelection =
             for handle in handles do
             (
                local n = GetAnimByHandle handle;
-               
+
                --Remove the node from the tree if it has no scene representation.
                --This should never happen, but apparently sometimes it does...
                if (n == undefined OR isDeleted n) then
@@ -692,8 +699,8 @@ function moveObjectToLayer obj targetLayer =
 (
    targetLayer.addNode obj;
    outliner_callbacks.nodeLayerChangedIntern obj targetLayer;
-   
-   --Also move dependencies in case of a PFSource 
+
+   --Also move dependencies in case of a PFSource
    --(in particular PFEngine, which affects visibility of actual particles).
    if ((classof obj) == PF_Source) do
    (
@@ -763,7 +770,7 @@ function addSelectionToNewLayer =
       (
          newLayer = LayerManager.newLayer();
       )
-      
+
       if (newLayer != undefined) do
       (
          newLayer = newLayer.layerAsRefTarg;
@@ -787,7 +794,7 @@ function addSelectionToNewContainer =
       if (sel.count > 0) do
       (
          local c = Containers.CreateContainer sel;
-         
+
          if (isValidNode c) do
          (
             if (outliner.prefs.getValue #Tree #editNewLayerName) do
@@ -803,13 +810,13 @@ function addSelectionToNewContainer =
 
 function addSelectionToNewGroup =
 (
-   try 
+   try
    (
       local sel = getCurrentSelection();
       if (sel.count > 0) do
       (
          local g = group sel;
-         
+
          if (isValidNode g) do
          (
             if (outliner.prefs.getValue #Tree #editNewLayerName) do
@@ -833,13 +840,13 @@ function addSelectionToNewGroup =
 /**
  * SET TREE COLOR SCHEME
  */
-function getColorFromStr colorStr = 
+function getColorFromStr colorStr =
 (
    local newColor;
    try (
       newColor = (execute colorStr);
    ) catch ()
-   if ((classof newColor) != Color) do 
+   if ((classof newColor) != Color) do
    (
       try (
          newColor = ((colorMan.getColor colorStr) * 255) as color;
@@ -856,7 +863,7 @@ function getColorFromStr colorStr =
 function setTreeColorScheme schemeName =
 (
    local invIcons = prefs.getValue #Visual #invertIcons;
-   
+
    --Guess scheme name (light or dark) if no name was provided.
    if (schemeName == "") do
    (
@@ -870,13 +877,13 @@ function setTreeColorScheme schemeName =
          schemeName = "Light";
          invIcons = false;
       )
-         
+
       prefs.setValue #Visual #colorScheme schemeName;
       prefs.setValue #Visual #invertIcons invIcons;
    )
-   
+
    tree.InvertIcons = invIcons;
-   
+
    local iniFile = pathConfig.appendPath (GetDir #userScripts) "outliner_user_colors.ini";
    if (not (hasINISetting iniFile schemeName)) do
    (
@@ -886,25 +893,25 @@ function setTreeColorScheme schemeName =
          messageBox ("Color scheme '" + schemeName + "' not found.")
          setTreeColorScheme ""
       )
-   )      
-   
+   )
+
    local colors = getINISetting iniFile schemeName;
    local colorClass = dotNetClass "System.Drawing.Color";
-   for i in colors do 
+   for i in colors do
    (
       local color = getColorFromStr (getINISetting iniFile schemeName i);
       setproperty tree.Style i (colorClass.FromARGB color.r color.g color.b);
    )
-   
-   try 
+
+   try
    (
-      outliner_main.setButtonImages(); 
+      outliner_main.setButtonImages();
       outliner_main.setSortModeBtnImages();
    ) catch()
    try ( outliner_filter_config.setButtonImages(); ) catch()
-   
+
    tree.ResetAllNodesStyle();
-   
+
    local windowColor = (colorman.getcolor #window) * 255;
    local textColor = (colorman.getcolor #windowtext) * 255;
    outliner_main.searchField.BackColor = (dotNetClass "System.Drawing.Color").FromARGB 255 windowColor[1] windowColor[2] windowColor[3];
@@ -944,18 +951,18 @@ function fileWatch_Changed sender e =
 (
    try
    (
-      --Disable further events until handling is completed. 
+      --Disable further events until handling is completed.
       --(Multiple Changed events are fired, we only need to handle one).
       sender.EnableRaisingEvents = false;
-      
+
       if (sender.MXSObject != undefined AND sender.MXSObject.value != undefined) do
          sender.MXSObject.value.Read();
-      
+
       sender.EnableRaisingEvents = true;
    ) catch ()
 ),
 
---actionMan.getKeyboardFile sometimes returns a path with a double backslash at 
+--actionMan.getKeyboardFile sometimes returns a path with a double backslash at
 --the end, .NET doesn't like that.
 function stripTrailingSlashes str =
 (
@@ -966,7 +973,7 @@ function stripTrailingSlashes str =
 
 
 --Adds the filesystemwatch changed event.
---MAKE SURE YOU CALL REMOVEKBDFILEWATCH() WHEN THE KEYACTIONSFILE OBJECT 
+--MAKE SURE YOU CALL REMOVEKBDFILEWATCH() WHEN THE KEYACTIONSFILE OBJECT
 --IS NO LONGER USED!
 function addKbdxFileWatch =
 (
@@ -977,7 +984,7 @@ function addKbdxFileWatch =
          kbdxFileWatch = dotnetObject "Outliner.MXSFileWatcher";
          kbdxFileWatch.MXSObject = dotNetMXSValue kbdxXml;
          kbdxFileWatch.WatchFileChange(kbdxXml.File);
-   
+
          dotNet.addEventHandler kbdxFileWatch "Changed" fileWatch_Changed;
       )
    )
@@ -1005,9 +1012,9 @@ function getActiveKbdxFile =
       userUIDir = pathConfig.removePathLeaf (GetDir #userIcons);
       configFile = pathConfig.appendPath userUIDir (filenameFromPath configFile);
    )
-   
+
    actionMan.saveKeyboardFile configFile;
-   
+
    configFile;
 ),
 
@@ -1023,13 +1030,13 @@ function loadkbdxFile =
 	(
 		local kbdxFileClass = dotnetClass "Outliner.KbdxFile";
 
-		try 
+		try
 		(
-			kbdxFile = getActiveKbdxFile() 	
+			kbdxFile = getActiveKbdxFile()
 			kbdxXml = kbdxFileClass.FromXml kbdxFile;
 			addkbdxFileWatch();
-		) 
-		catch 
+		)
+		catch
 		(
 			format "** Outliner exception **\n%\n" (getCurrentException());
 			messageBox ("An error occured while trying to load keyboard shortcuts.\n" \
@@ -1062,17 +1069,21 @@ function close =
 /**
  * Initialize Outliner.
  */
-function init = 
+function init =
 (
    local success = true;
-   
+
    try
    (
       CreateDialog outliner_initializing 150 40 style:#(#style_toolwindow);
-      
+
       try
       (
-         loadAssembly "Outliner.dll";
+         local assembly = loadAssembly "Outliner.dll";
+         build_info = getAssemblyVersion assembly;
+
+		   local fDate =	(dotNetObject "System.IO.FileInfo" (dir + "Outliner.dll")).LastWriteTime;
+		   append build_info ((fDate.Year as string) + formattedPrint fDate.Month format:"02d" + formattedPrint fDate.Day format:"02d")
       )
       catch
       (
@@ -1080,40 +1091,40 @@ function init =
          messageBox ("Loading Outliner core failed.\n\n" + \
             "Tip: make sure you have the latest .NET Framework installed.\n" + \
             "Please see the Maxscript Listener (F11) for details.") title:"Error";
-            
+
          destroyDialog outliner_initializing;
-         
+
          return false;
       )
-      
+
       prefs = outlinerPreferences();
       prefs.iniFile = (GetDir #userScripts) + "/outliner_prefs.ini";
       prefs.entries = outlinerPreferences.createPreferenceEntries();
       prefs.loadPreferences();
-      
+
       product_info = outlinerPreferences();
       product_info.iniFile = (GetDir #userScripts) + "/outliner_product_info.ini";
       product_info.entries = outlinerPreferences.createProductEntries();
       product_info.loadPreferences();
-         
+
       ui = outlinerUI();
-      
+
       --Check for updates.
       outliner_update.checkUpdateAuto();
-      
+
       --Convert nested layers for <2.1 nested layers.
       outliner_convertLegacyNestedLayers();
    )
    catch
    (
       fileIn (outliner.dir + "crash_report.ms")
-      
+
       success = false;
    )
-   
-   
+
+
    try ( destroyDialog outliner_initializing; ) catch ()
-   
+
    success;
 ),
 
@@ -1146,7 +1157,7 @@ function dispose =
    outliner_initializing   = undefined;
    outlinerUI              = undefined;
 
-   callbacks.removeScripts id:#outliner;     
+   callbacks.removeScripts id:#outliner;
    outliner_callbacks      = undefined;
    outlinerCallbacks       = undefined;
 
@@ -1160,7 +1171,7 @@ function dispose =
       outliner_update.dispose();
       outliner_update = undefined;
    )
-   
+
    outliner     = undefined;
    outlinerCore = undefined;
 )
