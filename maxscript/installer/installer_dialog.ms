@@ -21,7 +21,7 @@ rollout outliner_pre_install ((outlinerInstaller.getString #title) + " " + \
 
       if( classof outlinerInstaller.build_info == Array AND outlinerInstaller.build_info.count >= 4) do
       (
-         build_lbl.text = "Build: " 	+ (outlinerInstaller.build_info[1] as string) + "." \
+         build_lbl.text = "Build: "	+ (outlinerInstaller.build_info[1] as string) + "." \
                                     + (outlinerInstaller.build_info[2] as string) + "." \
                                     + (outlinerInstaller.build_info[3] as string) + "." \
                                     + (outlinerInstaller.build_info[4] as string) + "-" \

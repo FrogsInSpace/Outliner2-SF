@@ -734,20 +734,21 @@ function moveSelectionToLayer targetLayer =
                for handle in handles do
                (
                   local n = GetAnimByHandle handle;
-                  if (n != undefined) do
+
+                  if (n==undefined) do
+                     continue;
+
+                  if (isKindOf n Node) then
                   (
-                     if (isKindOf n Node) then
-                     (
-                        if (isGroupHead n AND tree.HideGroupMembersLayerMode) then
-                           moveGroupToLayer n targetLayer;
-                        else
-                           moveObjectToLayer n targetLayer;
-                     )
-                     else if (isKindOf n Base_Layer AND n != targetLayer AND n.name != "0") then
-                     (
-                        outlinerNestedLayers.setParent n targetLayer;
-                        tree_setLayerParentFn handle (GetHandleByAnim targetLayer);
-                     )
+                     if (isGroupHead n AND tree.HideGroupMembersLayerMode) then
+                        moveGroupToLayer n targetLayer;
+                     else
+                        moveObjectToLayer n targetLayer;
+                  )
+                  else if (isKindOf n Base_Layer AND n != targetLayer AND n.name != "0") then
+                  (
+                     outlinerNestedLayers.setParent n targetLayer;
+                     tree_setLayerParentFn handle (GetHandleByAnim targetLayer);
                   )
                )
             )
