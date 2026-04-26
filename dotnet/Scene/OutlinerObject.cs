@@ -44,56 +44,35 @@ namespace Outliner.Scene
             }
         }
 
-        public override int ChildNodesCount
-        {
-            get { return Scene.GetObjectChildNodesCount(Handle); }
-        }
-        override public List<OutlinerNode> ChildNodes
-        {
-            get
-            {
-                return Scene.GetObjectsByParentHandle(Handle);
-            }
-        }
+        public override int ChildNodesCount => Scene.GetObjectChildNodesCount(Handle); 
+        override public List<OutlinerNode> ChildNodes => Scene.GetObjectsByParentHandle(Handle);
 
         public int LayerHandle { get; set; }
-        public OutlinerLayer Layer
-        {
-            get
-            {
-                return Scene.GetLayerByHandle(LayerHandle);
-            }
-        }
+        public OutlinerLayer Layer => Scene.GetLayerByHandle(LayerHandle);
 
         public int MaterialHandle { get; set; }
-        public OutlinerMaterial Material
-        {
-            get
-            {
-                return Scene.GetMaterialByHandle(MaterialHandle);
-            }
-        }
-
+        public OutlinerMaterial Material => Scene.GetMaterialByHandle(MaterialHandle);
 
         override public string DisplayName
         {
             get
             {
-                string n = (this.Name != string.Empty) ? this.Name : "-unnamed-";
-                if (Class == OutlinerScene.XrefObjectType && (IsGroupMember || IsGroupHead)) return "{[ " + n + " ]}";
-                if (Class == OutlinerScene.XrefObjectType) return "{ " + n + " }";
-                if (IsGroupMember || IsGroupHead) return "[ " + n + " ]";
+                string n = string.IsNullOrEmpty(Name) ? "-unnamed-" : Name ;
+                if (Class == OutlinerScene.XrefObjectType && (IsGroupMember || IsGroupHead))
+                    return "{[ " + n + " ]}";
+
+                if (Class == OutlinerScene.XrefObjectType)
+                    return "{ " + n + " }";
+
+                if (IsGroupMember || IsGroupHead)
+                    return "[ " + n + " ]";
+
                 return n;
             }
         }
-        override public bool CanEditName { get { return true; } }
+        public override bool CanEditName => true;
 
-
-
-        public override bool CanBeDeleted
-        {
-            get { return true; }
-        }
+        public override bool CanBeDeleted => true;
 
         public int ObjectNr { get; private set; }
 
@@ -102,8 +81,6 @@ namespace Outliner.Scene
 
         public bool IsGroupHead { get; set; }
         public bool IsGroupMember { get; set; }
-
-
 
 
         public void SetIsGroupMemberRec(bool isGroupMember)

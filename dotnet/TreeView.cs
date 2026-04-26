@@ -12,6 +12,8 @@ using Outliner.DragDropHandlers;
 using Outliner.Scene;
 using Outliner.Resources;
 
+using Autodesk.Max;
+
 namespace Outliner
 {
     public partial class TreeView : System.Windows.Forms.TreeView
@@ -29,6 +31,57 @@ namespace Outliner
         private bool _ensureSelectionVisibleWaitingForSort;
 
 
+        private IReferenceTarget _prevCurrentLayerRefTarget;
+        private void sanityTimer_Tick(object sender, EventArgs e)
+        {
+
+            /*
+            var lMgr = Autodesk.Max.GlobalInterface.Instance.COREInterface14?.LayerManager;
+
+            if( lMgr == null )
+                return;
+
+            var props = lMgr.CurrentLayer as IILayerProperties;
+
+            // THIS is the equivalent:
+            IReferenceTarget refTarg = props as IReferenceTarget;
+
+            if (_prevCurrentLayerRefTarget != refTarg )
+            {
+                SetLayerActive( refTarg, true);
+
+
+
+            }
+            */
+        }
+
+        //public void SanitizeLayers()
+        //{
+        //    Scene.Layers
+        //    OutlinerLayer layer = this.Scene.GetLayerByHandle(layerHandle);
+        //    if (layer == null)
+        //        return;
+
+        //    layer.IsActive = isActive;
+
+        //    if (ListMode == OutlinerListMode.Layer)
+        //    {
+        //        if (_treeNodes.TryGetValue(layer, out TreeNode tn))
+        //        {
+        //            BeginTimedUpdate();
+        //            this.Style.SetNodeImageKey(tn);
+        //        }
+        //    }
+
+
+
+
+        //}
+
+
+
+
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         private static extern IntPtr SetFocus(IntPtr hWnd);
 
@@ -41,7 +94,27 @@ namespace Outliner
         public TreeStyle Style { get; private set; }
         public OutlinerFilter Filter { get; private set; }
 
-        public OutlinerListMode ListMode { get; set; }
+        private OutlinerListMode _listMode;
+        public OutlinerListMode ListMode
+        {
+            get => _listMode;
+            set
+            {
+                if( value == _listMode )
+                    return;    
+
+                if( value == OutlinerListMode.Layer )
+                {
+                    Scene.LayerNameSynced += SyncTreeLayerName;
+                }
+                else
+                {
+                    Scene.LayerNameSynced -= SyncTreeLayerName;
+                }
+                _listMode = value;
+            }
+
+        }
 
         #region Node buttons
 
@@ -172,7 +245,8 @@ namespace Outliner
             set
             {
                 _autoExpandHierarchy = value;
-                if (value && ListMode == OutlinerListMode.Hierarchy) this.ExpandAll();
+                if (value && ListMode == OutlinerListMode.Hierarchy)
+                    ExpandAll();
             }
         }
         private bool _autoExpandLayer = false;
@@ -182,17 +256,21 @@ namespace Outliner
             set
             {
                 _autoExpandLayer = value;
-                if (value && ListMode == OutlinerListMode.Layer) this.ExpandAll();
+                if (value && ListMode == OutlinerListMode.Layer)
+                    ExpandAll();
             }
         }
+
+
         private bool _autoExpandMaterial = false;
         public bool AutoExpandMaterial
         {
-            get { return _autoExpandMaterial; }
+            get => _autoExpandMaterial;
             set
             {
                 _autoExpandMaterial = value;
-                if (value && ListMode == OutlinerListMode.Material) this.ExpandAll();
+                if (value && ListMode == OutlinerListMode.Material)
+                    ExpandAll();
             }
         }
 
@@ -201,7 +279,7 @@ namespace Outliner
         private bool _hideGroupMembersLayerMode = true;
         public bool HideGroupMembersLayerMode
         {
-            get { return _hideGroupMembersLayerMode; }
+            get =>  _hideGroupMembersLayerMode;
             set
             {
                 _hideGroupMembersLayerMode = value;
@@ -210,12 +288,13 @@ namespace Outliner
         }
 
 
-        public TreeView()        {
+        public TreeView()
+        {
             InitializeComponent();
 
-            this.SetStyle(ControlStyles.UserPaint, true);
-            this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-            this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+            SetStyle(ControlStyles.UserPaint, true);
+            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 
             AllowDrop = true;
 
@@ -268,30 +347,11 @@ namespace Outliner
             maxMainHandle = ManagedServices.AppSDK.GetMaxHWND();
         }
 
-        protected override void WndProc(ref Message m)
-        {
-            //base.WndProc(ref m);
-
-
-            const int WM_KEYDOWN = 0x0100;
-            const int WM_KEYUP = 0x0101;
-
-            if(m.Msg == WM_KEYDOWN || m.Msg == WM_KEYUP)
-            {
-                ManagedServices.AppSDK.TranslateAndDispatchMessageToApplication(ref m);
-                SetFocus(this.Handle);
-            }
-            base.WndProc(ref m);
-        }
-
 
         public TreeView(IContainer container) : this()
         {
             container.Add(this);
         }
-
-
-        #region DetachHandlers
 
         private void DetachTimerHandlers()
         {
@@ -301,8 +361,21 @@ namespace Outliner
                 _sortTimer.Tick -= new EventHandler(sortTimer_Tick);
         }
 
-        #endregion
+        protected override void WndProc(ref Message m)
+        {
+            //base.WndProc(ref m);
 
+
+            const int WM_KEYDOWN = 0x0100;
+            const int WM_KEYUP = 0x0101;
+
+            if (m.Msg == WM_KEYDOWN || m.Msg == WM_KEYUP)
+            {
+                ManagedServices.AppSDK.TranslateAndDispatchMessageToApplication(ref m);
+                SetFocus(this.Handle);
+            }
+            base.WndProc(ref m);
+        }
 
 
         // Avoid tooltips popping up when a treenode's text is outside the bounds (gives draw error)
@@ -653,14 +726,14 @@ namespace Outliner
                 xPos -= Indent;
                 if (parent.NextNode != null)
                 {
-                    int x = xPos + _halfPlusMinSize;
+                    int x = xPos + HalfPlusMinSize;
                     graphics.DrawLine(_dottedLinePen, x, tnBounds.Y, x, tnBounds.Bottom);
                 }
                 parent = parent.Parent;
             }
 
             //Draw L / T shaped line in front of node.
-            int lineX = Indent * tn.Level + _plusMinPadding + _halfPlusMinSize - scrlPosX;
+            int lineX = Indent * tn.Level + _plusMinPadding + HalfPlusMinSize - scrlPosX;
             int nodeYMid = tnBounds.Y + (int)Math.Ceiling(ItemHeight / 2f) - 1;
             int vlineStartY;
             int vlineEndY;
@@ -676,7 +749,7 @@ namespace Outliner
                 vlineEndY = tnBounds.Bottom;
 
             graphics.DrawLine(_dottedLinePen, lineX, vlineStartY, lineX, vlineEndY);
-            graphics.DrawLine(_dottedLinePen, lineX, nodeYMid, lineX + _halfPlusMinSize + _plusMinPadding - 1, nodeYMid);
+            graphics.DrawLine(_dottedLinePen, lineX, nodeYMid, lineX + HalfPlusMinSize + _plusMinPadding - 1, nodeYMid);
 
 
             //Draw plusminus.
@@ -836,8 +909,8 @@ namespace Outliner
                 Indent = _iconSize.Width;
         }
 
-        private const int _plusMinSize = 9;
-        private const int _halfPlusMinSize = _plusMinSize / 2;
+        private const int PlusMinSize = 9;
+        private const int HalfPlusMinSize = PlusMinSize / 2;
         private int _plusMinPadding = 3;
         private int _iconSpacing = 1;
         private int _nodeButtonSpacing = 1;
@@ -849,7 +922,7 @@ namespace Outliner
             Rectangle b = new Rectangle();
             b.X = Indent * tn.Level - GetScrollPos(Handle, H_SCROLL);
             b.Y = tnBounds.Y;
-            b.Width = _plusMinPadding * 2 + _plusMinSize + tnBounds.Width - 1;
+            b.Width = _plusMinPadding * 2 + PlusMinSize + tnBounds.Width - 1;
             if (ShowNodeIcon) b.Width += _iconSpacing * 2 + _iconSize.Width;
             if (tn.Tag is IDisplayable)
             {
@@ -874,15 +947,15 @@ namespace Outliner
             {
                 r.X = Indent * tn.Level - GetScrollPos(Handle, H_SCROLL);
                 r.Y = tn.Bounds.Y;
-                r.Width = _plusMinSize + 2 * _plusMinPadding;
-                r.Height = _plusMinSize;
+                r.Width = PlusMinSize + 2 * _plusMinPadding;
+                r.Height = PlusMinSize;
             }
             else
             {
                 r.X = Indent * tn.Level + _plusMinPadding - GetScrollPos(Handle, H_SCROLL);
-                r.Y = tn.Bounds.Y + (ItemHeight - _plusMinSize) / 2;
-                r.Width = _plusMinSize;
-                r.Height = _plusMinSize;
+                r.Y = tn.Bounds.Y + (ItemHeight - PlusMinSize) / 2;
+                r.Width = PlusMinSize;
+                r.Height = PlusMinSize;
             }
 
             return r;
@@ -1160,7 +1233,7 @@ namespace Outliner
 
             int boundLeft = Indent * tn.Level + _plusMinPadding - GetScrollPos(Handle, H_SCROLL);
             if (tn.GetNodeCount(false) == 0)
-                boundLeft += _plusMinSize;
+                boundLeft += PlusMinSize;
 
             return e.X < boundLeft;
         }
@@ -2498,9 +2571,6 @@ namespace Outliner
         #endregion
 
 
-
-
-
         #region BeginTimedUpdate, BeginTimedSort, new TreeViewNodeSorter
 
         internal void BeginTimedUpdate()
@@ -3115,6 +3185,8 @@ namespace Outliner
                 _selectionChanged = false;
             }
         }
+
+
         #endregion
 
 
@@ -3491,7 +3563,7 @@ namespace Outliner
             EnsureSelectionVisible(EnsureSelectionVisibleAction.SelectionChanged);
             OnSelectionChanged();
         }
-
+            
         #endregion
 
 
@@ -3528,9 +3600,17 @@ namespace Outliner
             if (n == null)
                 return;
 
-            TreeNode tn;
-            if (_treeNodes.TryGetValue(n, out tn))
+            if (_treeNodes.TryGetValue(n, out TreeNode tn))
                 TreeNodeBeginEdit(tn);
+        }
+
+        internal void SyncTreeLayerName(OutlinerLayer layer)
+        {
+            if (layer == null || _listMode != OutlinerListMode.Layer)
+                return;
+
+            if (_treeNodes.TryGetValue(layer, out TreeNode tn))
+                tn.Text = layer.Name;
         }
 
         #endregion
@@ -3861,8 +3941,6 @@ namespace Outliner
             }
         }
 
-
-
         public void SetLayerActive(int layerHandle, bool isActive)
         {
             OutlinerLayer layer = this.Scene.GetLayerByHandle(layerHandle);
@@ -3873,8 +3951,7 @@ namespace Outliner
 
             if (ListMode == OutlinerListMode.Layer)
             {
-                TreeNode tn;
-                if (_treeNodes.TryGetValue(layer, out tn))
+                if (_treeNodes.TryGetValue(layer, out TreeNode tn))
                 {
                     BeginTimedUpdate();
                     this.Style.SetNodeImageKey(tn);
@@ -3931,8 +4008,7 @@ namespace Outliner
 
             if (ListMode == OutlinerListMode.Material)
             {
-                TreeNode tn;
-                if (_treeNodes.TryGetValue(mat, out tn))
+                if (_treeNodes.TryGetValue(mat, out TreeNode tn))
                 {
                     BeginTimedUpdate();
                     BeginTimedSort();

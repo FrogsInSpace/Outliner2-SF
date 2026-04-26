@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Timers;
+
+using Autodesk.Max;
 
 namespace Outliner.Scene
 {
     public class OutlinerScene
     {
+        private const int SanitizerInterval = 250;
+
         #region Type string constants
 
         public const string ObjectType = "Object";
@@ -62,6 +66,8 @@ namespace Outliner.Scene
         public const int RootHandle = -1;
         public const int UnassignedHandle = -1;
 
+        public event Action<OutlinerLayer> LayerNameSynced;
+
         protected int objectCounter;
 
         protected Dictionary<int, OutlinerObject> objects;
@@ -75,6 +81,10 @@ namespace Outliner.Scene
         protected Dictionary<int, List<int>> layers_by_parentHandle;
 
         protected Dictionary<int, List<int>> materials_by_parentHandle;
+
+        private IILayerManager _layerMgr;
+
+        private Timer _sanitizeTimer;
 
         public OutlinerScene()
         {
@@ -92,10 +102,20 @@ namespace Outliner.Scene
             materials_by_parentHandle = new Dictionary<int, List<int>>();
 
             AddMaterial(new OutlinerMaterial(this, UnassignedHandle, RootHandle, "", ""));
+
+            _layerMgr = Autodesk.Max.GlobalInterface.Instance.COREInterface14?.LayerManager;
+
+            _sanitizeTimer = new Timer(SanitizerInterval);
+            _sanitizeTimer.Elapsed += (s, e) => SyncLayerNames();
+            _sanitizeTimer.AutoReset = true;
+
         }
 
         public void Clear()
         {
+
+            _sanitizeTimer?.Stop();
+
             objectCounter = 0;
 
             objects.Clear();
@@ -117,55 +137,59 @@ namespace Outliner.Scene
         }
 
 
+        private int _isSyncing = 0;
+        public bool SyncLayerNames()
+        {
+            if (System.Threading.Interlocked.Exchange(ref _isSyncing, 1) == 1)
+                return false; // already running, skip
+
+            bool didSync = false;
+
+            try
+            {
+
+                if (layers.Count == 0 )
+                    return false;
+
+                foreach( var h in layers.Keys )
+                {
+                    var olLayer = layers[h];
+
+                    var maxLayer = GlobalInterface.Instance.Animatable.GetAnimByHandle( (UIntPtr) h ) as IILayer;
+
+                    if( olLayer == null || maxLayer == null )
+                        continue;       
+
+                    if( !string.Equals( olLayer.Name, maxLayer.Name, StringComparison.Ordinal))
+                    {
+                        olLayer.Name = maxLayer.Name;
+
+                        didSync = true;
+                        LayerNameSynced?.Invoke(olLayer);
+                    }
+                }
+            }
+            finally
+            {
+                _isSyncing=0;
+
+            }
+            return didSync;
+        }
+
         #region Objects, RootObjects, Layers, Materials
 
-        public List<OutlinerNode> RootObjects
-        {
-            get
-            {
-                return GetObjectsByParentHandle(RootHandle);
-            }
-        }
+        public List<OutlinerNode> RootObjects => GetObjectsByParentHandle(RootHandle);
 
-        public List<OutlinerObject> Objects
-        {
-            get
-            {
-                return new List<OutlinerObject>(objects.Values);
-            }
-        }
+        public List<OutlinerObject> Objects => new List<OutlinerObject>(objects.Values);
 
-        public List<OutlinerNode> RootLayers
-        {
-            get
-            {
-                return GetLayersByParentHandle(RootHandle);
-            }
-        }
+        public List<OutlinerNode> RootLayers => GetLayersByParentHandle(RootHandle);
 
-        public List<OutlinerLayer> Layers
-        {
-            get
-            {
-                return new List<OutlinerLayer>(layers.Values);
-            }
-        }
+        public List<OutlinerLayer> Layers => new List<OutlinerLayer>(layers.Values);
 
-        public List<OutlinerNode> RootMaterials
-        {
-            get
-            {
-                return GetMaterialsByParentHandle(RootHandle);
-            }
-        }
+        public List<OutlinerNode> RootMaterials => GetMaterialsByParentHandle(RootHandle);
 
-        public List<OutlinerMaterial> Materials
-        {
-            get
-            {
-                return new List<OutlinerMaterial>(materials.Values);
-            }
-        }
+        public List<OutlinerMaterial> Materials => new List<OutlinerMaterial>(materials.Values);
 
         #endregion
 
@@ -292,6 +316,8 @@ namespace Outliner.Scene
         {
             if (!layers.ContainsKey(layer.Handle))
             {
+                _sanitizeTimer.Enabled = true;
+
                 layers.Add(layer.Handle, layer);
 
                 addHandleToListInDict(layer.Handle, layers_by_parentHandle, layer.ParentHandle);

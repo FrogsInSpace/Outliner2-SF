@@ -21,22 +21,9 @@ namespace Outliner.Scene
             BoxMode = boxMode;
         }
 
+        override public OutlinerNode Parent => ParentHandle == OutlinerScene.RootHandle ? null : Scene.GetLayerByHandle(ParentHandle);
 
-        override public OutlinerNode Parent
-        {
-            get
-            {
-                if (ParentHandle == OutlinerScene.RootHandle)
-                    return null;
-                else
-                    return Scene.GetLayerByHandle(ParentHandle);
-            }
-        }
-
-        public override int ChildNodesCount
-        {
-            get { return Scene.GetLayerChildNodesCount(Handle); }
-        }
+        public override int ChildNodesCount => Scene.GetLayerChildNodesCount(Handle); 
 
         override public List<OutlinerNode> ChildNodes
         {
@@ -54,63 +41,31 @@ namespace Outliner.Scene
             }
         }
 
-        public List<OutlinerNode> ChildLayers
-        {
-            get
-            {
-                return Scene.GetLayersByParentHandle(Handle);
-            }
-        }
+        public List<OutlinerNode> ChildLayers => Scene.GetLayersByParentHandle(Handle);
 
-        public List<OutlinerNode> ChildObjects
-        {
-            get
-            {
-                return Scene.GetObjectsByLayerHandle(Handle);
-            }
-        }
+        public List<OutlinerNode> ChildObjects => Scene.GetObjectsByLayerHandle(Handle);
 
         override public string DisplayName
         {
             get
             {
-                if (IsDefaultLayer) return "0 (default)";
+                if (IsDefaultLayer)
+                    return "0 (default)";
+
                 return Name;
             }
         }
-        override public bool CanEditName
-        {
-            get
-            {
-                return !IsDefaultLayer;
-            }
-        }
+        override public bool CanEditName => !IsDefaultLayer;
 
-        public override bool CanBeDeleted
-        {
-            get { return !IsDefaultLayer; }
-        }
+        public override bool CanBeDeleted => !IsDefaultLayer;
 
         public bool IsActive { get; set; }
 
-        public bool IsDefaultLayer
-        {
-            get
-            {
-                return Name == "0";
-            }
-        }
-
-
-
-        #region IDisplayable Members
+        public bool IsDefaultLayer => Name == "0";
 
         public bool IsHidden { get; set; }
         public bool IsFrozen { get; set; }
         public bool BoxMode { get; set; }
-
-        #endregion
-
 
     }
 }
