@@ -2661,14 +2661,15 @@ namespace Outliner
             base.TreeViewNodeSorter = null;
             base.Sorted = false;
 
+            EndUpdate();
 
+            // Restoring states/selection should happen AFTER EndUpdate() !!!
             // Restore expanded states.
             RestoreExpandedStates();
 
             // Restore selection
             RestoreSelection(selection);
 
-            EndUpdate();
         }
 
 
