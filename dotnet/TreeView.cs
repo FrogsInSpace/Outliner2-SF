@@ -1263,7 +1263,8 @@ namespace Outliner
             else if (IsClickOnPlusMinus(tn, e))
             {
                 _internalExpandCollapse = true;
-                this.BeginUpdate();
+
+                BeginUpdate();
                 if (tn.IsExpanded)
                     tn.Collapse(!((Control.ModifierKeys & ExpandHierarchyKey) == ExpandHierarchyKey));
                 else
@@ -1273,7 +1274,8 @@ namespace Outliner
                     else
                         tn.Expand();
                 }
-                this.EndUpdate();
+                EndUpdate();
+
                 _internalExpandCollapse = false;
             }
             else if (Control.ModifierKeys == Keys.None)
@@ -1751,7 +1753,7 @@ namespace Outliner
 
         protected override void OnDragDrop(DragEventArgs drgevent)
         {
-            this.BeginUpdate();
+            BeginUpdate();
 
             RestorePreviousDragDropTargetColor();
 
@@ -1763,7 +1765,7 @@ namespace Outliner
 
             _dragDropTargetNode = null;
 
-            this.EndUpdate();
+            EndUpdate();
 
             base.OnDragDrop(drgevent);
         }
@@ -1907,19 +1909,19 @@ namespace Outliner
                 OutlinerNode[] selNodes = SelectedOutlinerNodes;
                 foreach (OutlinerNode n in selNodes)
                 {
-                    if (this.canSetProperty(n, "IsHidden"))
+                    if( !(this.canSetProperty(n, "IsHidden")))
+                        continue;
+
+                    if (n is OutlinerObject && ((OutlinerObject)n).IsGroupHead)
                     {
-                        if (n is OutlinerObject && ((OutlinerObject)n).IsGroupHead)
-                        {
-                            HideNodeRecursive(n, hidden);
-                            handles.Add(n.Handle);
-                            handles.AddRange(getChildNodeHandlesRecursive(n));
-                        }
-                        else
-                        {
-                            HideNode(n, hidden);
-                            handles.Add(n.Handle);
-                        }
+                        HideNodeRecursive(n, hidden);
+                        handles.Add(n.Handle);
+                        handles.AddRange(getChildNodeHandlesRecursive(n));
+                    }
+                    else
+                    {
+                        HideNode(n, hidden);
+                        handles.Add(n.Handle);
                     }
                 }
             }
@@ -2047,38 +2049,37 @@ namespace Outliner
 
         private void OnAddButtonClick(TreeNode tn, MouseEventArgs e)
         {
-            if (tn.Tag is OutlinerLayer)
+            if( !(tn.Tag is OutlinerLayer))
+                return;
+
+            int layerHandle = (tn.Tag as OutlinerLayer).Handle;
+            List<int> objectHandles = new List<int>();
+            List<int> layerHandles = new List<int>();
+
+            foreach (OutlinerNode node in _selectedNodes)
             {
-                int layerHandle = (tn.Tag as OutlinerLayer).Handle;
-                List<int> objectHandles = new List<int>();
-                List<int> layerHandles = new List<int>();
-                foreach (OutlinerNode node in _selectedNodes)
+                if (node.Handle == layerHandle)
+                    continue;
+
+                if (node is OutlinerObject)
                 {
-                    if (node.Handle != layerHandle)
+                    SetObjectLayer(node.Handle, layerHandle);
+                    objectHandles.Add(node.Handle);
+                }
+                else if (node is OutlinerLayer && !((OutlinerLayer)node).IsDefaultLayer)
+                {
+                    if (_treeNodes.TryGetValue(node, out TreeNode cn) && !IsChildOfNode(tn, cn))
                     {
-                        if (node is OutlinerObject)
-                        {
-                            SetObjectLayer(node.Handle, layerHandle);
-                            objectHandles.Add(node.Handle);
-                        }
-                        else if (node is OutlinerLayer && !((OutlinerLayer)node).IsDefaultLayer)
-                        {
-                            TreeNode cn;
-                            if (_treeNodes.TryGetValue(node, out cn) && !IsChildOfNode(tn, cn))
-                            {
-                                SetLayerParent(node.Handle, layerHandle);
-                                layerHandles.Add(node.Handle);
-                            }
-                        }
+                        SetLayerParent(node.Handle, layerHandle);
+                        layerHandles.Add(node.Handle);
                     }
                 }
-
-                if (objectHandles.Count > 0)
-                    RaiseObjectLayerChangedEvent(new NodeLinkedEventArgs(objectHandles.ToArray(), layerHandle));
-                if (layerHandles.Count > 0)
-                    RaiseLayerLinkedEvent(new NodeLinkedEventArgs(layerHandles.ToArray(), layerHandle));
             }
 
+            if (objectHandles.Count > 0)
+                RaiseObjectLayerChangedEvent(new NodeLinkedEventArgs(objectHandles.ToArray(), layerHandle));
+            if (layerHandles.Count > 0)
+                RaiseLayerLinkedEvent(new NodeLinkedEventArgs(layerHandles.ToArray(), layerHandle));
         }
 
 
@@ -2535,7 +2536,7 @@ namespace Outliner
         {
             _updateTimer.Stop();
             if (!_sortTimer.Enabled)
-                this.EndUpdate();
+                EndUpdate();
             else
                 _updateWaitingForSort = true;
         }
@@ -3513,17 +3514,15 @@ namespace Outliner
 
         public int[] ExpandedNodeHandles
         {
-            get
-            {
-                return this._expandedNodeHandles.ToArray();
-            }
+            get => _expandedNodeHandles.ToArray();
+
             set
             {
                 if (!(_autoExpandHierarchy && ListMode == OutlinerListMode.Hierarchy) && !(_autoExpandLayer && ListMode == OutlinerListMode.Layer))
                 {
                     BeginTimedUpdate();
-                    this._expandedNodeHandles = new HashSet<int>(value);
-                    this.RestoreExpandedStates();
+                    _expandedNodeHandles = new HashSet<int>(value);
+                    RestoreExpandedStates();
                 }
             }
         }

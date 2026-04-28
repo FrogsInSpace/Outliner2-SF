@@ -87,8 +87,6 @@ namespace Outliner.Scene
 
         private Timer _sanitizeTimer;
 
-        public bool DoSanitize=true;
-
         public OutlinerScene()
         {
             objectCounter = 0;
@@ -145,9 +143,6 @@ namespace Outliner.Scene
         {
             if (Interlocked.Exchange(ref _isSyncing, 1) == 1)
                 return false; // already running, skip
-
-            if( !DoSanitize )
-                return false;
 
             var current = GlobalInterface.Instance.Animatable.GetHandleByAnim(_layerMgr.CurrentLayer);
 
