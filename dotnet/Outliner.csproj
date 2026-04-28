@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <TargetFramework>net4</TargetFramework> 
+    <TargetFramework>net48</TargetFramework> 
     <PlatformTarget>x64</PlatformTarget>	
     <Platforms>x64</Platforms>
     <Deterministic>False</Deterministic>
@@ -9,10 +9,14 @@
     <UseWindowsForms>true</UseWindowsForms>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <FileAlignment>4096</FileAlignment>
-    <Deterministic>False</Deterministic>
-	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendPlatformToOutputPath>false</AppendPlatformToOutputPath>
   </PropertyGroup>
+  <PropertyGroup>
+    <!--<Nullable>enable</Nullable>-->
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>  
   <PropertyGroup>
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
     <AssemblyVersion>2.5.0.*</AssemblyVersion>
@@ -32,15 +36,10 @@
     <Compile Update="MXSFileWatcher.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="Properties\Resources.Designer.cs">
+    <Compile Update="NodeContextMenu.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Properties\Settings.Designer.cs">
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
+      <DependentUpon>NodeContextMenu.resx</DependentUpon>
     </Compile>
     <Compile Update="TreeView.cs">
       <SubType>Component</SubType>
@@ -207,16 +206,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Update="Properties\Resources.resx">
+    <EmbeddedResource Update="NodeContextMenu.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <LastGenOutput>NodeContextMenu.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
+    <EmbeddedResource Update="Resources\OutlinerResources.resx">
+      <Generator></Generator>
+    </EmbeddedResource>
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="Exists('$(ADSK_3DSMAX_x64_2027)Scripts\Outliner')">
     <Exec Command="xcopy $(ProjectDir)$(OutDir)$(AssemblyName).dll $(ADSK_3DSMAX_x64_2028)Scripts\Outliner /Y /I" />

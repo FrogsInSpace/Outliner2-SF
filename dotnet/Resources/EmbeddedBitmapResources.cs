@@ -71,5 +71,23 @@ namespace Outliner.Resources
                 }
             }
         }
+
+        //internal static System.Drawing.Bitmap BuyMeACoffee
+        //{
+        //    get
+        //    {
+        //        object bmc = OutlinerResources .BuyMeACoffee; //  ResourceManager.GetObject("BuyMeACoffee");
+
+        //        if (bmc is byte[] bytes)
+        //        {
+        //            using (var ms = new System.IO.MemoryStream(bytes))
+        //            {
+        //                return new System.Drawing.Bitmap(ms);
+        //            }
+        //        }
+        //        return null;
+        //    }
+        //}
+
     }
 }

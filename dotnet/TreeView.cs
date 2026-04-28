@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
+
 using Outliner.DragDropHandlers;
 using Outliner.Scene;
 using Outliner.Resources;
 
 using Autodesk.Max;
+
+using Timer = System.Windows.Forms.Timer;
 
 namespace Outliner
 {
@@ -31,61 +30,10 @@ namespace Outliner
         private bool _ensureSelectionVisibleWaitingForSort;
 
 
-        private IReferenceTarget _prevCurrentLayerRefTarget;
-        private void sanityTimer_Tick(object sender, EventArgs e)
-        {
-
-            /*
-            var lMgr = Autodesk.Max.GlobalInterface.Instance.COREInterface14?.LayerManager;
-
-            if( lMgr == null )
-                return;
-
-            var props = lMgr.CurrentLayer as IILayerProperties;
-
-            // THIS is the equivalent:
-            IReferenceTarget refTarg = props as IReferenceTarget;
-
-            if (_prevCurrentLayerRefTarget != refTarg )
-            {
-                SetLayerActive( refTarg, true);
-
-
-
-            }
-            */
-        }
-
-        //public void SanitizeLayers()
-        //{
-        //    Scene.Layers
-        //    OutlinerLayer layer = this.Scene.GetLayerByHandle(layerHandle);
-        //    if (layer == null)
-        //        return;
-
-        //    layer.IsActive = isActive;
-
-        //    if (ListMode == OutlinerListMode.Layer)
-        //    {
-        //        if (_treeNodes.TryGetValue(layer, out TreeNode tn))
-        //        {
-        //            BeginTimedUpdate();
-        //            this.Style.SetNodeImageKey(tn);
-        //        }
-        //    }
-
-
-
-
-        //}
-
-
-
-
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         private static extern IntPtr SetFocus(IntPtr hWnd);
 
-        private IntPtr maxMainHandle;
+        private readonly IntPtr maxMainHandle;
 
         private const int WM_KEYDOWN = 0x0100;
         private const int WM_KEYUP = 0x0101;
@@ -103,14 +51,15 @@ namespace Outliner
                 if( value == _listMode )
                     return;    
 
+                Scene.LayerNameSynced -= OnLayerNameSynced;
+                Scene.CurrentLayerChanged -= OnActiveLayerChanged;
+
                 if( value == OutlinerListMode.Layer )
                 {
-                    Scene.LayerNameSynced += SyncTreeLayerName;
+                    Scene.CurrentLayerChanged += OnActiveLayerChanged;
+                    Scene.LayerNameSynced += OnLayerNameSynced;
                 }
-                else
-                {
-                    Scene.LayerNameSynced -= SyncTreeLayerName;
-                }
+
                 _listMode = value;
             }
 
@@ -435,20 +384,21 @@ namespace Outliner
         private void RestoreExpandedStates()
         {
             _restoringExpandedStates = true;
-            if ((ListMode == OutlinerListMode.Hierarchy && AutoExpandHierarchy) || (ListMode == OutlinerListMode.Layer && AutoExpandLayer))
+            if ( (ListMode == OutlinerListMode.Hierarchy && AutoExpandHierarchy)|| (ListMode == OutlinerListMode.Layer && AutoExpandLayer))
+            {
                 ExpandAll();
+            }
             else
             {
-                foreach (int handle in this._expandedNodeHandles)
+                foreach (int handle in _expandedNodeHandles)
                 {
-                    OutlinerNode n = this.Scene.GetNodeByHandle(handle);
-                    if (n != null)
-                    {
-                        TreeNode tn;
-                        if (_treeNodes.TryGetValue(n, out tn))
-                            if (!tn.IsExpanded)
-                                tn.Expand();
-                    }
+                    OutlinerNode n = Scene.GetNodeByHandle(handle);
+
+                    if( n == null || !_treeNodes.TryGetValue(n, out TreeNode tn))
+                        continue;
+
+                    if( tn!= null && !tn.IsExpanded )
+                        tn.Expand();
                 }
             }
             _restoringExpandedStates = false;
@@ -1266,7 +1216,7 @@ namespace Outliner
             _handlingMouseClick = true;
             _numMouseClicks = e.Clicks;
 
-            TreeNode tn = this.GetNodeAt(e.X, e.Y);
+            TreeNode tn = GetNodeAt(e.X, e.Y);
 
 
             if (IsClickOnHideButton(tn, e))
@@ -1571,10 +1521,30 @@ namespace Outliner
 
         protected void OnSelectionChanged()
         {
-            if (_selectionChanged && SelectionChanged != null)
-            {
-                SelectionChanged(this, new SelectionChangedEventArgs(SelectedObjectHandles, SelectedLayerHandlesIndirect, SelectedMaterialHandles));
-            }
+            if (_selectionChanged )
+                SelectionChanged?.Invoke(this, new SelectionChangedEventArgs(SelectedObjectHandles, SelectedLayerHandlesIndirect, SelectedMaterialHandles));
+        }
+
+
+
+        protected void OnLayerNameSynced(OutlinerLayer layer)
+        {
+            if (layer == null || _listMode != OutlinerListMode.Layer)
+                return;
+
+            SetLayerName(layer.Handle, layer.Name);
+        }
+
+        protected void OnActiveLayerChanged(OutlinerLayer newActive , OutlinerLayer prevActive )
+        {
+            if (_listMode != OutlinerListMode.Layer)
+                return;
+
+            if( prevActive != null )
+                SetLayerActive(prevActive.Handle, false);
+
+            if( newActive != null )
+                SetLayerActive(newActive.Handle, true);
         }
 
 
@@ -1853,7 +1823,7 @@ namespace Outliner
             {
                 int handle = ((OutlinerNode)e.Node.Tag).Handle;
                 if (!_expandedNodeHandles.Contains(handle))
-                    this._expandedNodeHandles.Add(handle);
+                    _expandedNodeHandles.Add(handle);
             }
 
             base.OnAfterExpand(e);
@@ -1862,7 +1832,7 @@ namespace Outliner
         protected override void OnAfterCollapse(TreeViewEventArgs e)
         {
             if (e.Node.Tag is OutlinerNode)
-                this._expandedNodeHandles.Remove(((OutlinerNode)e.Node.Tag).Handle);
+                _expandedNodeHandles.Remove(((OutlinerNode)e.Node.Tag).Handle);
 
             base.OnAfterCollapse(e);
         }
@@ -1887,8 +1857,8 @@ namespace Outliner
                 {
                     OutlinerLayer layer = (OutlinerLayer)tn.Tag;
                     layer.IsActive = !layer.IsActive;
-                    if (LayerActiveChanged != null)
-                        LayerActiveChanged(this, new NodePropertyChangedEventArgs(new int[1] { layer.Handle }, "isActive", layer.IsActive));
+
+                    LayerActiveChanged?.Invoke(this, new NodePropertyChangedEventArgs(new int[1] { layer.Handle }, "isActive", layer.IsActive));
                 }
             }
         }
@@ -2386,19 +2356,6 @@ namespace Outliner
         #endregion
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
         #region ScrollPosition
 
         [DllImport("user32.dll", CharSet = System.Runtime.InteropServices.CharSet.Auto)]
@@ -2423,12 +2380,6 @@ namespace Outliner
         }
 
         #endregion
-
-
-
-
-
-
 
         #region IconSet
 
@@ -2518,9 +2469,6 @@ namespace Outliner
 
 
         #endregion
-
-
-
 
 
 
@@ -2690,12 +2638,12 @@ namespace Outliner
 
         public void FillTree()
         {
-            this.BeginUpdate();
+            BeginUpdate();
 
             // Store selection.
             OutlinerNode[] selection = SelectedOutlinerNodes;
 
-            this.ClearTree();
+            ClearTree();
 
             // Set sorter, so nodes are added in sorted order.
             if (_treeViewNodeSorter != null)
@@ -2703,7 +2651,7 @@ namespace Outliner
 
             // Fill the tree.
             if (ListMode == OutlinerListMode.Hierarchy)
-                AddObjectsToTreeNodeCollection(this.Nodes, Scene.RootObjects, true);
+                AddObjectsToTreeNodeCollection(Nodes, Scene.RootObjects, true);
             else if (ListMode == OutlinerListMode.Layer)
                 AddLayersToTree();
             else if (ListMode == OutlinerListMode.Material)
@@ -2720,7 +2668,7 @@ namespace Outliner
             // Restore selection
             RestoreSelection(selection);
 
-            this.EndUpdate();
+            EndUpdate();
         }
 
 
@@ -2742,7 +2690,7 @@ namespace Outliner
 
         private void AddLayersToTree()
         {
-            List<OutlinerNode> layers = this.Scene.RootLayers;
+            List<OutlinerNode> layers = Scene.RootLayers;
             List<TreeNode> treeNodes = new List<TreeNode>();
 
             foreach (OutlinerNode layer in layers)
@@ -2755,13 +2703,13 @@ namespace Outliner
                     _treeNodes.Add(layer, tn);
 
                     // Add all objects belonging to the layer to the layers nodecollection.
-                    this.AddObjectsToTreeNodeCollection(tn.Nodes, layer.ChildNodes, false);
+                    AddObjectsToTreeNodeCollection(tn.Nodes, layer.ChildNodes, false);
 
                     treeNodes.Add(tn);
                 }
             }
 
-            this.Nodes.AddRange(treeNodes.ToArray());
+            Nodes.AddRange(treeNodes.ToArray());
         }
 
 
@@ -2786,7 +2734,7 @@ namespace Outliner
                 }
             }
 
-            this.Nodes.AddRange(treeNodes.ToArray());
+            Nodes.AddRange(treeNodes.ToArray());
         }
 
 
@@ -3188,13 +3136,6 @@ namespace Outliner
 
 
         #endregion
-
-
-
-
-
-
-
 
         #region Events
 
@@ -3602,15 +3543,6 @@ namespace Outliner
 
             if (_treeNodes.TryGetValue(n, out TreeNode tn))
                 TreeNodeBeginEdit(tn);
-        }
-
-        internal void SyncTreeLayerName(OutlinerLayer layer)
-        {
-            if (layer == null || _listMode != OutlinerListMode.Layer)
-                return;
-
-            if (_treeNodes.TryGetValue(layer, out TreeNode tn))
-                tn.Text = layer.Name;
         }
 
         #endregion

@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Timers;
+﻿using Autodesk.Max;
 
-using Autodesk.Max;
+using Timer = System.Windows.Forms.Timer;
 
 namespace Outliner.Scene
 {
@@ -66,7 +64,9 @@ namespace Outliner.Scene
         public const int RootHandle = -1;
         public const int UnassignedHandle = -1;
 
-        public event Action<OutlinerLayer> LayerNameSynced;
+        internal event Action<OutlinerLayer> LayerNameSynced;
+        internal event Action<OutlinerLayer, OutlinerLayer> CurrentLayerChanged;
+
 
         protected int objectCounter;
 
@@ -82,9 +82,12 @@ namespace Outliner.Scene
 
         protected Dictionary<int, List<int>> materials_by_parentHandle;
 
-        private IILayerManager _layerMgr;
+        private readonly IILayerManager _layerMgr;
+        private UIntPtr _lastCurrentLayer;
 
         private Timer _sanitizeTimer;
+
+        public bool DoSanitize=true;
 
         public OutlinerScene()
         {
@@ -103,12 +106,12 @@ namespace Outliner.Scene
 
             AddMaterial(new OutlinerMaterial(this, UnassignedHandle, RootHandle, "", ""));
 
-            _layerMgr = Autodesk.Max.GlobalInterface.Instance.COREInterface14?.LayerManager;
+            _layerMgr = GlobalInterface.Instance.COREInterface14.LayerManager;
+            _lastCurrentLayer = GlobalInterface.Instance.Animatable.GetHandleByAnim( _layerMgr.CurrentLayer);
 
-            _sanitizeTimer = new Timer(SanitizerInterval);
-            _sanitizeTimer.Elapsed += (s, e) => SyncLayerNames();
-            _sanitizeTimer.AutoReset = true;
-
+            _sanitizeTimer = new Timer();
+            _sanitizeTimer.Interval = SanitizerInterval;
+            _sanitizeTimer.Tick += (s, e) => SanitizeLayers();
         }
 
         public void Clear()
@@ -138,10 +141,22 @@ namespace Outliner.Scene
 
 
         private int _isSyncing = 0;
-        public bool SyncLayerNames()
+        public bool SanitizeLayers()
         {
-            if (System.Threading.Interlocked.Exchange(ref _isSyncing, 1) == 1)
+            if (Interlocked.Exchange(ref _isSyncing, 1) == 1)
                 return false; // already running, skip
+
+            if( !DoSanitize )
+                return false;
+
+            var current = GlobalInterface.Instance.Animatable.GetHandleByAnim(_layerMgr.CurrentLayer);
+
+            if (current != null && current != _lastCurrentLayer)
+            {
+                CurrentLayerChanged?.Invoke(GetLayerByHandle((int)current), GetLayerByHandle((int)_lastCurrentLayer));
+                _lastCurrentLayer = current;
+            }
+
 
             bool didSync = false;
 
@@ -209,23 +224,24 @@ namespace Outliner.Scene
 
         public OutlinerObject GetObjectByHandle(int handle)
         {
-            OutlinerObject obj = null;
-            objects.TryGetValue(handle, out obj);
-            return obj;
+            if( objects.TryGetValue(handle, out OutlinerObject obj))
+                return obj;
+            return null;
         }
 
         public OutlinerLayer GetLayerByHandle(int handle)
         {
-            OutlinerLayer layer = null;
-            layers.TryGetValue(handle, out layer);
-            return layer;
+            if(layers.TryGetValue(handle, out OutlinerLayer layer))
+                return layer;
+
+            return null;
         }
 
         public OutlinerMaterial GetMaterialByHandle(int handle)
         {
-            OutlinerMaterial mat = null;
-            materials.TryGetValue(handle, out mat);
-            return mat;
+            if( materials.TryGetValue(handle, out OutlinerMaterial mat))
+                return mat;
+            return null;
         }
 
         #endregion
@@ -424,7 +440,7 @@ namespace Outliner.Scene
 
         public bool IsValidLayerName(OutlinerLayer editingLayer, string newName)
         {
-            if (newName == string.Empty)
+            if ( string.IsNullOrEmpty( newName))
                 return false;
 
             foreach (KeyValuePair<int, OutlinerLayer> kvp in layers)
@@ -446,7 +462,7 @@ namespace Outliner.Scene
 
         public bool IsValidMaterialName(OutlinerMaterial editingMaterial, string newName)
         {
-            if (newName == string.Empty)
+            if (string.IsNullOrEmpty(newName))
                 return false;
 
             foreach (KeyValuePair<int, OutlinerMaterial> kvp in materials)
