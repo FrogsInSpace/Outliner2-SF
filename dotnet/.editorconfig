@@ -1,9 +1,23 @@
+root=true
+
 [*]
 end_of_line = crlf
 trim_trailing_whitespace = true
 insert_final_newline = false
 indent_style = space
 indent_size = 4
+
+[*.csproj]
+indent_size = 2
+indent_style = space
+
+[*.ms,*.mcr]
+indent_size = 2
+indent_style = space
+
+[*.xml,*.yaml,*.yml]
+indent_size = 2
+indent_style = space
 
 # Microsoft .NET properties
 csharp_space_after_keywords_in_control_flow_statements = true
@@ -42,7 +56,7 @@ dotnet_naming_symbols.private_static_readonly_symbols.applicable_accessibilities
 dotnet_naming_symbols.private_static_readonly_symbols.applicable_kinds = field
 dotnet_naming_symbols.private_static_readonly_symbols.required_modifiers = static,readonly
 dotnet_naming_symbols.unity_serialized_field_symbols.applicable_accessibilities = *
-dotnet_naming_symbols.unity_serialized_field_symbols.applicable_kinds = 
+dotnet_naming_symbols.unity_serialized_field_symbols.applicable_kinds =
 dotnet_naming_symbols.unity_serialized_field_symbols.resharper_applicable_kinds = unity_serialised_field
 dotnet_naming_symbols.unity_serialized_field_symbols.resharper_required_modifiers = instance
 dotnet_style_parentheses_in_arithmetic_binary_operators = never_if_unnecessary:none
@@ -55,22 +69,3 @@ dotnet_style_qualification_for_field = false:suggestion
 dotnet_style_qualification_for_method = false:suggestion
 dotnet_style_qualification_for_property = false:suggestion
 dotnet_style_require_accessibility_modifiers = for_non_interface_members:suggestion
-
-
-[{*.har,*.inputactions,*.jsb2,*.jsb3,*.json,.babelrc,.eslintrc,.stylelintrc,bowerrc,jest.config}]
-indent_style = space
-indent_size = 2
-
-[{*.yaml,*.yml}]
-indent_style = space
-indent_size = 2
-
-[*.asmdef]
-indent_style = space
-indent_size = 2
-
-[*.asmref]
-indent_style = space
-indent_size = 2
-
-
