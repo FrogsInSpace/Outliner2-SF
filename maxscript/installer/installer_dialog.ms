@@ -25,7 +25,7 @@ rollout outliner_pre_install ((outlinerInstaller.getString #title) + " " + \
                                     + (outlinerInstaller.build_info[2] as string) + "." \
                                     + (outlinerInstaller.build_info[3] as string) + "." \
                                     + (outlinerInstaller.build_info[4] as string) + "-" \
-                                    +  outlinerInstaller.build_info[5]
+                                    + (outlinerInstaller.build_info[5] as string)
       )
 
 	   descr_lbl.text = outlinerInstaller.getString #descr_lbl1;
