@@ -6,7 +6,7 @@ prefs,
 product_info,
 build_info,
 ui,
-
+assembly,
 tree,
 kbdxXml,
 
@@ -27,6 +27,11 @@ function loadAssembly dll =
 	if( (getDotNetVersion())[1] > 5 ) then
 	(
 		--No shadow copying with dotnet framework 5 and higher ( deprecated )
+    /* Workarround  
+    local tmp = (getDir #temp) + "\\" + (getFilenameFile path) + "_" + (timestamp() as string) + ".dll"
+    copyFile path tmp
+    (dotNetClass "System.Reflection.Assembly").LoadFrom tmp
+     */
 		dotNet.loadAssembly(dir + dll)
 	)
 	else
@@ -1080,7 +1085,7 @@ function init =
 
       try
       (
-         local assembly = loadAssembly "Outliner.dll";
+         assembly = loadAssembly "Outliner.dll";
          build_info = getAssemblyVersion assembly;
 
 		   local fDate =	(dotNetObject "System.IO.FileInfo" (dir + "Outliner.dll")).LastWriteTime;

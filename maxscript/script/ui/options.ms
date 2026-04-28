@@ -424,30 +424,31 @@ rollout outliner_options_workflowtools "Workflow Tools Options"
 )--End rollout.
 
 
-rollout outliner_options_about "About \x26 Donate"
+rollout outliner_options_about "About & Donate"
 (
    label versionLbl "";
    label buildLbl "";
-   label bugfixLbl "Max 2017+ compability \xa9 2016-2026" align:#center offset:[0, 5]
-   hyperlink bugfixSiteLbl "Josef Wienerroither | frogsinspace.at" address:"https://www.frogsinspace.at/?p=3001" align:#center offset:[0, 0];
+   label bugfixLbl "Max 2017+ compability © 2016-2026" align:#center offset:[0, 5]
 
+   hyperlink bugfixSiteLbl "Josef Wienerroither | frogsinspace.at" address:"https://www.frogsinspace.at/?p=3001" align:#center offset:[0, 0];
    hyperlink sfDonateLbl "Please donate by buying me a virtual coffee. Thank you!" address:"https://buymeacoffee.com/frogsinspace" align:#center offset:[0, 5] ;
    label donateLbl2 "This will support future development and maintenance." align:#center;
-
-   label nameLbl "Original copyright \xa9 2011, Pier Janssen" offset:[0, 8]
-
+   
+   label nameLbl "Original copyright © 2011, Pier Janssen" offset:[0, 8]
+   
    function setUIValues =
    (
-	  versionLbl.text = "Version " + outliner.product_info.getValue #General #versionString;
+      versionLbl.text = "Version " + outliner.product_info.getValue #General #versionString;
 
-	  if( classof outliner.build_info == Array AND outliner.build_info.count >= 4) do
-	  (
-		buildLbl.text = "Build: " 	+ (outliner.build_info[1] as string) + "." \
-											+ (outliner.build_info[2] as string) + "." \
-											+ (outliner.build_info[3] as string) + "." \
-											+ (outliner.build_info[4] as string) + "-" \
-		     								+ outliner.build_info[5]
-	  )
+      if( classof outliner.build_info == Array AND outliner.build_info.count >= 4) do
+      (
+         buildLbl.text = "Build: " 	\
+                           + (outliner.build_info[1] as string) + "." \
+                           + (outliner.build_info[2] as string) + "." \
+                           + (outliner.build_info[3] as string) + "." \
+                           + (outliner.build_info[4] as string) + "-" \
+                           + outliner.build_info[5]
+      )
    )
 )--End rollout.
 
@@ -462,8 +463,11 @@ rollout outliner_options "Options"
 
    function close =
    (
-      if (outliner_status != undefined) do outliner_status.optionsOpen = false;
-      if (not closing) do destroyDialog outliner_options;
+      if (outliner_status != undefined) do 
+         outliner_status.optionsOpen = false;
+      
+      if (not closing) do 
+         destroyDialog outliner_options;
    )
 
    function checkOutlinerStatus =

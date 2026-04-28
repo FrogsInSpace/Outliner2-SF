@@ -131,9 +131,9 @@ function NodeFrozen e =
                if (n != undefined AND not isDeleted n) do
                (
                   if (isValidNode n) then
-                     n.isNodeFrozen = e.newValue;
+                    n.isNodeFrozen = e.newValue;
                   else if (isKindOf n Base_Layer) then
-                     outlinerNestedLayers.setLayerProperty n #isFrozen e.newValue;
+                    outlinerNestedLayers.setLayerProperty n #isFrozen e.newValue;
                )
             )
          )
@@ -165,10 +165,10 @@ function NodeBoxModeChanged e =
             local n = GetAnimByHandle handle;
             if (n != undefined AND not isDeleted n) do
             (
-               if (isValidNode n) then
-                  n.boxMode = e.newValue;
-               else if (isKindOf n Base_Layer) then
-                  outlinerNestedLayers.setLayerProperty n #boxMode e.newValue;
+              if (isValidNode n) then
+                n.boxMode = e.newValue;
+              else if (isKindOf n Base_Layer) then
+                outlinerNestedLayers.setLayerProperty n #boxMode e.newValue;
             )
          )
       )
@@ -512,17 +512,19 @@ function LayerLinked e =
       local layerHandles = e.Handles;
       local targetLayer = if (targetHandle != -1) then (GetAnimByHandle targetHandle) \
                                                   else undefined;
-
       for h in layerHandles do
-      (
+      (     
          local layer = GetAnimByHandle h;
-         if (layer != undefined) do
+      
+         if (layer != undefined ) do
+         (
             outlinerNestedLayers.setParent layer targetLayer;
+         )
       )
    )
    catch
    (
-      fileIn (outliner.dir + "crash_report.ms")
+     fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 

@@ -3,10 +3,10 @@
 function outliner_convertLegacyNestedLayers =
 (
    --Skip if loaded file was a render preset.
-   if (callbacks.notificationParam() == 2) do
-      return ok;
+	if (callbacks.notificationParam() == 2) do
+		return ok;
    
-   local mb = dotNetClass "System.Windows.Forms.MessageBox";
+	local mb = dotNetClass "System.Windows.Forms.MessageBox";
 	local mbBtn = dotNetClass "System.Windows.Forms.MessageBoxButtons";
 	local mbIcon = dotNetClass "System.Windows.Forms.MessageBoxIcon";
 		
@@ -17,28 +17,28 @@ function outliner_convertLegacyNestedLayers =
       --Loop through all CA definitions.
       for def in custAttributes.getSceneDefs() where (def.name == defName) do
       (
-         local instances = custAttributes.getDefInstances def;
-         for i in instances \
-               where (l = custAttributes.getOwner i) != undefined do
-         (
-            --Set parent layer in new nested layers system.
-            outlinerNestedLayers.setParent l l.outliner_parentLayer;
-            
-            --Loop through all ca sets on the owner object and find one that
-            --matches the one we want to remove. Delete has to be done using 
-            --the index, since it has to be made unique first.
-            for caIndex = 1 to (custAttributes.count l) do
-            (
-               if (((custAttributes.get l caIndex).name as name) == defName) do
-               (
-                  --Make CA set unique first, otherwise delete won't work..
-                  custAttributes.makeUnique l caIndex;
-                  custAttributes.delete l caIndex;
-               )
-            )
-            
-            numConverted += 1;
-         )
+		local instances = custAttributes.getDefInstances def;
+         
+		for i in instances where (l = custAttributes.getOwner i) != undefined do
+		(
+			--Set parent layer in new nested layers system.
+			outlinerNestedLayers.setParent l l.outliner_parentLayer;
+
+			--Loop through all ca sets on the owner object and find one that
+			--matches the one we want to remove. Delete has to be done using 
+			--the index, since it has to be made unique first.
+			for caIndex = 1 to (custAttributes.count l) do
+			(
+			   if (((custAttributes.get l caIndex).name as name) == defName) do
+			   (
+				  --Make CA set unique first, otherwise delete won't work..
+				  custAttributes.makeUnique l caIndex;
+				  custAttributes.delete l caIndex;
+			   )
+			)
+
+			numConverted += 1;
+		)
          --Remove the nested layer custom attributes definition from the scene.
          custAttributes.deleteDef def;
       )
