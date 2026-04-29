@@ -60,6 +60,7 @@
     <EmbeddedResource Include="Resources\contextmenu_icons\ungroup.png" />
     <EmbeddedResource Include="Resources\contextmenu_icons\unlink.png" />
     <EmbeddedResource Include="Resources\contextmenu_icons\hide.png" />
+    <EmbeddedResource Include="Resources\images\BuyMeACoffee.png" />
     <EmbeddedResource Include="Resources\max_icons\bone_16.png" />
     <EmbeddedResource Include="Resources\max_icons\camera_16.png" />
     <EmbeddedResource Include="Resources\max_icons\container_16.png" />
@@ -215,6 +216,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="Exists('$(ADSK_3DSMAX_x64_2027)Scripts\Outliner')">
-    <Exec Command="xcopy $(ProjectDir)$(OutDir)$(AssemblyName).dll $(ADSK_3DSMAX_x64_2028)Scripts\Outliner /Y /I" />
+    <Exec Command="xcopy $(ProjectDir)$(OutDir)$(AssemblyName).dll $(ADSK_3DSMAX_x64_2027)Scripts\Outliner /Y /I" />
   </Target>
 </Project>

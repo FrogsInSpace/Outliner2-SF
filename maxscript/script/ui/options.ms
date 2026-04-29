@@ -12,14 +12,14 @@ local drpDwnLblX = marginX + drpDwnW + 6;
 local getPrefFn;
 local setPrefFn;
 
+local buyMeACoffeeBmp;
+local donateUrl = "https://buymeacoffee.com/frogsinspace";
+local outlinerUrl = "https://www.frogsinspace.at/?p=8889";
+
 rollout outliner_options_general "General"
 (
-   checkbox checkForUpdates "Check for updates every" pos:[marginX, marginY] enabled:false;
-   spinner checkUpdatesInterval "" range:[1, 30, 7] type:#integer fieldWidth:30 pos:[marginX + 140, marginY + 1] enabled:false;
-   label checkUpdateDaysLbl "days" pos:[marginX + 187, marginY + 1] enabled:false;
-   checkbutton checkNowBtn "Check now" width:70 pos:[marginX + 220, marginY - 2];
-   checkbox skipTrialVersions "Skip trial versions (recommended)" pos:[marginX, marginY + chkbxDY];
-
+   checkbutton checkUpdateBtn "Check Github.com for Updates..." align:#center
+   
    checkbox openAtStartup "Open at 3dsMax startup" pos:[marginX, marginY + chkbxDY * 2];
    checkbox focusSearchFieldOnOpen "Set focus to search field when opening" pos:[marginX, marginY + chkbxDY * 3];
    checkbox clearSearchFieldAfterSelect "Clear search field when selecting found nodes" pos:[marginX, marginY + chkbxDY * 4];
@@ -37,34 +37,26 @@ rollout outliner_options_general "General"
 
    function resetCheckBtn =
    (
-      checkNowBtn.text = "Check now";
-      checkNowBtn.checked = false;
+      checkUpdateBtn.text = "Check now";
+      checkUpdateBtn.checked = false;
    )
 
-   on checkNowBtn changed checked do
+   on checkUpdateBtn changed checked do
    (
       if (checked) then
       (
          shellLaunch "https://github.com/FrogsInSpace/Outliner/releases" ""
-         checkNowBtn.checked = false
-         -- checkNowBtn.text = "Cancel";
+         checkUpdateBtn.checked = false
+         -- checkUpdateBtn.text = "Cancel";
          -- outliner_update.checkCompleteFn = outliner_options_general.resetCheckBtn;
          -- outliner_update.checkUpdateManual();
       )
       -- else
       -- (
-      --    checkNowBtn.text = "Check now";
+      --    checkUpdateBtn.text = "Check now";
       --    outliner_update.cancelCheckUpdate();
       -- )
    )
-
-   on skipTrialVersions changed checked do
-   (
-      setPrefFn #General #accept_trial (not checked);
-      if (not checked) do
-         messageBox "It is possible that by disabling this option, you will be presented with\nuntested pre-release versions of the Outliner.\nUse this at your own risk!" title:"Warning";
-   )
-
    on openAtStartup changed checked do
       setPrefFn #General #openAtStartup checked;
 
@@ -88,9 +80,6 @@ rollout outliner_options_general "General"
 
    function setUIvalues =
    (
-      checkForUpdates.checked = getPrefFn #General #checkForUpdates;
-      checkUpdatesInterval.value = getPrefFn #General #checkUpdatesInterval;
-      skipTrialVersions.checked = not (getPrefFn #General #accept_trial);
       openAtStartup.checked = getPrefFn #General #openAtStartup;
       focusSearchFieldOnOpen.checked = getPrefFn #General #focusSearchFieldOnOpen;
       clearSearchFieldAfterSelect.checked = getPrefFn #General #clearSearchFieldAfterSelect;
@@ -426,30 +415,94 @@ rollout outliner_options_workflowtools "Workflow Tools Options"
 
 rollout outliner_options_about "About & Donate"
 (
-   label versionLbl "";
-   label buildLbl "";
-   label bugfixLbl "Max 2017+ compability © 2016-2026" align:#center offset:[0, 5]
+  label versionLbl "";
+  label buildLbl "";
+  dotNetControl sfDonateLbl2 "System.Windows.Forms.LinkLabel" text:"Please donate to support future development. Thank you!"  offset:[0, 5] align:#center 
 
-   hyperlink bugfixSiteLbl "Josef Wienerroither | frogsinspace.at" address:"https://www.frogsinspace.at/?p=3001" align:#center offset:[0, 0];
-   hyperlink sfDonateLbl "Please donate by buying me a virtual coffee. Thank you!" address:"https://buymeacoffee.com/frogsinspace" align:#center offset:[0, 5] ;
-   label donateLbl2 "This will support future development and maintenance." align:#center;
-   
-   label nameLbl "Original copyright © 2011, Pier Janssen" offset:[0, 8]
-   
-   function setUIValues =
-   (
-      versionLbl.text = "Version " + outliner.product_info.getValue #General #versionString;
+  dotNetControl donateButton "System.Windows.Forms.PictureBox" align:#center width:285 height:80
 
-      if( classof outliner.build_info == Array AND outliner.build_info.count >= 4) do
+
+  label aboutLbl "Max 2017+ compability © 2016-2026" align:#center offset:[0, 10]
+  hyperlink outlinerSiteLbl "Josef Wienerroither | frogsinspace.at" address:outlinerUrl align:#center
+
+  label nameLbl "Original copyright © 2011, Pier Janssen" offset:[0, 8]
+
+  
+  function setUIValues =
+  (
+    versionLbl.text = "Version " + outliner.product_info.getValue #General #versionString;
+
+    if( classof outliner.build_info == Array AND outliner.build_info.count >= 4) do
+    (
+       buildLbl.text = "Build: " 	\
+                         + (outliner.build_info[1] as string) + "." \
+                         + (outliner.build_info[2] as string) + "." \
+                         + (outliner.build_info[3] as string) + "." \
+                         + (outliner.build_info[4] as string) + "-" \
+                         + outliner.build_info[5]
+    )
+  )
+  
+  function openUrl url= 
+  (
+    if( classof(url) == string ) do
+      shellLaunch url ""  
+  )
+
+  
+  on sfDonateLbl2 Click do
+  (
+    openUrl donateUrl
+  )
+
+  on donateButton MouseEnter do
+  (
+    donateButton.BorderStyle = (dotNetClass "System.Windows.Forms.BorderStyle").FixedSingle
+  )
+
+  on donateButton MouseLeave do
+  (
+    donateButton.BorderStyle = (dotNetClass "System.Windows.Forms.BorderStyle").None
+  )
+
+  on donateButton Click do
+  (
+    openUrl donateUrl
+  )
+
+  on outliner_options_about open do 
+  (
+      local c = (colorman.getColor #backgroundeven) * 255
+      local backColor = (dotNetClass "System.Drawing.Color").FromArgb c[1] c[2] c[3]
+  
+      c = (colorman.getColor #buttontext) * 255
+      local foreColor = (dotNetClass "System.Drawing.Color").FromArgb c[1] c[2] c[3]
+  
+  
+      sfDonateLbl2.linkBehavior = (dotNetClass "System.Windows.Forms.LinkBehavior").HoverUnderline
+      sfDonateLbl2.textAlign = (dotNetClass "System.Drawing.ContentAlignment").MiddleCenter
+  
+      if( colorMan.getColorTheme() == #dark ) then
       (
-         buildLbl.text = "Build: " 	\
-                           + (outliner.build_info[1] as string) + "." \
-                           + (outliner.build_info[2] as string) + "." \
-                           + (outliner.build_info[3] as string) + "." \
-                           + (outliner.build_info[4] as string) + "-" \
-                           + outliner.build_info[5]
+         sfDonateLbl2.linkColor = (dotNetClass "System.Drawing.Color").Orange
+         sfDonateLbl2.activeLinkColor = (dotNetClass "System.Drawing.Color").Red
       )
-   )
+      else
+      (
+         sfDonateLbl2.linkColor = (dotNetClass "System.Drawing.Color").Blue
+         sfDonateLbl2.activeLinkColor = (dotNetClass "System.Drawing.Color").DeepSkyBlue
+      )     
+  
+      sfDonateLbl2.BackColor = backColor 
+      sfDonateLbl2.ForeColor = foreColor
+      
+      donateButton.SizeMode = (dotNetClass "System.Windows.Forms.PictureBoxSizeMode").StretchImage
+      donateButton.Cursor = (dotNetClass "System.Windows.Forms.Cursors").Hand
+  
+      donateButton.Image = buyMeACoffeeBmp
+      donateButton.BackColor = backColor 
+  )
+  
 )--End rollout.
 
 
@@ -460,6 +513,7 @@ rollout outliner_options "Options"
    button closeBtn "Close" width:(outliner_options.width - 10) height:25 pos:[5, outliner_options.height - 28];
 
    local closing = false;
+
 
    function close =
    (
@@ -486,6 +540,8 @@ rollout outliner_options "Options"
 
    on outliner_options open do
    (
+      buyMeACoffeeBmp = (dotNetClass "Outliner.Resources.EmbeddedBitmapResources").BuyMeACoffee
+   
       if (checkOutlinerStatus()) do
       (
          AddSubRollout rollouts outliner_options_general;

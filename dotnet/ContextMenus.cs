@@ -177,9 +177,9 @@ namespace Outliner
             MainMenu.ShowImageMargin = true;
             MainMenu.ShowCheckMargin = false;
 
-            SelectChildnodesItem = MainMenu.Items.Add(OutlinerResources.ContextMenuSelectChildnodes, OutlinerResources.childnodes);
-            SetActiveLayerItem = MainMenu.Items.Add(OutlinerResources.ContextMenuSetActiveLayer, OutlinerResources.activelayer);
-            CreateNewLayerItem = MainMenu.Items.Add(OutlinerResources.ContextMenuCreateNewLayer, OutlinerResources.newlayer);
+            SelectChildnodesItem = MainMenu.Items.Add(OutlinerResources.ContextMenuSelectChildnodes, ContextMenuIcons.childnodes);
+            SetActiveLayerItem = MainMenu.Items.Add(OutlinerResources.ContextMenuSetActiveLayer, ContextMenuIcons.activelayer);
+            CreateNewLayerItem = MainMenu.Items.Add(OutlinerResources.ContextMenuCreateNewLayer, ContextMenuIcons.newlayer);
             EditMaterialItem = new ToolStripMenuItem(OutlinerResources.ContextMenuEditMaterial);
             EditMaterialItem.DropDown = createEditMaterialMenu();
             MainMenu.Items.Add(EditMaterialItem);
@@ -187,16 +187,16 @@ namespace Outliner
             separator1 = new ToolStripSeparator();
             MainMenu.Items.Add(separator1);
 
-            RenameItem = MainMenu.Items.Add(OutlinerResources.ContextMenuRename, OutlinerResources.rename);
-            AdvancedRenameItem = MainMenu.Items.Add(OutlinerResources.ContextMenuAdvRename, OutlinerResources.advrename);
-            DeleteItem = MainMenu.Items.Add(OutlinerResources.ContextMenuDelete, OutlinerResources.delete);
+            RenameItem = MainMenu.Items.Add(OutlinerResources.ContextMenuRename, ContextMenuIcons.rename);
+            AdvancedRenameItem = MainMenu.Items.Add(OutlinerResources.ContextMenuAdvRename, ContextMenuIcons.advrename);
+            DeleteItem = MainMenu.Items.Add(OutlinerResources.ContextMenuDelete, ContextMenuIcons.delete);
 
             separator2 = new ToolStripSeparator();
             MainMenu.Items.Add(separator2);
 
-            HideItem = MainMenu.Items.Add(OutlinerResources.ContextMenuHide, OutlinerResources.hide);
+            HideItem = MainMenu.Items.Add(OutlinerResources.ContextMenuHide, ContextMenuIcons.hide);
             UnhideItem = MainMenu.Items.Add(OutlinerResources.ContextMenuUnhide);
-            FreezeItem = MainMenu.Items.Add(OutlinerResources.ContextMenuFreeze, OutlinerResources.freeze);
+            FreezeItem = MainMenu.Items.Add(OutlinerResources.ContextMenuFreeze, ContextMenuIcons.freeze);
             UnfreezeItem = MainMenu.Items.Add(OutlinerResources.ContextMenuUnfreeze);
 
             separator3 = new ToolStripSeparator();
@@ -205,7 +205,7 @@ namespace Outliner
             AddSelectionToItem = new ToolStripMenuItem(OutlinerResources.ContextMenuAddTo);
             AddSelectionToItem.DropDown = createAddSelectionToMenu();
             MainMenu.Items.Add(AddSelectionToItem);
-            UnlinkItem = MainMenu.Items.Add(OutlinerResources.ContextMenuUnlink, OutlinerResources.unlink);
+            UnlinkItem = MainMenu.Items.Add(OutlinerResources.ContextMenuUnlink, ContextMenuIcons.unlink);
             UngroupItem = MainMenu.Items.Add(OutlinerResources.ContextMenuUngroup);
 
             separator4 = new ToolStripSeparator();
@@ -218,8 +218,8 @@ namespace Outliner
             RenderPropertiesItem.DropDown = createRenderPropertiesMenu();
             MainMenu.Items.Add(RenderPropertiesItem);
 
-            LayerPropertiesItem = MainMenu.Items.Add(OutlinerResources.ContextMenuLayerProperties, OutlinerResources.properties);
-            ObjectPropertiesItem = MainMenu.Items.Add(OutlinerResources.ContextMenuObjectProperties, OutlinerResources.properties);
+            LayerPropertiesItem = MainMenu.Items.Add(OutlinerResources.ContextMenuLayerProperties, ContextMenuIcons.properties);
+            ObjectPropertiesItem = MainMenu.Items.Add(OutlinerResources.ContextMenuObjectProperties, ContextMenuIcons.properties);
         }
 
         #endregion
@@ -254,9 +254,9 @@ namespace Outliner
             AddSelectionToMenu.RenderMode = ToolStripRenderMode.Professional;
             AddSelectionToMenu.ShowImageMargin = true;
 
-            AddToNewContainerItem = AddSelectionToMenu.Items.Add(OutlinerResources.ContextMenuNewContainer, OutlinerResources.newcontainer);
-            AddToNewGroupItem = AddSelectionToMenu.Items.Add(OutlinerResources.ContextMenuNewGroup, OutlinerResources.newgroup);
-            AddToNewLayerItem = AddSelectionToMenu.Items.Add(OutlinerResources.ContextMenuNewLayer, OutlinerResources.newlayer);
+            AddToNewContainerItem = AddSelectionToMenu.Items.Add(OutlinerResources.ContextMenuNewContainer, ContextMenuIcons.newcontainer);
+            AddToNewGroupItem = AddSelectionToMenu.Items.Add(OutlinerResources.ContextMenuNewGroup, ContextMenuIcons.newgroup);
+            AddToNewLayerItem = AddSelectionToMenu.Items.Add(OutlinerResources.ContextMenuNewLayer, ContextMenuIcons.newlayer);
 
             AddSelectionToMenu.Items.Add(new ToolStripSeparator());
 

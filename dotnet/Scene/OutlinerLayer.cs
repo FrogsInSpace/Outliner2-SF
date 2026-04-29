@@ -45,16 +45,8 @@ namespace Outliner.Scene
 
         public List<OutlinerNode> ChildObjects => Scene.GetObjectsByLayerHandle(Handle);
 
-        override public string DisplayName
-        {
-            get
-            {
-                if (IsDefaultLayer)
-                    return "0 (default)";
+        override public string DisplayName => IsDefaultLayer ? "0 (default)" : Name;
 
-                return Name;
-            }
-        }
         override public bool CanEditName => !IsDefaultLayer;
 
         public override bool CanBeDeleted => !IsDefaultLayer;

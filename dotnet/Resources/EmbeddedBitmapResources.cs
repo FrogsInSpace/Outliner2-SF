@@ -8,16 +8,17 @@ using System.Resources;
 
 namespace Outliner.Resources
 {
-    internal static class EmbeddedBitmapResources
+    public static class EmbeddedBitmapResources
     {
         private const string ResourcePrefix = "Outliner.Resources.";
+        private static readonly string[] ValidExtensions = new [] { ".png", ".gif", ".bmp" };
 
         private static readonly Assembly Assembly = typeof(EmbeddedBitmapResources).Assembly;
         private static readonly Dictionary<string, string> ManifestNames = BuildManifestNameLookup();
 
-        internal static Bitmap Load(string folderName, string resourceName)
+        internal static Bitmap Load(string folderName, string resourceName, string extension=".png")
         {
-            return LoadByKey(folderName + "." + resourceName + ".png");
+            return LoadByKey(folderName + "." + resourceName + extension) as Bitmap;
         }
 
         internal static IEnumerable<KeyValuePair<string, Bitmap>> LoadSet(string folderName, string postfix = ".png" )
@@ -31,7 +32,7 @@ namespace Outliner.Resources
             foreach (string key in keys)
             {
                 string resourceName = key.Substring(prefix.Length, key.Length - prefix.Length - postfix.Length);
-                yield return new KeyValuePair<string, Bitmap>(resourceName, LoadByKey(key));
+                yield return new KeyValuePair<string, Bitmap>(resourceName, LoadByKey(key) as Bitmap);
             }
         }
 
@@ -41,11 +42,11 @@ namespace Outliner.Resources
 
             foreach (string manifestName in Assembly.GetManifestResourceNames())
             {
-                if (!manifestName.StartsWith(ResourcePrefix, StringComparison.Ordinal) ||
-                    !manifestName.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
-                {
+                if(!manifestName.StartsWith(ResourcePrefix, StringComparison.Ordinal))
                     continue;
-                }
+
+                if( ValidExtensions.FirstOrDefault( e => e.Equals( Path.GetExtension(manifestName) , StringComparison.OrdinalIgnoreCase)) == null )
+                    continue;
 
                 string key = manifestName.Substring(ResourcePrefix.Length);
                 manifestNames[key] = manifestName;
@@ -65,29 +66,14 @@ namespace Outliner.Resources
                 if (stream == null)
                     throw new MissingManifestResourceException("Unable to open embedded bitmap resource: " + manifestName);
 
-                using (Bitmap bitmap = new Bitmap(stream))
+
+                using (var image = Image.FromStream(stream))
                 {
-                    return new Bitmap(bitmap);
+                    return new Bitmap(image);
                 }
             }
         }
 
-        //internal static System.Drawing.Bitmap BuyMeACoffee
-        //{
-        //    get
-        //    {
-        //        object bmc = OutlinerResources .BuyMeACoffee; //  ResourceManager.GetObject("BuyMeACoffee");
-
-        //        if (bmc is byte[] bytes)
-        //        {
-        //            using (var ms = new System.IO.MemoryStream(bytes))
-        //            {
-        //                return new System.Drawing.Bitmap(ms);
-        //            }
-        //        }
-        //        return null;
-        //    }
-        //}
-
+        public static Bitmap BuyMeACoffee = Load("images", "BuyMeACoffee");
     }
 }

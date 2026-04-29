@@ -787,9 +787,9 @@ namespace Outliner
                         r = GetHideButtonBounds(tn);
                         bool isHidden = ((IDisplayable)tnTag).IsHidden || (tnTag is OutlinerObject && ((OutlinerObject)tnTag).Layer.IsHidden);
                         if ((isHidden && !InvertNodeHideButton) || (!isHidden && InvertNodeHideButton))
-                            graphics.DrawImage(OutlinerResources.hide_button, r);
+                            graphics.DrawImage(NodeButtonIcons.hide_button, r);
                         else
-                            graphics.DrawImage(OutlinerResources.hide_button_disabled, r);
+                            graphics.DrawImage(NodeButtonIcons.hide_button_disabled, r);
                     }
 
                     if (ShowNodeFreezeButton)
@@ -797,18 +797,18 @@ namespace Outliner
                         r = GetFreezeButtonBounds(tn);
 
                         if (((IDisplayable)tnTag).IsFrozen || (tnTag is OutlinerObject && ((OutlinerObject)tnTag).Layer.IsFrozen))
-                            graphics.DrawImage(OutlinerResources.freeze_button, r);
+                            graphics.DrawImage(NodeButtonIcons.freeze_button, r);
                         else
-                            graphics.DrawImage(OutlinerResources.freeze_button_disabled, r);
+                            graphics.DrawImage(NodeButtonIcons.freeze_button_disabled, r);
                     }
 
                     if (ShowNodeBoxModeButton)
                     {
                         r = GetBoxModeButtonBounds(tn);
                         if (((IDisplayable)tnTag).BoxMode)
-                            graphics.DrawImage(OutlinerResources.boxmode_button, r);
+                            graphics.DrawImage(NodeButtonIcons.boxmode_button, r);
                         else
-                            graphics.DrawImage(OutlinerResources.boxmode_button_disabled, r);
+                            graphics.DrawImage(NodeButtonIcons.boxmode_button_disabled, r);
                     }
 
                     if (tnTag is OutlinerLayer && ShowNodeAddButton)
@@ -816,9 +816,9 @@ namespace Outliner
                         r = GetAddButtonBounds(tn);
 
                         if (canAddSelectionToLayer((OutlinerLayer)tnTag))
-                            graphics.DrawImage(OutlinerResources.add_button, r);
+                            graphics.DrawImage(NodeButtonIcons.add_button, r);
                         else
-                            graphics.DrawImage(OutlinerResources.add_button_disabled, r);
+                            graphics.DrawImage(NodeButtonIcons.add_button_disabled, r);
                     }
                 }
             }
@@ -860,13 +860,18 @@ namespace Outliner
                 Indent = _iconSize.Width;
         }
 
-        private const int PlusMinSize = 9;
+        private const int PlusMinSize = 14;
         private const int HalfPlusMinSize = PlusMinSize / 2;
         private int _plusMinPadding = 3;
         private int _iconSpacing = 1;
         private int _nodeButtonSpacing = 1;
 
+        private const int NodeButtonHeight = 20; // 16
 
+        private const int AddButtonWidth = 10; // 9
+        private const int BoxModeButtonWidth = 10; // 9
+        private const int FreezeButtonWidth = 14; // 12
+        private const int HideButtonWidth = 10; // 8
         protected Rectangle GetNodeBounds(TreeNode tn)
         {
             Rectangle tnBounds = tn.Bounds;
@@ -986,7 +991,8 @@ namespace Outliner
             return r;
         }
 
-        private Size _hideButtonSize = new Size(8, 16);
+        //private Size _hideButtonSize = new Size(8, NodeButtonHeight);
+        private Size _hideButtonSize = new Size(HideButtonWidth, NodeButtonHeight);
         private Rectangle GetHideButtonBounds(TreeNode tn)
         {
             if (tn == null || !ShowNodeHideButton || !(tn.Tag is IDisplayable))
@@ -1014,7 +1020,8 @@ namespace Outliner
 
 
 
-        private Size _freezeButtonSize = new Size(12, 16);
+        //private Size _freezeButtonSize = new Size(12, NodeButtonHeight);
+        private Size _freezeButtonSize = new Size(FreezeButtonWidth, NodeButtonHeight);
         private Rectangle GetFreezeButtonBounds(TreeNode tn)
         {
             if (tn == null || !ShowNodeFreezeButton || !(tn.Tag is IDisplayable))
@@ -1045,7 +1052,8 @@ namespace Outliner
         }
 
 
-        private Size _boxModeButtonSize = new Size(9, 16);
+        //private Size _boxModeButtonSize = new Size(9, NodeButtonHeight);
+        private Size _boxModeButtonSize = new Size(BoxModeButtonWidth, NodeButtonHeight);
         private Rectangle GetBoxModeButtonBounds(TreeNode tn)
         {
             if (tn == null)
@@ -1078,7 +1086,8 @@ namespace Outliner
         }
 
 
-        private Size _addButtonSize = new Size(9, 16);
+        //private Size _addButtonSize = new Size(9, NodeButtonHeight);
+        private Size _addButtonSize = new Size(AddButtonWidth, NodeButtonHeight);
         private Rectangle GetAddButtonBounds(TreeNode tn)
         {
             if (tn == null)
@@ -1089,16 +1098,27 @@ namespace Outliner
             if (NodeAddButtonLocation == NodeButtonsLocation.BeforeNode)
             {
                 r.X = GetPlusMinusBounds(tn, true).Right;// +_nodeButtonSpacing;
-                if (ShowNodeHideButton && NodeHideButtonLocation == NodeButtonsLocation.BeforeNode) r.X += _hideButtonSize.Width + _nodeButtonSpacing;
-                if (ShowNodeFreezeButton && NodeFreezeButtonLocation == NodeButtonsLocation.BeforeNode) r.X += _freezeButtonSize.Width + _nodeButtonSpacing;
-                if (ShowNodeBoxModeButton && NodeBoxModeButtonLocation == NodeButtonsLocation.BeforeNode) r.X += _boxModeButtonSize.Width + _nodeButtonSpacing;
+                if (ShowNodeHideButton && NodeHideButtonLocation == NodeButtonsLocation.BeforeNode)
+                    r.X += _hideButtonSize.Width + _nodeButtonSpacing;
+
+                if (ShowNodeFreezeButton && NodeFreezeButtonLocation == NodeButtonsLocation.BeforeNode)
+                    r.X += _freezeButtonSize.Width + _nodeButtonSpacing;
+
+                if (ShowNodeBoxModeButton && NodeBoxModeButtonLocation == NodeButtonsLocation.BeforeNode)
+                    r.X += _boxModeButtonSize.Width + _nodeButtonSpacing;
             }
             else if (NodeAddButtonLocation == NodeButtonsLocation.AfterNode)
             {
-                r.X = GetTextBackgroundBounds(tn, false).Right;
-                if (ShowNodeHideButton && NodeHideButtonLocation == NodeButtonsLocation.AfterNode) r.X += _hideButtonSize.Width + _nodeButtonSpacing;
-                if (ShowNodeFreezeButton && NodeFreezeButtonLocation == NodeButtonsLocation.AfterNode) r.X += _freezeButtonSize.Width + _nodeButtonSpacing;
-                if (ShowNodeBoxModeButton && NodeBoxModeButtonLocation == NodeButtonsLocation.AfterNode) r.X += _boxModeButtonSize.Width + _nodeButtonSpacing;
+                r.X = GetTextBackgroundBounds(tn, false).Right + _nodeButtonSpacing;
+
+                if (ShowNodeHideButton && NodeHideButtonLocation == NodeButtonsLocation.AfterNode)
+                    r.X += _hideButtonSize.Width + _nodeButtonSpacing;
+
+                if (ShowNodeFreezeButton && NodeFreezeButtonLocation == NodeButtonsLocation.AfterNode)
+                    r.X += _freezeButtonSize.Width + _nodeButtonSpacing;
+
+                if (ShowNodeBoxModeButton && NodeBoxModeButtonLocation == NodeButtonsLocation.AfterNode)
+                    r.X += _boxModeButtonSize.Width + _nodeButtonSpacing;
             }
             else if (NodeAddButtonLocation == NodeButtonsLocation.AlignRight)
             {
@@ -2095,7 +2115,7 @@ namespace Outliner
         {
             if (IsClickOnText(e.Node, e))
             {
-                if (this.DoubleClickAction == DoubleClickAction.Rename)
+                if (DoubleClickAction == DoubleClickAction.Rename)
                     TreeNodeBeginEdit(e.Node);
                 else if (DoubleClickAction == DoubleClickAction.Expand)
                 {
@@ -2193,7 +2213,7 @@ namespace Outliner
             {
                 foreach (OutlinerLayer layer in Scene.Layers)
                 {
-                    ToolStripItem item = ContextMenus.AddSelectionToMenu.Items.Add(layer.Name, OutlinerResources.layer);
+                    ToolStripItem item = ContextMenus.AddSelectionToMenu.Items.Add(layer.Name, ContextMenuIcons.layer);
                     item.Name = "addSelToExistingLayer";
                     item.Tag = layer.Handle;
                 }
@@ -2287,7 +2307,10 @@ namespace Outliner
         // Begins by setting the treenode.Text to Name rather than DisplayName (to avoid editing curly braces for example).
         private void TreeNodeBeginEdit(TreeNode tn)
         {
-            if (tn.Tag is OutlinerNode && ((OutlinerNode)tn.Tag).CanEditName && !tn.IsEditing)
+            if(tn.IsEditing)
+                return;
+
+            if (tn.Tag is OutlinerNode && ((OutlinerNode)tn.Tag).CanEditName )
             {
                 // Make sure endupdate and sort are called before putting the node into labeledit mode.
                 if (_updateTimer.Enabled)

@@ -27,14 +27,14 @@ namespace Outliner
 
         public Color BackColor
         {
-            get { return _tree.BackColor; }
-            set { _tree.BackColor = value; }
+            get => _tree.BackColor; 
+            set => _tree.BackColor = value; 
         }
 
         public Color LineColor
         {
-            get { return _tree.LineColor; }
-            set { _tree.LineColor = value; }
+            get => _tree.LineColor; 
+            set => _tree.LineColor = value; 
         }
 
         public Color NodeForeColor { get; set; }
@@ -178,9 +178,6 @@ namespace Outliner
         }
 
 
-
-
-
         internal void SetNodeImageKey(TreeNode tn)
         {
             tn.ImageKey = GetImageKey((OutlinerNode)tn.Tag);
@@ -203,10 +200,7 @@ namespace Outliner
 
         private string GetLayerImageKey(OutlinerLayer layer)
         {
-            if (layer.IsActive)
-                return "layer_active";
-            else
-                return "layer";
+            return layer.IsActive ? "layer_active" : "layer";
         }
 
 

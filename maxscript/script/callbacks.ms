@@ -230,11 +230,9 @@ function callbackEnd evt handles =
 --an action performed in the Outliner.
 function processEvent evt =
 (
-   not isMerging AND \
-   not isMergingXrefs AND \
-   not isOpening AND \
-   outliner_status != undefined AND \
-   findItem outliner_status.ignoreEvents evt == 0;
+   not isMerging AND not isMergingXrefs AND not isOpening AND \
+	outliner_status != undefined AND \
+	findItem outliner_status.ignoreEvents evt == 0;
 ),
 
 
@@ -244,7 +242,7 @@ function processEvent evt =
 function selectionChanged evt handles = 
 (
    try
-   (
+   (  
       if (processEvent evt) do
       (
          -- A small shortcut to deselect all objects quickly.
@@ -258,8 +256,7 @@ function selectionChanged evt handles =
             tree_selectAllFn false;
    
             --Iterate through selection, select each node.
-            tree_selectObjectRangeFn (for o in selection \
-                                            collect (GetHandleByAnim o)) true;
+            tree_selectObjectRangeFn (for o in selection collect (GetHandleByAnim o)) true;
          
             tree_endUpdateFn();
          )
@@ -281,8 +278,7 @@ function nodesAdded evt handles =
    (
       if (processEvent evt) do
       (
-         for h in handles where isValidNode (n = GetAnimByHandle h) AND
-                                classof n != undefined do
+         for h in handles where isValidNode (n = GetAnimByHandle h) AND classof n != undefined do
          (
             outliner_addObjectToTreeFn n;
             tree_addObjectToTreeFn h;
@@ -407,12 +403,13 @@ function displayPropertiesChanged evt handles =
 (
    try
    (
-   
-    print "DisplayPropertiesChanged"
 		if (processEvent evt) do
 		(
+      
 			for h in handles where isValidNode (n = GetAnimByHandle h) AND classof n != undefined do
-			tree_SetNodeDisplayPropertiesFn h n.isHiddenInVpt n.isFrozen n.BoxMode;
+      (
+        tree_SetNodeDisplayPropertiesFn h n.isHiddenInVpt n.isFrozen n.BoxMode
+      )
 		)
    )
    catch

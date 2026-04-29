@@ -8,7 +8,6 @@ struct layerTools
 
     if( parent != undefined) then
     (
-     -- format "LayerTools->GetParent %=%\n" (classof(parentLayer)) (if(parent != undefined) then parent.Name else "<undefined>");
       parent.layerAsRefTarg;
     )
     else undefined
@@ -16,13 +15,10 @@ struct layerTools
 
   --Sets the parent layer for the supplied layer argument.
   --Use undefined to unlink the layer.
-
   mapped function setParent layer parent =
   (
     if( layer != undefined ) do
     (
-      -- format "LayerTools->SetParent % -> %\n" layer (if(parent != undefined) then parent.name else "<root>")
-
       if( isKindOf layer Base_Layer ) do
         layer = LayerManager.getLayerFromName layer.name;
 
@@ -38,7 +34,6 @@ struct layerTools
         
         outliner.tree.SetLayerParent (getHandleByAnim layer.layerAsRefTarg) pHandle;
       )
-
       ok;
     )
   ),
@@ -88,44 +83,39 @@ struct layerTools
   ),
 
 
-    --Sets a property on the layer and propagates it to its children.
-    mapped function setLayerProperty layer prop value isSetByParent:false =
-    (      
-      try
+  --Sets a property on the layer and propagates it to its children.
+  mapped function setLayerProperty layer prop value isSetByParent:false =
+  (      
+    try
+    (
+      if (isProperty layer prop) do
       (
-        if (isProperty layer prop) do
+        local parentLayer = layerTools.getParent layer;
+        
+        if (parentLayer == undefined) then
         (
-          --local ca = outlinerNestedLayers.getCA();
-          local parentLayer = layerTools.getParent layer;
-          
-          if (parentLayer == undefined) then
-          (
-            --Only set the property on the layer itself.
-            setProperty layer prop value;
-          )
+          --Only set the property on the layer itself.
+          setProperty layer prop value;
+        )
+        else
+        (
+          local parentValue = getProperty parentLayer prop;
+          local ownValue;
+
+          --Get / store own value.
+          if (isSetByParent AND parentValue) then
+            ownValue = layerTools.getLayerProperty layer prop;
           else
-          (
-            local parentValue = getProperty parentLayer prop;
-            local ownValue;
-
-            --Get / store own value.
-            if (isSetByParent AND parentValue) then
-              ownValue = layerTools.getLayerProperty layer prop;
-            else
-              ownValue = value;
-
-
-            format "setLayerProperty: % '%=%, IsSetByParent:%,( p:%)\n" layer.name prop (parentValue OR ownValue) isSetByParent parentLayer       
-            
-            setProperty layer prop (parentValue OR ownValue);
-          )
-
-          --Propagate to children.
-          layerTools.setLayerProperty (layerTools.getChildren layer) prop value isSetByParent:true;
+            ownValue = value;   
+          
+          setProperty layer prop (parentValue OR ownValue);
         )
 
-        ok;
+        --Propagate to children.
+        layerTools.setLayerProperty (layerTools.getChildren layer) prop value isSetByParent:true;
       )
-      catch fileIn (outliner.dir + "crash_report.ms")
+      ok;
     )
+    catch fileIn (outliner.dir + "crash_report.ms")
+  )
 )
