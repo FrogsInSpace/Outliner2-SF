@@ -14,7 +14,6 @@ global outliner_callbacks;
 global outliner_status;
 global outliner_main;
 global outliner_update;
-global outliner_convertLegacyNestedLayers;
    
    
 if (outliner_restart_required == true) then
@@ -24,7 +23,7 @@ if (outliner_restart_required == true) then
 else
 (
    --Import scripts.
-   fileIn "nestedLayers.ms";
+   fileIn "layerTools.ms";
    fileIn "preferences.ms";
    fileIn "callbacks.ms";
    fileIn "treeEventHandlers.ms";
@@ -36,9 +35,6 @@ else
    fileIn "ui.ms";
    fileIn "update.ms";
    fileIn "core.ms";
-
-   --Import legacy support scripts.
-   fileIn "legacy_support/legacy_nestedlayers.ms";
 
    outliner = outlinerCore();
    if (not outliner.init()) do

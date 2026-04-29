@@ -95,7 +95,7 @@ function NodeHidden e =
                   if (isValidNode n) then
                      n.isNodeHidden = e.newValue;
                   else if (isKindOf n Base_Layer) then
-                     outlinerNestedLayers.setLayerProperty n #isHidden e.newValue;
+                     layerTools.setLayerProperty n #isHidden e.newValue;
                )
             )
          )
@@ -133,7 +133,7 @@ function NodeFrozen e =
                   if (isValidNode n) then
                     n.isNodeFrozen = e.newValue;
                   else if (isKindOf n Base_Layer) then
-                    outlinerNestedLayers.setLayerProperty n #isFrozen e.newValue;
+                    layerTools.setLayerProperty n #isFrozen e.newValue;
                )
             )
          )
@@ -168,7 +168,7 @@ function NodeBoxModeChanged e =
               if (isValidNode n) then
                 n.boxMode = e.newValue;
               else if (isKindOf n Base_Layer) then
-                outlinerNestedLayers.setLayerProperty n #boxMode e.newValue;
+                layerTools.setLayerProperty n #boxMode e.newValue;
             )
          )
       )
@@ -518,7 +518,7 @@ function LayerLinked e =
       
          if (layer != undefined ) do
          (
-            outlinerNestedLayers.setParent layer targetLayer;
+            layerTools.setParent layer targetLayer;
          )
       )
    )
@@ -795,7 +795,7 @@ function ContextMenuItemClicked e =
                if (layer != undefined) do
                (
                   append layers layer;
-                  join layers (outlinerNestedLayers.getChildren layer recursive:true);
+                  join layers (layerTools.getChildren layer recursive:true);
                )
             )
             outliner.UI.openLayerProperties layers;

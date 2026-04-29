@@ -635,7 +635,7 @@ function layerParametersChanged layer =
 (
   try
   (   
-    format "LayerParamChanged %\n"  (if layer != undefined then layer.name else "<undefined>")
+    --format "LayerParamChanged %\n"  (if layer != undefined then layer.name else "<undefined>")
     if (layer != undefined AND not (isDeleted layer)) do
       tree_SetNodeDisplayPropertiesFn (GetHandleByAnim layer) layer.isHidden layer.isFrozen layer.boxMode;
   )

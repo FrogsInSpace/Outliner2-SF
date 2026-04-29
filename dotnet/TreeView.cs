@@ -592,10 +592,10 @@ namespace Outliner
 
         #region Paint
 
-        private Pen _dottedLinePen;
+
         new public Color LineColor
         {
-            get { return base.LineColor; }
+            get => base.LineColor;
             set
             {
                 base.LineColor = value;
@@ -606,7 +606,7 @@ namespace Outliner
         private SolidBrush _backgroundBrush;
         public override Color BackColor
         {
-            get { return base.BackColor; }
+            get=> base.BackColor;
             set
             {
                 _backgroundBrush = new SolidBrush(value);
@@ -614,6 +614,7 @@ namespace Outliner
             }
         }
 
+        private Pen _dottedLinePen;
         private void createLinePen()
         {
             _dottedLinePen = new Pen(LineColor);
@@ -844,8 +845,8 @@ namespace Outliner
         private int _indent = 12;
         public new int Indent
         {
-            get { return _indent; }
-            set { _indent = value; }
+            get => _indent;
+            set => _indent = value; 
         }
         private void AutoIndent()
         {
@@ -873,7 +874,9 @@ namespace Outliner
             b.X = Indent * tn.Level - GetScrollPos(Handle, H_SCROLL);
             b.Y = tnBounds.Y;
             b.Width = _plusMinPadding * 2 + PlusMinSize + tnBounds.Width - 1;
-            if (ShowNodeIcon) b.Width += _iconSpacing * 2 + _iconSize.Width;
+            if (ShowNodeIcon)
+                b.Width += _iconSpacing * 2 + _iconSize.Width;
+
             if (tn.Tag is IDisplayable)
             {
                 if (ShowNodeHideButton && NodeHideButtonLocation != NodeButtonsLocation.AlignRight) b.Width += _hideButtonSize.Width;
@@ -1165,8 +1168,6 @@ namespace Outliner
 
             return GetPlusMinusBounds(tn, false).Contains(e.Location);
         }
-
-
 
         private bool IsDragOnNode(TreeNode tn, Point e)
         {
@@ -1867,7 +1868,7 @@ namespace Outliner
 
         //Returns true if an IDisplayable of a node can be set. That is, when
         //its property is not overridden by its (parent-)layer.
-        private bool canSetProperty(OutlinerNode n, string propName)
+        private bool CanSetProperty(OutlinerNode n, string propName)
         {
             IDisplayable objToInspect = null;
             if (n is OutlinerObject)
@@ -1900,6 +1901,7 @@ namespace Outliner
 
             OutlinerNode node = (OutlinerNode)tn.Tag;
             bool hidden = !((IDisplayable)node).IsHidden;
+
             List<int> handles = new List<int>();
 
 
@@ -1909,7 +1911,7 @@ namespace Outliner
                 OutlinerNode[] selNodes = SelectedOutlinerNodes;
                 foreach (OutlinerNode n in selNodes)
                 {
-                    if( !(this.canSetProperty(n, "IsHidden")))
+                    if( !( CanSetProperty(n, "IsHidden")))
                         continue;
 
                     if (n is OutlinerObject && ((OutlinerObject)n).IsGroupHead)
@@ -1925,7 +1927,7 @@ namespace Outliner
                     }
                 }
             }
-            else if (this.canSetProperty(node, "IsHidden"))
+            else if ( CanSetProperty(node, "IsHidden"))
             {
                 if (node is OutlinerObject && ((OutlinerObject)node).IsGroupHead)
                 {
@@ -1962,7 +1964,7 @@ namespace Outliner
                 OutlinerNode[] selNodes = SelectedOutlinerNodes;
                 foreach (OutlinerNode n in selNodes)
                 {
-                    if (this.canSetProperty(n, "IsFrozen"))
+                    if (this.CanSetProperty(n, "IsFrozen"))
                     {
                         if (n is OutlinerObject && ((OutlinerObject)n).IsGroupHead)
                         {
@@ -1978,7 +1980,7 @@ namespace Outliner
                     }
                 }
             }
-            else if (this.canSetProperty(node, "IsFrozen"))
+            else if (CanSetProperty(node, "IsFrozen"))
             {
                 if (node is OutlinerObject && ((OutlinerObject)node).IsGroupHead)
                 {

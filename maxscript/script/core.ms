@@ -133,7 +133,7 @@ function addLayerToTree layer layerHandle: =
    if (layerHandle == unsupplied) do
       layerHandle = GetHandleByAnim layer.layerAsRefTarg;
 
-   local parentLayer = outlinerNestedLayers.getParent layer;
+   local parentLayer = layerTools.getParent layer;
    local parentHandle = if (parentLayer != undefined) then (GetHandleByAnim parentLayer) else -1;
 
    tree_Scene_AddLayerFn layerHandle \
@@ -423,7 +423,7 @@ function createNewLayer parentLayer =
    --Set new layer's parent.
    --(either clicked layer or layer of clicked node).
    if (parentLayer != undefined) do
-      outlinerNestedLayers.setParent layer parentLayer;
+      layerTools.setParent layer parentLayer;
 
    --Set layer active.
    if (prefs.getValue #Tree #setNewLayerActive) do
@@ -555,7 +555,7 @@ function setPropertyOnSelection prop value includeObjects:false \
             else if (isKindOf n Base_Layer AND (isProperty n prop)) then
             (
                setProperty n prop value;
-               setProperty (outlinerNestedLayers.getChildren n recursive:true) \
+               setProperty (layerTools.getChildren n recursive:true) \
                            prop value;
             )
          )
@@ -624,7 +624,7 @@ function hideSelection hide =
                   if (isKindOf n Node) then
                      n.isNodeHidden = hide;
                   else if (isKindOf n Base_Layer) then
-                     outlinerNestedLayers.setLayerProperty n #isHidden hide;
+                     layerTools.setLayerProperty n #isHidden hide;
                )
             )
          )
@@ -656,7 +656,7 @@ function freezeSelection freeze =
                   if (isKindOf n Node) then
                      n.isNodeFrozen = freeze;
                   else if (isKindOf n Base_Layer) then
-                     outlinerNestedLayers.setLayerProperty n #isFrozen freeze;
+                     layerTools.setLayerProperty n #isFrozen freeze;
                )
             )
          )
@@ -752,7 +752,7 @@ function moveSelectionToLayer targetLayer =
                   )
                   else if (isKindOf n Base_Layer AND n != targetLayer AND n.name != "0") then
                   (
-                     outlinerNestedLayers.setParent n targetLayer;
+                     layerTools.setParent n targetLayer;
                      tree_setLayerParentFn handle (GetHandleByAnim targetLayer);
                   )
                )
@@ -1085,11 +1085,11 @@ function init =
 
       try
       (
-         assembly = loadAssembly "Outliner.dll";
-         build_info = getAssemblyVersion assembly;
+        assembly = loadAssembly "Outliner.dll";
+        build_info = getAssemblyVersion assembly;
 
-		   local fDate =	(dotNetObject "System.IO.FileInfo" (dir + "Outliner.dll")).LastWriteTime;
-		   append build_info ((fDate.Year as string) + formattedPrint fDate.Month format:"02d" + formattedPrint fDate.Day format:"02d")
+        local fDate =	(dotNetObject "System.IO.FileInfo" (dir + "Outliner.dll")).LastWriteTime;
+        append build_info ((fDate.Year as string) + formattedPrint fDate.Month format:"02d" + formattedPrint fDate.Day format:"02d")
       )
       catch
       (
@@ -1119,7 +1119,7 @@ function init =
       outliner_update.checkUpdateAuto();
 
       --Convert nested layers for <2.1 nested layers.
-      outliner_convertLegacyNestedLayers();
+      --outliner_convertLegacyNestedLayers();
    )
    catch
    (
