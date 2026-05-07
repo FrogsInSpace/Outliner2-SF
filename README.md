@@ -1,33 +1,4 @@
 Outliner2-SF
-
-This project brings the great but deprecated original Outliner 2.0 (see below) to modern versions of 3ds Max.
-
-The original plugin has been incompatible with 3ds Max since at least 3ds Max 2017. While several compatibility fixes were released over time, the removal of the legacy keyboard shortcut system and the introduction of .NET 8 in 3ds Max 2026 required a more extensive rewrite.
-
-Outliner2-SF restores compatibility with modern 3ds Max versions, currently supporting 3ds Max 2017–2027.
-
-Building Requirements
-Installed 3ds Max (2016 or newer)
-Matching framework/runtime depending on the target version:
-.NET Framework 4.8.1
-.NET 8
-.NET 10
-7-Zip (for building the installer)
-Build Notes
-
-The project is currently configured against a local 3ds Max 2025 installation, the last version using .NET Framework 4.8.1. Newer versions use .NET 8/10.
-
-Outliner.csproj uses the Autodesk environment variable:
-
-$ADSK_3DSMAX_x64_2025
-
-Depending on the build machine, the environment variable and target framework may need adjustment.
-
-Using the 3ds Max 2025 setup proved to be the most flexible solution while still producing builds compatible with later .NET-based versions.
-
-Required Autodesk assemblies (Autodesk.Max.dll, ManagedServices.dll) are intentionally not included in the repository.
-
-Outliner2-SF
 ============
 This project brings the great but deprecated original Outliner 2.0 (see below) to modern versions of 3ds Max.
 The original plugin has been incompatible with 3ds Max since at least 3ds Max 2017. 
