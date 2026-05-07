@@ -425,7 +425,7 @@ rollout outliner_options_about "About & Donate"
   label aboutLbl "Max 2017+ compability © 2016-2026" align:#center offset:[0, 10]
   hyperlink outlinerSiteLbl "Josef Wienerroither | frogsinspace.at" address:outlinerUrl align:#center
 
-  label nameLbl "Original copyright © 2011, Pier Janssen" offset:[0, 8]
+  label nameLbl "Original Code: Copyright © 2011, Pier Janssen" offset:[0, 8]
 
   
   function setUIValues =
@@ -507,7 +507,7 @@ rollout outliner_options_about "About & Donate"
 
 
 
-rollout outliner_options "Options"
+rollout outliner_options "Outliner SF - Options"
 (
    subrollout rollouts width:(outliner_options.width + 5) height:(outliner_options.height - 32) pos:[-1, 0];
    button closeBtn "Close" width:(outliner_options.width - 10) height:25 pos:[5, outliner_options.height - 28];
