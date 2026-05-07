@@ -16,6 +16,21 @@ namespace Outliner.Resources
         private static readonly Assembly Assembly = typeof(EmbeddedBitmapResources).Assembly;
         private static readonly Dictionary<string, string> ManifestNames = BuildManifestNameLookup();
 
+        private static Bitmap _buyMeACoffee;
+
+
+        public static Bitmap BuyMeACoffee
+        {
+            get
+            {
+                if( _buyMeACoffee == null )
+                    _buyMeACoffee = Load("images", "BuyMeACoffee");
+
+                return _buyMeACoffee;
+            }
+        }
+
+
         internal static Bitmap Load(string folderName, string resourceName, string extension=".png")
         {
             return LoadByKey(folderName + "." + resourceName + extension) as Bitmap;
@@ -74,6 +89,5 @@ namespace Outliner.Resources
             }
         }
 
-        public static Bitmap BuyMeACoffee = Load("images", "BuyMeACoffee");
     }
 }
