@@ -195,14 +195,14 @@
     <EmbeddedResource Include="Resources\node_buttons\hide_button_disabled.png" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Autodesk.Max, Version=29.0.0.3590, Culture=neutral, processorArchitecture=AMD64">
+    <Reference Include="Autodesk.Max">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>Refs\Autodesk.Max.dll</HintPath>
+      <HintPath>$(ADSK_3DSMAX_x64_2027)Autodesk.Max.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="ManagedServices, Version=0.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+    <Reference Include="ManagedServices">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>Refs\ManagedServices.dll</HintPath>
+      <HintPath>$(ADSK_3DSMAX_x64_2027)ManagedServices.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
