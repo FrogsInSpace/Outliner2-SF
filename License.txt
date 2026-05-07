@@ -1,3 +1,5 @@
+Copyright 2016-2026 Josef Wienerroither
+
 Copyright 2011 P.J. Janssen. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, 
