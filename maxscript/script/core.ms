@@ -40,12 +40,12 @@ struct outlinerCore
 
       try
       (
-          dotNet.loadAssembly tempDll
+        dotNet.loadAssembly tempDll
       )
       catch
       (
-          format "Outliner: failed to load shadow copy assembly: %\n" tempDll
-          undefined
+        format "Outliner: failed to load shadow copy assembly: %\n" tempDll
+        undefined
       )
     )
     else
@@ -197,22 +197,21 @@ struct outlinerCore
       local layerCount = LayerManager.count - 1;
       for i = 0 to layerCount do
       (
-         local layer = LayerManager.getLayer i;
-         local layerHandle = GetHandleByAnim layer.layerAsRefTarg;
+        local layer = LayerManager.getLayer i;
+        local layerHandle = GetHandleByAnim layer.layerAsRefTarg;
 
-         addLayerToTree layer layerHandle:layerHandle;
+        addLayerToTree layer layerHandle:layerHandle;
 
-         --Add all objects on this layer
-         local nodes;
-         layer.nodes &nodes;
-         for n in nodes do
-            addObjectToTree n layerHandle:layerHandle;
+        --Add all objects on this layer
+        local nodes;
+        layer.nodes &nodes;
+        for n in nodes do
+          addObjectToTree n layerHandle:layerHandle;
       )
 
       --Add materials to tree if necessary.
-      if ((prefs.getValue #Tree #listMode) == "Material" OR \
-          (prefs.getValue #Tree #sortMode) == "Material") do
-         pushMaterialsToTree();
+      if ((prefs.getValue #Tree #listMode) == "Material" OR (prefs.getValue #Tree #sortMode) == "Material") do
+        pushMaterialsToTree();
     )
     catch
     (
@@ -229,8 +228,8 @@ struct outlinerCore
         pushSceneToTree();
         tree.FillTree();
 
-        if (outliner_callbacks != undefined) do
-           outliner_callbacks.selectionChanged #selectionChanged #();
+        if(outliner_callbacks != undefined) do
+          outliner_callbacks.selectionChanged #selectionChanged #();
      )
      OK;
   ),

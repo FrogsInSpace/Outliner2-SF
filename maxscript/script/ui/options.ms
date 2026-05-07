@@ -421,11 +421,11 @@ rollout outliner_options_about "About & Donate"
 
   dotNetControl donateButton "System.Windows.Forms.PictureBox" align:#center width:285 height:80
 
+  label nameLbl "Original Project Copyright © 2011, Pier Janssen" offset:[0, 8]
 
-  label aboutLbl "Max 2017+ compability © 2016-2026" align:#center offset:[0, 10]
+  label aboutLbl "Max 2017+ compatibility © 2016-2026" align:#center offset:[0, 10]
   hyperlink outlinerSiteLbl "Josef Wienerroither | frogsinspace.at" address:outlinerUrl align:#center
 
-  label nameLbl "Original Code: Copyright © 2011, Pier Janssen" offset:[0, 8]
 
   
   function setUIValues =

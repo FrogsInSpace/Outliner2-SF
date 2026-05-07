@@ -23,7 +23,7 @@
   <PropertyGroup>
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
     <AssemblyVersion>2.5.0.*</AssemblyVersion>
-    <FileVersion>2.5.0.0</FileVersion>
+    <FileVersion>2.5.0.*</FileVersion>
   </PropertyGroup>    
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <DebugSymbols>true</DebugSymbols>
@@ -187,9 +187,11 @@
   <ItemGroup>
     <Reference Include="Autodesk.Max">
       <HintPath>$(MaxInstallPath)\Autodesk.Max.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="ManagedServices">
       <HintPath>$(MaxInstallPath)\ManagedServices.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="Exists('$(MaxInstallPath)\Scripts\Outliner')">
