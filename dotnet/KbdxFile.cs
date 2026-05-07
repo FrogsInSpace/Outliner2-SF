@@ -245,7 +245,7 @@ namespace Outliner
         {
             try
             {
-                return MaxscriptSDK.ExecuteStringMaxscriptQuery("actionMan.getKeyboardFile()");
+                return MaxscriptSDK.ExecuteStringMaxscriptQuery("actionMan.getKeyboardFile()", MaxscriptSDK.ScriptSource.NonEmbedded);
             }
             catch (Exception e)
             {
@@ -258,16 +258,16 @@ namespace Outliner
 
         public static string MaxGetWriteableKbdxFile()
         {
-            string kbdxFile = MaxscriptSDK.ExecuteStringMaxscriptQuery("actionMan.getKeyboardFile()");
+            string kbdxFile = MaxscriptSDK.ExecuteStringMaxscriptQuery("actionMan.getKeyboardFile()", MaxscriptSDK.ScriptSource.NonEmbedded);
             try
             {
-                MaxscriptSDK.ExecuteMaxscriptCommand("actionMan.saveKeyboardFile @\"" + kbdxFile + "\"");
+                MaxscriptSDK.ExecuteMaxscriptCommand("actionMan.saveKeyboardFile @\"" + kbdxFile + "\"", MaxscriptSDK.ScriptSource.NonEmbedded);
             }
             catch
             {
                 string fileName = Path.GetFileName(kbdxFile);
                 kbdxFile = Path.Combine(PathSDK.GetDirectoryPath(PathSDK.DirectoryID.UI), fileName);
-                MaxscriptSDK.ExecuteMaxscriptCommand("actionMan.saveKeyboardFile @\"" + kbdxFile + "\"");
+                MaxscriptSDK.ExecuteMaxscriptCommand("actionMan.saveKeyboardFile @\"" + kbdxFile + "\"", MaxscriptSDK.ScriptSource.NonEmbedded);
             }
 
             return kbdxFile;
@@ -290,7 +290,7 @@ namespace Outliner
         {
             try
             {
-                return MaxscriptSDK.ExecuteBooleanMaxscriptQuery("actionMan.loadKeyboardFile @\"" + this.File + "\"");
+                return MaxscriptSDK.ExecuteBooleanMaxscriptQuery("actionMan.loadKeyboardFile @\"" + this.File + "\"", MaxscriptSDK.ScriptSource.NonEmbedded);
             }
             catch (Exception e)
             {

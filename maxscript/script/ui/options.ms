@@ -482,19 +482,23 @@ rollout outliner_options_about "About & Donate"
       sfDonateLbl2.linkBehavior = (dotNetClass "System.Windows.Forms.LinkBehavior").HoverUnderline
       sfDonateLbl2.textAlign = (dotNetClass "System.Drawing.ContentAlignment").MiddleCenter
   
-      if( colorMan.getColorTheme() == #dark ) then
+      if((MaxVersion())[1] >= 19000 ) do
       (
-         sfDonateLbl2.linkColor = (dotNetClass "System.Drawing.Color").Orange
-         sfDonateLbl2.activeLinkColor = (dotNetClass "System.Drawing.Color").Red
+         -- colorman getColorTheme() only exists in 3ds Max 2017+
+         if( colorMan.getColorTheme() == #dark ) then
+         (
+            sfDonateLbl2.linkColor = (dotNetClass "System.Drawing.Color").Orange
+            sfDonateLbl2.activeLinkColor = (dotNetClass "System.Drawing.Color").Red
+         )
+         else
+         (
+            sfDonateLbl2.linkColor = (dotNetClass "System.Drawing.Color").Blue
+            sfDonateLbl2.activeLinkColor = (dotNetClass "System.Drawing.Color").DeepSkyBlue
+         )     
+      
+         sfDonateLbl2.BackColor = backColor 
+         sfDonateLbl2.ForeColor = foreColor
       )
-      else
-      (
-         sfDonateLbl2.linkColor = (dotNetClass "System.Drawing.Color").Blue
-         sfDonateLbl2.activeLinkColor = (dotNetClass "System.Drawing.Color").DeepSkyBlue
-      )     
-  
-      sfDonateLbl2.BackColor = backColor 
-      sfDonateLbl2.ForeColor = foreColor
       
       donateButton.SizeMode = (dotNetClass "System.Windows.Forms.PictureBoxSizeMode").StretchImage
       donateButton.Cursor = (dotNetClass "System.Windows.Forms.Cursors").Hand

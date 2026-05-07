@@ -9,10 +9,10 @@ for /f "usebackq delims=" %%i in (`
 echo %MSBuild%
 
 ::Adjust the value of MaxDir to match your local 3dsmax installation directory.
-IF "%ADSK_3DSMAX_x64_2027%"=="" (
-    SET "MaxDir=C:\Program Files\Autodesk\3ds Max 2027\"
+IF "%ADSK_3DSMAX_x64_2025%"=="" (
+    SET "MaxDir=C:\Program Files\Autodesk\3ds Max 2025\"
 ) ELSE (
-    SET "MaxDir=%ADSK_3DSMAX_x64_2027%\"
+    SET "MaxDir=%ADSK_3DSMAX_x64_2025%"
 )
 
 ::Build Outliner.dll
