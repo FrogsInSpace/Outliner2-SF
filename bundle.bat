@@ -41,20 +41,21 @@ IF EXIST %targetDir% (
 ::Remove output file if it exists
 IF EXIST %output% ( del /Q /S %output% || goto :error )
 
-
-
 ::Copy the maxscript dir to a temporary directory.
 ECHO.
 ECHO Copying maxscript to temporary mzp directory...
 xcopy %dir%maxscript %targetDir% /e /q || goto :error
 
-
+echo %dir%License.txt %targetDir%
+::Copy License.txt to the temporary directory.
+ECHO.
+ECHO Copying License.txt to bundle...
+copy %dir%License.txt %targetDir%  || goto :error
 
 ::Copy Outliner.dll from dotnet to maxscript
 ECHO.
 ECHO Copying Outliner.dll to bundle...
 copy %assembly% %targetDir%script\Outliner.dll || goto :OutlinerDllError
-
 
 
 ::Create package from target dir
