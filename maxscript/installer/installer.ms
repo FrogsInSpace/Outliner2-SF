@@ -103,7 +103,7 @@ function getDotNetVersion =
 ),
 
 --Load an assembly with shadow-copy enabled.
-function loadAssembly dll =
+function loadAssembly dllPath =
 (
    local AppDomain = dotNetClass "System.AppDomain";
    local AssemblyName = dotNetClass "System.Reflection.AssemblyName";
@@ -111,14 +111,20 @@ function loadAssembly dll =
 	if( (getDotNetVersion())[1] > 5 ) then
 	(
 		--No shadow copying with dotnet framework 5 and higher ( deprecated )
-		dotNet.loadAssembly(dll)
+		if( doesFileExist dllPath) then
+    (
+      local assBytes = (dotNetClass "System.IO.File").ReadAllBytes dllPath
+      (dotNetClass "System.Reflection.Assembly").Load assBytes
+    )
+    else
+      undefined
 	)
 	else
 	(
 	   AppDomain.CurrentDomain.SetShadowCopyPath (GetDir #temp);
 	   AppDomain.CurrentDomain.SetShadowCopyFiles();
 
-	   local assemblyName = AssemblyName.GetAssemblyName dll;
+	   local assemblyName = AssemblyName.GetAssemblyName dllPath;
 	   AppDomain.CurrentDomain.Load assemblyName;
 	)
 ),
@@ -1010,15 +1016,17 @@ public function install silent:false =
 
 on create do
 (
-   clearTempDir();
-   local assembly = loadAssembly (tempDir + "/script/Outliner.dll");
+  clearTempDir();
+  local assembly = loadAssembly (tempDir + "/script/Outliner.dll");
 
-   build_info = getAssemblyVersion assembly
+  if( assembly != undefined ) do
+  (
+    build_info = getAssemblyVersion assembly
 
-   local fDate =(dotNetObject "System.IO.FileInfo" (tempDir + "/script/Outliner.dll")).LastWriteTime;
-   append build_info ((fDate.Year as string) + formattedPrint fDate.Month format:"02d" + formattedPrint fDate.Day format:"02d")
-
-   assembly
+    local fDate =(dotNetObject "System.IO.FileInfo" (tempDir + "/script/Outliner.dll")).LastWriteTime;
+    append build_info ((fDate.Year as string) + formattedPrint fDate.Month format:"02d" + formattedPrint fDate.Day format:"02d")
+  )
+  assembly
 )
 
 

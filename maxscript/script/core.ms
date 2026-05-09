@@ -36,7 +36,10 @@ struct outlinerCore
       local fileName = getFilenameFile assemblyPath
       local tempDll = tempDir + fileName + ".dll"
       
-    -- overwrite cache copy every time
+      -- overwrite cache copy every time
+      if( doesFileExist tempDll ) do
+         deleteFile tempDll
+    
       copyFile assemblyPath tempDll
 
       try

@@ -18,7 +18,7 @@ IF "%ADSK_3DSMAX_x64_2025%"=="" (
 ::Build Outliner.dll
 ECHO Building Outliner...
 SET CONFIG=Release
-%MSBuild% dotnet/Outliner.csproj /nologo /t:Restore;Build /p:Configuration=%CONFIG%;ReferencePath="%MaxDir%;" /verbosity:quiet || goto :error
+%MSBuild% dotnet/Outliner.csproj /nologo /t:Restore;Rebuild /p:Configuration=%CONFIG%;ReferencePath="%MaxDir%;" /verbosity:quiet || goto :error
 
 
 ECHO.

@@ -3,9 +3,9 @@
     <TargetFramework>net481</TargetFramework> 
     <PlatformTarget>x64</PlatformTarget>	
     <Platforms>x64</Platforms>
-    <Deterministic>False</Deterministic>
+    <Deterministic>True</Deterministic>
     <OutputType>Library</OutputType>
-    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
     <UseWindowsForms>true</UseWindowsForms>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <FileAlignment>4096</FileAlignment>
@@ -13,6 +13,8 @@
     <AppendPlatformToOutputPath>false</AppendPlatformToOutputPath>
   </PropertyGroup>
   <PropertyGroup>
+		<OutlinerVersion>2.5.0.0</OutlinerVersion>
+    <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
 		<MaxInstallPath>$(ADSK_3DSMAX_x64_2025)</MaxInstallPath>
   </PropertyGroup>
   <PropertyGroup>
@@ -21,9 +23,12 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
-    <AssemblyVersion>2.5.0.*</AssemblyVersion>
-    <FileVersion>2.5.0.*</FileVersion>
+    <AssemblyVersion>$(OutlinerVersion)</AssemblyVersion>
+    <FileVersion>$(OutlinerVersion)</FileVersion>
+    <Version>$(OutlinerVersion)</Version>
+    <Title>Outliner Custom TreeView control</Title>
+    <Description>Outliner Custom TreeView control</Description>
+    <Product>Outliner Custom TreeView control</Product>
   </PropertyGroup>    
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <DebugSymbols>true</DebugSymbols>
