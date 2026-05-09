@@ -7,6 +7,10 @@ and the introduction of .NET 8 with 3ds Max 2026 required a more extensive rewri
 
 Outliner2-SF is the result of this effort and restores compatibility with modern 3ds Max versions ( up to 2027 ).
 
+License
+-------
+This project is licensed under the BSD license, see LICENSE.txt  
+
 Installation
 ------------
 -  Download or build the maxscript installer package yourself (see below)
