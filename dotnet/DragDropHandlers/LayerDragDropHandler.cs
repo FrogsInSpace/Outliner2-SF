@@ -9,7 +9,7 @@ namespace Outliner.DragDropHandlers
 {
     public class LayerDragDropHandler : DragDropHandler
     {
-        public LayerDragDropHandler(Outliner.TreeView tree, OutlinerLayer data) : base(tree, null) 
+        public LayerDragDropHandler(Outliner.TreeView tree, OutlinerLayer data) : base(tree, null)
         {
             Data = data;
         }
@@ -35,7 +35,7 @@ namespace Outliner.DragDropHandlers
             else
                 return base.IsValidDropTarget(dragData);
         }
-        
+
 
         public override DragDropEffects GetDragDropEffect(IDataObject dragData)
         {
@@ -51,8 +51,8 @@ namespace Outliner.DragDropHandlers
             if (IsValidDropTarget(dragData))
             {
                 OutlinerNode[] droppedNodes = GetNodesFromDataObject(dragData);
-                List<Int32> droppedNodeHandles = new List<Int32>();
-                List<Int32> droppedLayerHandles = new List<Int32>();
+                List<int> droppedNodeHandles = new List<int>();
+                List<int> droppedLayerHandles = new List<int>();
 
                 Tree.BeginTimedUpdate();
                 Tree.BeginTimedSort();
@@ -90,7 +90,7 @@ namespace Outliner.DragDropHandlers
         private void setObjectLayerRecursive(OutlinerObject obj)
         {
             Tree.Scene.SetObjectLayerHandle(obj, Data.Handle);
-            foreach(OutlinerNode cn in obj.ChildNodes)
+            foreach (OutlinerNode cn in obj.ChildNodes)
                 setObjectLayerRecursive((OutlinerObject)cn);
         }
     }

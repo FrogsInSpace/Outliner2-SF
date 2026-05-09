@@ -184,30 +184,63 @@ function setButtonImages =
 -- Set button images on dialog open.
 on outliner_filter_config open do
 (
-   if (checkOutlinerStatus()) do
-   (
-      -- Note: Button, filter and hidebycategory reference indices must 
-      --       correspond for functions to work correctly!
-      buttons = #(filter_go, filter_sh, filter_li, filter_ca, filter_he, 
-                  filter_sw, filter_bo, filter_pa, filter_xr, filter_gr,
-                  filter_hi, filter_fr, affect_layers, affect_vpt);
-   
-      treeFilter = outliner.tree.Filter;
-      filter_refs = #(&treeFilter.showGeometry, &treeFilter.showShapes, 
-                      &treeFilter.showLights,   &treeFilter.showCameras, 
-                      &treeFilter.showHelpers,  &treeFilter.showSpaceWarps,
-                      &treeFilter.showBones,    &treeFilter.showParticles, 
-                      &treeFilter.showXRefs,    &treeFilter.showGroups,
-                      &treeFilter.showHidden,   &treeFilter.showFrozen);
-                    
-      hideByCat_refs = #(&hideByCategory.geometry, &hideByCategory.shapes, 
-                         &hideByCategory.lights,   &hideByCategory.cameras, 
-                         &hideByCategory.helpers,  &hideByCategory.spacewarps,
-                         &hideByCategory.bones,    &hideByCategory.particles);
+	if (checkOutlinerStatus()) do
+	(
+		-- Note: Button, filter and hidebycategory reference indices must 
+		--       correspond for functions to work correctly!
+		buttons = #(filter_go, filter_sh, filter_li, filter_ca, filter_he, 
+				  filter_sw, filter_bo, filter_pa, filter_xr, filter_gr,
+				  filter_hi, filter_fr, affect_layers, affect_vpt);
 
-      setButtonImages();
-      setButtonStates();
-   )
+		treeFilter = outliner.tree.Filter;
+
+		-- BEGIN JW Bugfix - 2016.08.08: 	by-Ref array initializers fail ( get dereferenced ) in Max 2017+, append still works 		
+		if( (maxversion())[1] < 19000 ) then
+		(
+			filter_refs = #(&treeFilter.showGeometry, &treeFilter.showShapes, 
+						&treeFilter.showLights,   &treeFilter.showCameras, 
+						&treeFilter.showHelpers,  &treeFilter.showSpaceWarps,
+						&treeFilter.showBones,    &treeFilter.showParticles, 
+						&treeFilter.showXRefs,    &treeFilter.showGroups,
+						&treeFilter.showHidden,   &treeFilter.showFrozen);
+						
+			hideByCat_refs = #(&hideByCategory.geometry, &hideByCategory.shapes, 
+						&hideByCategory.lights,   &hideByCategory.cameras, 
+						&hideByCategory.helpers,  &hideByCategory.spacewarps,
+						&hideByCategory.bones,    &hideByCategory.particles)
+		)
+		else
+		(
+			filter_refs = #()			  
+					  
+			append filter_refs &treeFilter.showGeometry
+			append filter_refs &treeFilter.showShapes 
+			append filter_refs &treeFilter.showLights   
+			append filter_refs &treeFilter.showCameras 
+			append filter_refs &treeFilter.showHelpers
+			append filter_refs &treeFilter.showSpaceWarps
+			append filter_refs &treeFilter.showBones
+			append filter_refs &treeFilter.showParticles
+			append filter_refs &treeFilter.showXRefs
+			append filter_refs &treeFilter.showGroups
+			append filter_refs &treeFilter.showHidden
+			append filter_refs &treeFilter.showFrozen
+					  
+			hideByCat_refs = #()		  
+			append hideByCat_refs &hideByCategory.geometry
+			append hideByCat_refs &hideByCategory.shapes
+			append hideByCat_refs &hideByCategory.lights
+			append hideByCat_refs &hideByCategory.cameras
+			append hideByCat_refs &hideByCategory.helpers
+			append hideByCat_refs &hideByCategory.spacewarps
+			append hideByCat_refs &hideByCategory.bones
+			append hideByCat_refs &hideByCategory.particles
+		)
+		-- ENDOF JW Bugfix
+		
+		setButtonImages();
+		setButtonStates();
+	)
 )
 
 )--End struct.

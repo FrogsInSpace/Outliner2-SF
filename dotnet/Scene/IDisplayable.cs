@@ -7,8 +7,8 @@ namespace Outliner.Scene
 {
     public interface IDisplayable
     {
-        Boolean IsHidden { get; set; }
-        Boolean IsFrozen { get; set; }
-        Boolean BoxMode { get; set; }
+        bool IsHidden { get; set; }
+        bool IsFrozen { get; set; }
+        bool BoxMode { get; set; }
     }
 }

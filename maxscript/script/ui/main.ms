@@ -208,29 +208,48 @@ function setHideByCategory forceSet:false =
    local objFilterAffectVpt = getPrefFn #Tree #objFilterAffectVpt;
    local objFilterEnabled   = getPrefFn #Tree #objFilterEnabled;
    local objFilter          = getPrefFn #Tree #objFilter;
-   local hideByCat_enum     = #(&hideByCategory.geometry, &hideByCategory.shapes, 
-                                &hideByCategory.lights, &hideByCategory.cameras, 
-                                &hideByCategory.helpers, &hideByCategory.spacewarps, 
-                                &hideByCategory.bones, &hideByCategory.particles);
+
+   local hideByCat_enum=#()
    
-   if (objFilterAffectVpt OR forceSet) do
-   (
-      disableSceneRedraw();
-      
-      if (objFilterAffectVpt AND objFilterEnabled) then
-      (
-         for i = 1 to hideByCat_enum.count do *hideByCat_enum[i] = not objFilter[i];
-         maxOps.hideFrozenObjects = not objFilter[11];
-      )
-      else
-      (
-         for i = 1 to hideByCat_enum.count do *hideByCat_enum[i] = false;
-         maxOps.hideFrozenObjects = false;
-      )
-      
-      enableSceneRedraw();
-      completeRedraw();
-   )
+	-- BEGIN JW Bugfix - 2016.08.08: 	by-Ref array initializers fail ( get dereferenced ) in Max 2017+, append still works 		
+	if( (maxversion())[1] < 19000 ) then
+	(
+		hideByCat_enum = #(&hideByCategory.geometry, &hideByCategory.shapes, 
+							&hideByCategory.lights, &hideByCategory.cameras, 
+							&hideByCategory.helpers, &hideByCategory.spacewarps, 
+							&hideByCategory.bones, &hideByCategory.particles);
+	)
+	else
+	(
+		append hideByCat_enum &hideByCategory.geometry
+		append hideByCat_enum &hideByCategory.shapes 
+		append hideByCat_enum &hideByCategory.lights 
+		append hideByCat_enum &hideByCategory.cameras 
+		append hideByCat_enum &hideByCategory.helpers 
+		append hideByCat_enum &hideByCategory.spacewarps
+		append hideByCat_enum &hideByCategory.bones
+		append hideByCat_enum &hideByCategory.particles
+	)
+	-- ENDOF JW Bugfix
+
+	if (objFilterAffectVpt OR forceSet) do
+	(	   
+		disableSceneRedraw();
+
+		if (objFilterAffectVpt AND objFilterEnabled) then
+		(
+		 for i = 1 to hideByCat_enum.count do *hideByCat_enum[i] = not objFilter[i];
+		 maxOps.hideFrozenObjects = not objFilter[11];
+		)
+		else
+		(
+		 for i = 1 to hideByCat_enum.count do *hideByCat_enum[i] = false;
+		 maxOps.hideFrozenObjects = false;
+		)
+
+		enableSceneRedraw();
+		completeRedraw();
+	)
 )
 
 
@@ -386,68 +405,100 @@ function disposeFunctionCache =
 --Rollout opened.
 on outliner_main open do
 (
-   try (
-   outliner.setTreeInst tree;
-   getPrefFn = outliner.prefs.getValue;
-   setPrefFn = outliner.prefs.setValue;
+	try 
+	(
+		outliner.setTreeInst tree;
+		getPrefFn = outliner.prefs.getValue;
+		setPrefFn = outliner.prefs.setValue;
 
-   positionElements();
-   setButtonImages();
-   setButtonStates();
-   setSortModeBtnImages();
-   
-   searchField.Font = (dotNetObject "System.Drawing.Font" "Sans Serif" 7.5);
+		positionElements();
+		setButtonImages();
+		setButtonStates();
+		setSortModeBtnImages();
 
-   outliner.setTreeColorScheme (getPrefFn #Visual #colorscheme);
-   tree.IconSet = outliner.parseDotNetEnum "Outliner.IconSet" (getPrefFn #Visual #iconSet);
-   
-   tree.TreeViewNodeSorter = dotNetObject ("Outliner.NodeSorters." + (getPrefFn #Tree #sortMode) + "Sorter");  
-   
-   tree.ShowNodeHideButton        = getPrefFn #Tree #showNodeHideButton;
-   tree.NodeHideButtonLocation    = outliner.parseDotNetEnum "Outliner.NodeButtonsLocation" (getPrefFn #Tree #nodeHideButtonLocation);
-   tree.ShowNodeFreezeButton      = getPrefFn #Tree #showNodeFreezeButton;
-   tree.NodeFreezeButtonLocation  = outliner.parseDotNetEnum "Outliner.NodeButtonsLocation" (getPrefFn #Tree #nodeFreezeButtonLocation);
-   tree.ShowNodeBoxModeButton     = getPrefFn #Tree #showNodeBoxModeButton;
-   tree.NodeBoxModeButtonLocation = outliner.parseDotNetEnum "Outliner.NodeButtonsLocation" (getPrefFn #Tree #nodeBoxModeButtonLocation);
-   tree.ShowNodeAddButton         = getPrefFn #Tree #showNodeAddButton;
-   tree.NodeAddButtonLocation     = outliner.parseDotNetEnum "Outliner.NodeButtonsLocation" (getPrefFn #Tree #nodeAddButtonLocation);
-   tree.InvertNodeHideButton      = getPrefFn #Tree #invertNodeHideButton;
-   
-   tree.HighlighLastSelectedObject = getPrefFn #Tree #highlightLastSel;
-   tree.AutoExpandHierarchy        = getPrefFn #Tree #autoExpandHierarchy;
-   tree.AutoExpandLayer            = getPrefFn #Tree #autoExpandLayer;
-   tree.AutoExpandMaterial         = getPrefFn #Tree #autoExpandMaterial;
-   tree.HideGroupMembersLayerMode  = getPrefFn #Tree #hideGroupMembersLayerMode;
-   
-   tree.ListMode           = outliner.parseDotNetEnum "Outliner.OutlinerListMode" (getPrefFn #Tree #listMode);
-   tree.IconClickAction    = outliner.parseDotNetEnum "Outliner.IconClickAction" (getPrefFn #Tree #iconClickAction);
-   tree.DoubleClickAction  = outliner.parseDotNetEnum "Outliner.DoubleClickAction" (getPrefFn #Tree #doubleClickAction);
-   tree.DragMouseButton    = outliner.parseDotNetEnum "System.Windows.Forms.MouseButtons" (getPrefFn #Tree #dragMouseButton);
-   tree.ExpandHierarchyKey = outliner.parseDotNetEnum "System.Windows.Forms.Keys" (getPrefFn #Tree #expandHierarchyKey);
-   
-   tree.ExpandSelectionPolicyHierarchy = outliner.parseDotNetEnum "Outliner.ExpandPolicy" (getPrefFn #Tree #expandSelPolicyHierarchy);
-   tree.ExpandSelectionPolicyLayer     = outliner.parseDotNetEnum "Outliner.ExpandPolicy" (getPrefFn #Tree #expandSelPolicyLayer);
-   tree.ExpandSelectionPolicyMaterial  = outliner.parseDotNetEnum "Outliner.ExpandPolicy" (getPrefFn #Tree #expandSelPolicyMaterial);
-      
+		searchField.Font = (dotNetObject "System.Drawing.Font" "Sans Serif" 7.5);
 
-   tree.Filter.Enabled      = getPrefFn #Tree #objFilterEnabled;
-   local filter_enum = #(&tree.Filter.showGeometry, &tree.Filter.showShapes, 
-                         &tree.Filter.showLights,   &tree.Filter.showCameras,
-                         &tree.Filter.showHelpers,  &tree.Filter.showSpaceWarps, 
-                         &tree.Filter.showBones,    &tree.Filter.showParticles,
-                         &tree.Filter.showXRefs,    &tree.Filter.showGroups,
-                         &tree.Filter.showHidden,   &tree.Filter.showFrozen);
-   local objFilter = (getPrefFn #Tree #objFilter);
-   for i = 1 to filter_enum.count do *filter_enum[i] = objFilter[i];
+		outliner.setTreeColorScheme (getPrefFn #Visual #colorscheme);
+		try
+		(
+			tree.IconSet = outliner.parseDotNetEnum "Outliner.IconSet" (getPrefFn #Visual #iconSet);
+		)
+		catch
+		(
+			setPrefFn #Visual #iconSet "Max_16x16"
+			tree.IconSet = outliner.parseDotNetEnum "Outliner.IconSet" (getPrefFn #Visual #iconSet);
+		)
 
-   setHideByCategory();
-   
-   createFunctionCache();
-   )
-   catch
-   (
-      fileIn "crash_report.ms";
-   )
+		tree.TreeViewNodeSorter = dotNetObject ("Outliner.NodeSorters." + (getPrefFn #Tree #sortMode) + "Sorter");  
+
+		tree.ShowNodeHideButton        = getPrefFn #Tree #showNodeHideButton;
+		tree.NodeHideButtonLocation    = outliner.parseDotNetEnum "Outliner.NodeButtonsLocation" (getPrefFn #Tree #nodeHideButtonLocation);
+		tree.ShowNodeFreezeButton      = getPrefFn #Tree #showNodeFreezeButton;
+		tree.NodeFreezeButtonLocation  = outliner.parseDotNetEnum "Outliner.NodeButtonsLocation" (getPrefFn #Tree #nodeFreezeButtonLocation);
+		tree.ShowNodeBoxModeButton     = getPrefFn #Tree #showNodeBoxModeButton;
+		tree.NodeBoxModeButtonLocation = outliner.parseDotNetEnum "Outliner.NodeButtonsLocation" (getPrefFn #Tree #nodeBoxModeButtonLocation);
+		tree.ShowNodeAddButton         = getPrefFn #Tree #showNodeAddButton;
+		tree.NodeAddButtonLocation     = outliner.parseDotNetEnum "Outliner.NodeButtonsLocation" (getPrefFn #Tree #nodeAddButtonLocation);
+		tree.InvertNodeHideButton      = getPrefFn #Tree #invertNodeHideButton;
+
+		tree.HighlighLastSelectedObject = getPrefFn #Tree #highlightLastSel;
+		tree.AutoExpandHierarchy        = getPrefFn #Tree #autoExpandHierarchy;
+		tree.AutoExpandLayer            = getPrefFn #Tree #autoExpandLayer;
+		tree.AutoExpandMaterial         = getPrefFn #Tree #autoExpandMaterial;
+		tree.HideGroupMembersLayerMode  = getPrefFn #Tree #hideGroupMembersLayerMode;
+
+		tree.ListMode           = outliner.parseDotNetEnum "Outliner.OutlinerListMode" (getPrefFn #Tree #listMode);
+		tree.IconClickAction    = outliner.parseDotNetEnum "Outliner.IconClickAction" (getPrefFn #Tree #iconClickAction);
+		tree.DoubleClickAction  = outliner.parseDotNetEnum "Outliner.DoubleClickAction" (getPrefFn #Tree #doubleClickAction);
+		tree.DragMouseButton    = outliner.parseDotNetEnum "System.Windows.Forms.MouseButtons" (getPrefFn #Tree #dragMouseButton);
+		tree.ExpandHierarchyKey = outliner.parseDotNetEnum "System.Windows.Forms.Keys" (getPrefFn #Tree #expandHierarchyKey);
+
+		tree.ExpandSelectionPolicyHierarchy = outliner.parseDotNetEnum "Outliner.ExpandPolicy" (getPrefFn #Tree #expandSelPolicyHierarchy);
+		tree.ExpandSelectionPolicyLayer     = outliner.parseDotNetEnum "Outliner.ExpandPolicy" (getPrefFn #Tree #expandSelPolicyLayer);
+		tree.ExpandSelectionPolicyMaterial  = outliner.parseDotNetEnum "Outliner.ExpandPolicy" (getPrefFn #Tree #expandSelPolicyMaterial);
+		  
+
+		tree.Filter.Enabled      = getPrefFn #Tree #objFilterEnabled;
+
+		-- BEGIN JW Bugfix - 2016.08.08: 	by-Ref array initializers fail ( get dereferenced ) in Max 2017+, append still works 		
+		local filter_enum = #()
+
+		if( (maxversion())[1] < 19000 ) then
+		(
+			filter_enum = #(&tree.Filter.showGeometry, &tree.Filter.showShapes, 
+							 &tree.Filter.showLights,   &tree.Filter.showCameras,
+							 &tree.Filter.showHelpers,  &tree.Filter.showSpaceWarps, 
+							 &tree.Filter.showBones,    &tree.Filter.showParticles,
+							 &tree.Filter.showXRefs,    &tree.Filter.showGroups,
+							 &tree.Filter.showHidden,   &tree.Filter.showFrozen);
+		)
+		else
+		(
+			append filter_enum &tree.Filter.showGeometry
+			append filter_enum &tree.Filter.showShapes
+			append filter_enum &tree.Filter.showLights   
+			append filter_enum &tree.Filter.showCameras
+			append filter_enum &tree.Filter.showHelpers  
+			append filter_enum &tree.Filter.showSpaceWarps
+			append filter_enum &tree.Filter.showBones
+			append filter_enum &tree.Filter.showParticles
+			append filter_enum &tree.Filter.showXRefs    
+			append filter_enum &tree.Filter.showGroups
+			append filter_enum &tree.Filter.showHidden   
+			append filter_enum &tree.Filter.showFrozen
+		)					 
+		local objFilter = getPrefFn #Tree #objFilter
+							 
+		for i = 1 to filter_enum.count do *filter_enum[i] = objFilter[i]
+
+		setHideByCategory()
+
+		createFunctionCache()
+	)
+	catch
+	(
+	  fileIn (outliner.dir + "crash_report.ms")
+	)
 )
 
 

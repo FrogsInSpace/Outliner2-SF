@@ -35,7 +35,7 @@ namespace Outliner.DragDropHandlers
                 else
                 {
                     OutlinerNode[] draggedNodes = GetNodesFromDataObject(dragData);
-                    Int32[] draggedNodeHandles = new Int32[draggedNodes.Length];
+                    int[] draggedNodeHandles = new int[draggedNodes.Length];
                     for (int i = 0; i < draggedNodes.Length; i++)
                         draggedNodeHandles[i] = ((OutlinerObject)draggedNodes[i]).Handle;
 

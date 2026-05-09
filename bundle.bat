@@ -3,7 +3,7 @@
 SET dir=%~dp0
 SET Configuration=Release
 SET targetDir=%dir%mzp\
-SET output=%dir%outliner.mzp
+SET assembly=%dir%dotnet\bin\%Configuration%\Outliner.dll
 
 
 ECHO Checking bundle prerequisites...
@@ -12,6 +12,22 @@ IF "%zip%"=="" goto :ZipNotFoundError
 dir "%zip%" > nul || goto :ZipNotFoundError
 ECHO Found 7Zip.
 
+
+ECHO.
+ECHO Getting version information from outliner assembly
+for /f "usebackq tokens=1-4 delims=." %%a in (`
+  powershell -NoProfile -Command ^
+    "( [Reflection.AssemblyName]::GetAssemblyName('%assembly%').Version.ToString() )"
+`) do (
+    set VER_MAJOR=%%a
+    set VER_MINOR=%%b
+    set VER_BUILD=%%c
+    set VER_REVISION=%%d
+)
+
+for /f %%i in ('powershell -NoProfile -Command "Get-Date -Format yyyyMMdd"') do set TODAY=%%i
+
+SET output=%dir%outliner-%VER_MAJOR%.%VER_MINOR%.%VER_BUILD%.%VER_REVISION%-%TODAY%.mzp
 
 ECHO.
 ECHO Removing old target files and directory...
@@ -37,7 +53,7 @@ xcopy %dir%maxscript %targetDir% /e /q || goto :error
 ::Copy Outliner.dll from dotnet to maxscript
 ECHO.
 ECHO Copying Outliner.dll to bundle...
-copy %dir%dotnet\bin\%Configuration%\Outliner.dll %targetDir%script\Outliner.dll || goto :OutlinerDllError
+copy %assembly% %targetDir%script\Outliner.dll || goto :OutlinerDllError
 
 
 

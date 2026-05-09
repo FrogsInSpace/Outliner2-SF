@@ -92,7 +92,7 @@ function openOutliner =
          outliner_status.reset();
 
       --Create keyboard actions object.
-      outliner.loadKbdFile();
+      outliner.loadkbdxFile();
       
       --Load window preferences.
       local prefs_getValueFn = outliner.prefs.getValue;
@@ -155,7 +155,7 @@ function openOutliner =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -186,7 +186,7 @@ function closeOutliner =
    if (outliner_callbacks != undefined) do
       outliner_callbacks.removeCallbacks();
       
-   outliner.removeKbdFileWatch();
+   outliner.removekbdxFileWatch();
    
    --outliner.dispose();
    outliner.disposeFunctionCache();
@@ -231,7 +231,7 @@ function openFilterConfigWindow =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -265,7 +265,7 @@ function openSortModeWindow =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -283,7 +283,7 @@ function openOptionsWindow =
          else 
          (
             CreateDialog outliner_options 320 \
-                                          515 \
+                                          550 \
                                           style:#(#style_toolwindow, #style_sysmenu);
                                           
             outliner_status.optionsOpen = true;
@@ -292,7 +292,7 @@ function openOptionsWindow =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -306,7 +306,7 @@ function openLayerProperties layers =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 )
 

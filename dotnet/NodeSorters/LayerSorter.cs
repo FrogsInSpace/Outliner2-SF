@@ -11,15 +11,15 @@ namespace Outliner.NodeSorters
     public class LayerSorter : IComparer
     {
         [DllImport("shlwapi.dll", CharSet = CharSet.Unicode, ExactSpelling = true)]
-        static extern int StrCmpLogicalW(String x, String y);
+        static extern int StrCmpLogicalW(string x, string y);
 
         public int Compare(object x, object y)
         {
             if (!(x is TreeNode) || !(y is TreeNode))
                 return 0;
 
-            Object xTag = ((TreeNode)x).Tag;
-            Object yTag = ((TreeNode)y).Tag;
+            object xTag = ((TreeNode)x).Tag;
+            object yTag = ((TreeNode)y).Tag;
 
             if (!(xTag is OutlinerNode) || !(yTag is OutlinerNode))
                 return 0;

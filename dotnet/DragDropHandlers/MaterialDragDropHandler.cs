@@ -48,12 +48,12 @@ namespace Outliner.DragDropHandlers
                 return false;
 
             OutlinerNode[] droppedNodes = GetNodesFromDataObject(dragData);
-            Int32[] droppedNodeHandles = new Int32[droppedNodes.Length];
+            int[] droppedNodeHandles = new int[droppedNodes.Length];
 
             Tree.BeginTimedUpdate();
             Tree.BeginTimedSort();
 
-            Int32 i = 0;
+            int i = 0;
             foreach (OutlinerNode n in droppedNodes)
             {
                 Tree.SetObjectMaterial((OutlinerObject)n, Data.Handle);

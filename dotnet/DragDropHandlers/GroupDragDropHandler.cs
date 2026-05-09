@@ -30,13 +30,13 @@ namespace Outliner.DragDropHandlers
             if (IsValidDropTarget(dragData))
             {
                 OutlinerNode[] droppedNodes = GetNodesFromDataObject(dragData);
-                Int32[] droppedNodeHandles = new Int32[droppedNodes.Length];
+                int[] droppedNodeHandles = new int[droppedNodes.Length];
 
                 Tree.BeginTimedUpdate();
                 Tree.BeginTimedSort();
 
-                Boolean group = (Control.ModifierKeys & Keys.Control) != Keys.Control;
-                Int32 i = 0;
+                bool group = (Control.ModifierKeys & Keys.Control) != Keys.Control;
+                int i = 0;
                 foreach (OutlinerNode n in droppedNodes)
                 {
                     Tree.LinkObject((OutlinerObject)n, Data.Handle, group, true);
@@ -48,7 +48,7 @@ namespace Outliner.DragDropHandlers
                 if (group)
                 {
                     Tree.RaiseObjectGroupedEvent(new NodeGroupedEventArgs(droppedNodeHandles, Data.Handle, true, true));
-                    Int32[] childHandles = getChildHandles(droppedNodes);
+                    int[] childHandles = getChildHandles(droppedNodes);
                     if (childHandles.Length > 0)
                         Tree.RaiseObjectGroupedEvent(new NodeGroupedEventArgs(childHandles, Data.Handle, true, false));
                 }

@@ -38,7 +38,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
+			this.SuspendLayout();
+			// 
+			// TreeView
+			// 
+			this.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.471698F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.ResumeLayout(false);
+
         }
 
         #endregion

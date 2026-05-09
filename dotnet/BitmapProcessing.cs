@@ -69,7 +69,7 @@ namespace Outliner
         }
 
 
-        public static void Opacity(Bitmap b, Int32 opacity)
+        public static void Opacity(Bitmap b, int opacity)
         {
             BitmapData bmData = b.LockBits(new Rectangle(0, 0, b.Width, b.Height), ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
             int stride = bmData.Stride;
@@ -96,7 +96,7 @@ namespace Outliner
         }
 
 
-        public static void Brightness(Bitmap b, Int32 brightness)
+        public static void Brightness(Bitmap b, int brightness)
         {
             BitmapData bmData = b.LockBits(new Rectangle(0, 0, b.Width, b.Height), ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
             int stride = bmData.Stride;

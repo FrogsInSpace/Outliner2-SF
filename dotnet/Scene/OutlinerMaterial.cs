@@ -7,7 +7,7 @@ namespace Outliner.Scene
 {
     public class OutlinerMaterial : OutlinerNode
     {
-        public OutlinerMaterial(OutlinerScene scene, Int32 handle, Int32 parentHandle, String name, String type)
+        public OutlinerMaterial(OutlinerScene scene, int handle, int parentHandle, string name, string type)
         {
             Scene = scene;
             Handle = handle;
@@ -73,7 +73,7 @@ namespace Outliner.Scene
             get
             {
                 if (IsUnassigned) return "-Unassigned-";
-                String n = (this.Name != String.Empty) ? this.Name : "-unnamed-";
+                string n = (this.Name != string.Empty) ? this.Name : "-unnamed-";
                 if (Type == OutlinerScene.XrefMaterialType)
                     return "{ " + n + " }";
                 return n;
@@ -90,10 +90,10 @@ namespace Outliner.Scene
             get { return false; }// return !IsUnassigned; }
         }
 
-        public String Type { get; private set; }
+        public string Type { get; private set; }
 
 
-        public Boolean IsUnassigned
+        public bool IsUnassigned
         {
             get
             {

@@ -35,9 +35,12 @@ namespace Outliner
 
     public enum IconSet
     {
-        Max,
+        Max_16x16,
         Maya_16x16,
-        Maya_20x20
+        Maya_20x20,
+        SceneExplorer_16x16,
+        SceneExplorer_20x20,
+        SceneExplorer_32x32,
     }
 
     public enum ExpandPolicy

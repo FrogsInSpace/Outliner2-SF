@@ -11,19 +11,19 @@ namespace Outliner.NodeSorters
     public class VisibilitySorter : IComparer
     {
         [DllImport("shlwapi.dll", CharSet = CharSet.Unicode, ExactSpelling = true)]
-        static extern int StrCmpLogicalW(String x, String y);
+        static extern int StrCmpLogicalW(string x, string y);
 
         public int Compare(object x, object y)
         {
             if ((x is TreeNode) && (y is TreeNode))
             {
-                Object xTag = ((TreeNode)x).Tag;
-                Object yTag = ((TreeNode)y).Tag;
+                object xTag = ((TreeNode)x).Tag;
+                object yTag = ((TreeNode)y).Tag;
 
                 if ((xTag is IDisplayable) && (yTag is IDisplayable))
                 {
-                    Boolean xHidden = ((IDisplayable)xTag).IsHidden;
-                    Boolean yHidden = ((IDisplayable)yTag).IsHidden;
+                    bool xHidden = ((IDisplayable)xTag).IsHidden;
+                    bool yHidden = ((IDisplayable)yTag).IsHidden;
 
                     if (!xHidden && yHidden)
                         return -1;

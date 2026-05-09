@@ -7,6 +7,7 @@ callbacksEnum = #(
    (Pair key:#nodePostMaterial    value:"outliner_callbacks.nodePostMaterial()"),
    (Pair key:#layerCreated        value:"outliner_callbacks.layerCreated()"),
    (Pair key:#layerDeleted        value:"outliner_callbacks.layerDeleted()"),
+   (Pair key:#layerParentChanged  value:"outliner_callbacks.layerParentChanged()"),	
    (Pair key:#objectXrefPreMerge  value:"outliner_callbacks.objectXrefPreMerge()"),
    (Pair key:#objectXrefPostMerge value:"outliner_callbacks.objectXrefPostMerge()"),
    (Pair key:#filePreMerge        value:"outliner_callbacks.filePreMerge()"),
@@ -111,21 +112,20 @@ function removeLayerChangeHandlers =
    deleteAllChangeHandlers id:#outliner_layers;
 ),
 
+
 function createLayerChangeHandlers =
 (
-   removeLayerChangeHandlers();
-   when parameters (for i=0 to LayerManager.count - 1 \
-                            collect (LayerManager.getLayer i).layerAsRefTarg) \
-        changes id:#outliner_layers layer do 
+  removeLayerChangeHandlers();
+  when parameters (for i=0 to LayerManager.count - 1 collect (LayerManager.getLayer i).layerAsRefTarg) changes id:#outliner_layers layer do 
          outliner_callbacks.layerParametersChanged layer;
 ),
-
 
 
 function removeMaterialChangeHandlers =
 (
    deleteAllChangeHandlers id:#outliner_materials;
 ),
+
 
 function createMaterialChangeHandlers =
 (
@@ -135,6 +135,42 @@ function createMaterialChangeHandlers =
          outliner_callbacks.materialNameSet mat;   
 ),
 
+/*
+
+NodeEventCallback properties
+
+#enabled
+#added
+#deleted
+#linkChanged
+#layerChanged
+#groupChanged
+#hierarchyOtherEvent
+#modelStructured
+#geometryChanged
+#topologyChanged
+#mappingChanged
+#extentionChannelChanged
+#modelOtherEvent
+#materialStructured
+#materialOtherEvent
+#controllerStructured
+#controllerOtherEvent
+#nameChanged
+#wireColorChanged
+#renderPropertiesChanged
+#displayPropertiesChanged
+#userPropertiesChanged
+#propertiesOtherEvent
+#subobjectSelectionChanged
+#selectionChanged
+#hideChanged
+#freezeChanged
+#displayOtherEvent
+#callbackBegin
+#callbackEnd
+#all
+*/
 
 nodeEventCB,
 
@@ -148,7 +184,6 @@ function createCallbacks =
    )
    
    createLayerChangeHandlers();
-   
    
    nodeEventCB = NodeEventCallback mouseUp:true delay:10;
    nodeEventCB.callbackBegin    = (fn a e h = outliner_callbacks.callbackBegin e h);
@@ -177,8 +212,6 @@ function removeCallbacks =
 ),
 
 
-
-
 function callbackBegin evt handles =
 (
    tree_beginUpdateFn();
@@ -197,16 +230,10 @@ function callbackEnd evt handles =
 --an action performed in the Outliner.
 function processEvent evt =
 (
-   not isMerging AND \
-   not isMergingXrefs AND \
-   not isOpening AND \
-   outliner_status != undefined AND \
-   findItem outliner_status.ignoreEvents evt == 0;
+   not isMerging AND not isMergingXrefs AND not isOpening AND \
+	outliner_status != undefined AND \
+	findItem outliner_status.ignoreEvents evt == 0;
 ),
-
-
-
-
 
 
 /*
@@ -215,7 +242,7 @@ function processEvent evt =
 function selectionChanged evt handles = 
 (
    try
-   (
+   (  
       if (processEvent evt) do
       (
          -- A small shortcut to deselect all objects quickly.
@@ -229,8 +256,7 @@ function selectionChanged evt handles =
             tree_selectAllFn false;
    
             --Iterate through selection, select each node.
-            tree_selectObjectRangeFn (for o in selection \
-                                            collect (GetHandleByAnim o)) true;
+            tree_selectObjectRangeFn (for o in selection collect (GetHandleByAnim o)) true;
          
             tree_endUpdateFn();
          )
@@ -241,16 +267,9 @@ function selectionChanged evt handles =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
-   
-   
-   
-   
-
-
-
 
 
 function nodesAdded evt handles =
@@ -259,8 +278,7 @@ function nodesAdded evt handles =
    (
       if (processEvent evt) do
       (
-         for h in handles where isValidNode (n = GetAnimByHandle h) AND
-                                classof n != undefined do
+         for h in handles where isValidNode (n = GetAnimByHandle h) AND classof n != undefined do
          (
             outliner_addObjectToTreeFn n;
             tree_addObjectToTreeFn h;
@@ -269,31 +287,27 @@ function nodesAdded evt handles =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
-
 
 
 function nodesNameChanged evt handles =
 (
    try
    (
+      print "nodesNameChangedCB"
       if (processEvent evt) do
       (
-         for h in handles where isValidNode (n = GetAnimByHandle h) AND 
-                                classof n != undefined do
+         for h in handles where isValidNode (n = GetAnimByHandle h) AND classof n != undefined do
             tree_setObjectNameFn h n.name;
       )
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
-
-
-
 
 
 function nodesLinked evt handles =
@@ -305,23 +319,19 @@ function nodesLinked evt handles =
          --First process objects that became unlinked.
          --This avoids issues when reversing hierarchy. 
          --E.g. x.parent = y ==> y.parent = x.
-         for h in handles where isValidNode (n = GetAnimByHandle h) \
-                                AND n.parent == undefined do
+         for h in handles where isValidNode (n = GetAnimByHandle h) AND n.parent == undefined do
             tree_setObjectParentFn h -1;
          
          --Then process linked objects.
-         for h in handles where isValidNode (n = GetAnimByHandle h) \
-                                AND n.parent != undefined do
+         for h in handles where isValidNode (n = GetAnimByHandle h) AND n.parent != undefined do
             tree_setObjectParentFn h (GetHandleByAnim n.parent);
       )
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
-
-
 
 
 function nodesGroupChanged evt handles =
@@ -330,8 +340,7 @@ function nodesGroupChanged evt handles =
    (
       if (processEvent evt) do
       (
-         for h in handles where isValidNode (n = GetAnimByHandle h) AND
-                                classof n != undefined do
+         for h in handles where isValidNode (n = GetAnimByHandle h) AND classof n != undefined do
          (
             tree_setObjectIsGroupMemberFn h (isGroupMember n);
          )
@@ -339,11 +348,9 @@ function nodesGroupChanged evt handles =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
-
-
 
 
 function nodesLayerChanged evt handles =
@@ -352,8 +359,7 @@ function nodesLayerChanged evt handles =
    (
       if (processEvent evt) do
       (
-         for h in handles where isValidNode (n = GetAnimByHandle h) AND
-                                classof n != undefined do
+         for h in handles where isValidNode (n = GetAnimByHandle h) AND classof n != undefined do
          (
             tree_setObjectLayerFn h (GetHandleByAnim n.layer.layerAsRefTarg);            
          )
@@ -361,11 +367,9 @@ function nodesLayerChanged evt handles =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
-
-
 
 
 /**
@@ -379,17 +383,15 @@ function modelStructured evt handles =
       --closed (caused a crash before).
       if (tree_setObjectClassFn != undefined AND processEvent evt) do
       (
-         for h in handles where isValidNode (n = GetAnimByHandle h) AND
-                                classof n != undefined do
+         for h in handles where isValidNode (n = GetAnimByHandle h) AND classof n != undefined do
          (
-            tree_setObjectClassFn h (getClassName n) \
-                                    ((superClassOf n) as string);
+            tree_setObjectClassFn h (getClassName n) ((superClassOf n) as string);
          )
       )
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -401,28 +403,20 @@ function displayPropertiesChanged evt handles =
 (
    try
    (
-      if (processEvent evt) do
+		if (processEvent evt) do
+		(
+      
+			for h in handles where isValidNode (n = GetAnimByHandle h) AND classof n != undefined do
       (
-         for h in handles where isValidNode (n = GetAnimByHandle h) AND
-                                classof n != undefined do
-         (
-            tree_SetNodeDisplayPropertiesFn h n.isHiddenInVpt \
-                                              n.isFrozen \
-                                              n.BoxMode;
-         )
+        tree_SetNodeDisplayPropertiesFn h n.isHiddenInVpt n.isFrozen n.BoxMode
       )
+		)
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
-
-
-
-
-
-
 
 
 
@@ -436,16 +430,13 @@ function nodeLinkedIntern linkedNode =
    (
       if (isValidNode linkedNode) do
       (
-         local parentHandle = if (linkedNode.parent != undefined) \
-                                 then (GetHandleByAnim linkedNode.parent) \
-                                 else -1;
-         tree_setObjectParentFn (GetHandleByAnim linkedNode) \
-                                 parentHandle;
+         local parentHandle = if (linkedNode.parent != undefined) then (GetHandleByAnim linkedNode.parent) else -1;
+         tree_setObjectParentFn (GetHandleByAnim linkedNode) parentHandle;
       )
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -474,7 +465,7 @@ function nodePreDelete =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -482,12 +473,6 @@ function nodePostDelete =
 (
    deletingNode = undefined;
 ),
-
-
-
-
-
-
 
 
 
@@ -522,7 +507,7 @@ function nodePostMaterial =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -532,13 +517,11 @@ function materialNameSet mat =
    try
    (
       if ((processEvent #nameChanged) AND mat != undefined) do
-      (
          tree_setMaterialNameFn (GetHandleByAnim mat) mat.name;
-      )
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -553,12 +536,12 @@ function nodeLayerChangedIntern node layer =
    try
    (
       if (node != undefined AND layer != undefined) do
-         tree_setObjectLayerFn (GetHandleByAnim node) \
-                               (GetHandleByAnim layer.layerAsRefTarg);
+         tree_setObjectLayerFn (GetHandleByAnim node) (GetHandleByAnim layer.layerAsRefTarg);
+
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -585,7 +568,7 @@ function layerCreated =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -604,7 +587,7 @@ function layerDeletedIntern layer =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -615,6 +598,31 @@ function layerDeleted =
 ),
 
 
+function layerParentChanged=
+(
+  try
+  (   
+    local params = callbacks.notificationParam();
+    local layer = params[1];
+    local parent = layer.GetParent();
+
+    if( parent != undefined AND (IsKindOf parent LayerProperties OR IsKindOf parent Base_Layer )) do
+      parent = (LayerManager.getLayerFromName( parent.name));
+    
+    --Update tree.
+    if (outliner_status != undefined AND outliner_status.windowOpen) do
+    (
+      local hParent = if( parent != undefined ) then (GetHandleByAnim parent.layerAsRefTarg) else outliner.tree.Scene.RootHandle;  
+      outliner.tree.SetLayerParent (getHandleByAnim layer.layerAsRefTarg) hParent;
+    )
+  )
+  catch
+  (
+    fileIn (outliner.dir + "crash_report.ms")
+  )  
+),
+
+
 /**
  * LAYER PARAMETERS CHANGED.
  *    called from when parameters change handler when either 
@@ -622,31 +630,17 @@ function layerDeleted =
  */
 function layerParametersChanged layer =
 (
-   try
-   (
-      if (layer != undefined AND not (isDeleted layer)) do
-      (
-         tree_SetNodeDisplayPropertiesFn (GetHandleByAnim layer) \
-                                          layer.isHidden \
-                                          layer.isFrozen \
-                                          layer.boxMode;
-      )
-   )
-   catch
-   (
-      fileIn "crash_report.ms";
-   )
+  try
+  (   
+    --format "LayerParamChanged %\n"  (if layer != undefined then layer.name else "<undefined>")
+    if (layer != undefined AND not (isDeleted layer)) do
+      tree_SetNodeDisplayPropertiesFn (GetHandleByAnim layer) layer.isHidden layer.isFrozen layer.boxMode;
+  )
+  catch
+  (
+    fileIn (outliner.dir + "crash_report.ms")
+  )
 ),
-
-
-
-
-
-
-
-
-
-
 
 
 /**

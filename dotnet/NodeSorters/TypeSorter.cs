@@ -11,14 +11,14 @@ namespace Outliner.NodeSorters
     public class TypeSorter : IComparer
     {
         [DllImport("shlwapi.dll", CharSet = CharSet.Unicode, ExactSpelling = true)]
-        static extern int StrCmpLogicalW(String x, String y);
+        static extern int StrCmpLogicalW(string x, string y);
 
         public int Compare(object x, object y)
         {
             if ((x is TreeNode) && (y is TreeNode))
             {
-                Object xTag = ((TreeNode)x).Tag;
-                Object yTag = ((TreeNode)y).Tag;
+                object xTag = ((TreeNode)x).Tag;
+                object yTag = ((TreeNode)y).Tag;
 
                 if ((xTag is OutlinerObject) && (yTag is OutlinerObject))
                 {
@@ -34,7 +34,7 @@ namespace Outliner.NodeSorters
                 }
                 else if ((xTag is OutlinerNode) && (yTag is OutlinerNode))
                     return StrCmpLogicalW(((OutlinerNode)xTag).Name, ((OutlinerNode)yTag).Name);
-                
+
             }
 
             return 0;

@@ -115,7 +115,7 @@ public function createPreferenceEntries =
 #(
    --General section
    (outlinerPrefsEntry section:#General key:#openAtStartup               default:false),
-   (outlinerPrefsEntry section:#General key:#checkForUpdates             default:true),
+   (outlinerPrefsEntry section:#General key:#checkForUpdates             default:false),
    (outlinerPrefsEntry section:#General key:#checkUpdatesInterval        default:1),
    (outlinerPrefsEntry section:#General key:#accept_trial                default:false),
    (outlinerPrefsEntry section:#General key:#lastUpdateCheck             default:0L),
@@ -163,8 +163,8 @@ public function createPreferenceEntries =
    (outlinerPrefsEntry section:#Tree key:#invertNodeHideButton      default:false),
    
    --Visual section
-   (outlinerPrefsEntry section:#Visual key:#iconset         default:"Max"),
-   (outlinerPrefsEntry section:#Visual key:#invertIcons     default:true),
+   (outlinerPrefsEntry section:#Visual key:#iconset         default:"Max_16x16"),
+   (outlinerPrefsEntry section:#Visual key:#invertIcons     default:false),
    (outlinerPrefsEntry section:#Visual key:#colorscheme     default:""),
    (outlinerPrefsEntry section:#Visual key:#buttonsAtTop    default:false),
    (outlinerPrefsEntry section:#Visual key:#showSearchBar   default:true),

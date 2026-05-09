@@ -8,7 +8,7 @@ rollout outliner_install ""
 (
    edittext progress_txt height:200 readonly:true width:278 align:#center offset:[-1, 0];
    progressbar progress_bar value:0 width:273 align:#center;
-   button close_btn "Close" enabled:false width:273 align:#center    
+   button close_btn "Close" enabled:false width:273 align:#center
    on close_btn pressed do
       destroyDialog outliner_install;
 )
@@ -28,21 +28,21 @@ private prefs_file           = (GetDir #userScripts) + "/outliner_prefs.ini",
 private user_colors_file     = (GetDir #userScripts) + "/outliner_user_colors.ini",
 private product_info_file    = (GetDir #userScripts) + "/outliner_product_info.ini",
 
-
+public build_info = #(0,0,0,0,0),
 
 --Retrieves the string from the strings ini file.
-public function getString key section:#Strings = 
+public function getString key section:#Strings =
 (
    local str;
    if (section != undefined AND key != undefined) do
       str = getINISetting strings_file section key;
-   
-   if (str == undefined) do 
+
+   if (str == undefined) do
    (
       print ("Outliner installer: cannot find string " + key + " in section " + section);
       str = "";
    )
-   
+
    --Replace escaped newline characters and return result.
    substituteString str "\\n" "\n";
 ),
@@ -51,10 +51,10 @@ public function getString key section:#Strings =
 --Returns the version of this installer.
 public function getVersion asString:false =
 (
-   if (not asString) then
-      (getINISetting installer_data_file #Version #version) as float;
-   else
+   if (asString) then
       getINISetting installer_data_file #Version #versionString
+   else
+      (getINISetting installer_data_file #Version #version) as float;
 ),
 
 
@@ -67,7 +67,7 @@ public function getInstalledVersion =
       v = (getINISetting product_info_file #General #version) as float;
    else if (hasINISetting prefs_file #General #version) then
       v = (getINISetting product_info_file #General #version) as float;
-   
+
    v;
 ),
 
@@ -95,18 +95,57 @@ private function setIsWorkflowToolsInstalled i =
    setINISetting product_info_file #General #workflowtoolsinstalled (i as string);
 ),
 
+--Return the dotnet framework version as array #( Major, Minor, Build )
+function getDotNetVersion =
+(
+	local ver= ((dotNetClass "System.Environment").version)
+	#(ver.Major, ver.Minor, ver.Build)
+),
 
 --Load an assembly with shadow-copy enabled.
-private function loadAssembly dll =
+function loadAssembly dllPath =
 (
-   local AppDomain    = dotNetClass "System.AppDomain";
+   local AppDomain = dotNetClass "System.AppDomain";
    local AssemblyName = dotNetClass "System.Reflection.AssemblyName";
 
-   AppDomain.CurrentDomain.SetShadowCopyPath (GetDir #temp);
-   AppDomain.CurrentDomain.SetShadowCopyFiles();
+	if( (getDotNetVersion())[1] > 5 ) then
+	(
+		--No shadow copying with dotnet framework 5 and higher ( deprecated )
+		if( doesFileExist dllPath) then
+    (
+      local assBytes = (dotNetClass "System.IO.File").ReadAllBytes dllPath
+      (dotNetClass "System.Reflection.Assembly").Load assBytes
+    )
+    else
+      undefined
+	)
+	else
+	(
+	   AppDomain.CurrentDomain.SetShadowCopyPath (GetDir #temp);
+	   AppDomain.CurrentDomain.SetShadowCopyFiles();
 
-   local assemblyName = AssemblyName.GetAssemblyName dll;
-   AppDomain.CurrentDomain.Load assemblyName;
+	   local assemblyName = AssemblyName.GetAssemblyName dllPath;
+	   AppDomain.CurrentDomain.Load assemblyName;
+	)
+),
+
+function getAssemblyVersion ass=
+(
+   local ver = (ass.GetName()).Version
+   #(ver.Major, ver.Minor, ver.Build, ver.Revision )
+),
+
+private function canModifyHotkeys =
+(
+   local success=true
+	-- Max2020.1+ do not use kbdx files any longer, so skip this all
+   local mVer = maxVersion()
+   if( mVer.Count > 3 AND mVer[4] >= 22 AND mVer[5] >= 1) do
+      success = false
+
+   if ( ToLower (getFilenameType (actionMan.getKeyboardFile()) ) != ".kbdx") do
+      success = false
+   success
 ),
 
 
@@ -130,9 +169,9 @@ private function printException executingFn exception =
 public function clearTempDir =
 (
    local scriptStr = ("local d = (GetDir #temp) + \"/outliner\";
-      if ((dotNetClass \"System.IO.Directory\").Exists d) do 
+      if ((dotNetClass \"System.IO.Directory\").Exists d) do
          try ( (dotNetClass \"System.IO.Directory\").Delete d true; ) catch ()");
-   
+
    callbacks.removeScripts #preSystemShutdown id:#outliner_installer;
    callbacks.addScript #preSystemShutdown scriptStr id:#outliner_installer;
 ),
@@ -145,6 +184,22 @@ private function restartRequired =
 
 
 
+--Returns the currently active kbd file if it can be written to,
+--otherwise it saves a new config file in the userUI dir.
+private function getActiveKbdFile =
+(
+   local configFile = actionMan.getKeyboardFile();
+   if (not (doesFileExist configFile) OR
+       not (getFileSecurityInfo configFile #write)) do
+   (
+      configFile = pathConfig.appendPath userUIDir (filenameFromPath configFile);
+   )
+
+   actionMan.saveKeyboardFile configFile;
+
+   configFile;
+),
+
 
 /**
  * UNINSTALL FUNCTIONS
@@ -152,32 +207,32 @@ private function restartRequired =
 private function removeScriptFiles =
 (
    local success = true;
-   
+
    closeOutliner();
-   
+
    local System_IO_Directory = dotNetClass "System.IO.Directory";
-   
+
    --Delete all script files (old and current).
-   local oldOutlinerDirs = #(((GetDir #startupScripts) + "/outliner"), 
-                       ((GetDir #startupScripts) + "/grin_tools/outliner"), 
-                       ((GetDir #Scripts) + "/outliner"), 
+   local oldOutlinerDirs = #(((GetDir #startupScripts) + "/outliner"),
+                       ((GetDir #startupScripts) + "/grin_tools/outliner"),
+                       ((GetDir #Scripts) + "/outliner"),
                        ((GetDir #maxroot) + "/stdplugs/stdscripts/outliner"),
                        ((GetDir #ui) + "/macroscripts/outliner"),
                        ((GetDir #userMacros) + "/outliner"),
                        userScriptDir,
                        userStartupScriptDir
                       );
-   for d in oldOutlinerDirs where (System_IO_Directory.Exists d) do 
+   for d in oldOutlinerDirs where (System_IO_Directory.Exists d) do
    (
       try (
          System_IO_Directory.Delete d true;
-      ) catch 
+      ) catch
       (
          printException "removeScriptFiles" (getCurrentException());
          success = false;
       )
    )
-   
+
    --Delete other startup files. (in stdscripts)
    local otherStartupFiles = getFiles ((GetDir #maxroot) + "/stdplugs/stdscripts/outliner*");
    for f in otherStartupFiles do
@@ -185,15 +240,15 @@ private function removeScriptFiles =
       if (not (deleteFile f)) do
          success = false;
    )
-   
-   --Remove icon files 
+
+   --Remove icon files
    --old location
    local iconFiles = getFiles ((GetDir #ui) + "/icons/*Outliner*");
    for ico in iconFiles do
    (
       if ((findString ico "_wftools_") == undefined) do
       (
-         if (not (deleteFile ico)) do 
+         if (not (deleteFile ico)) do
             success = false;
       )
    )
@@ -203,21 +258,21 @@ private function removeScriptFiles =
    (
       if ((findString ico "_wftools_") == undefined) do
       (
-         if (not (deleteFile ico)) do 
+         if (not (deleteFile ico)) do
             success = false;
       )
    )
-   
+
 
 
    -- Remove user macros
    local userMacroDir = (GetDir #userMacros);
    local oldUserMacros = (getFiles (userMacroDir + "/*Outliner*"));
-   for mcr in oldUserMacros do 
+   for mcr in oldUserMacros do
    (
       if (not (matchPattern mcr pattern:"*Outliner Workflow Tools*")) do
       (
-         if (not (deleteFile mcr)) do 
+         if (not (deleteFile mcr)) do
             success = false;
       )
    )
@@ -228,31 +283,31 @@ private function removeScriptFiles =
 private function removeWorkflowTools =
 (
    local success = true;
-   
+
    local System_IO_Directory = dotNetClass "System.IO.Directory";
    local oldWfToolsDir = (GetDir #userMacros) + "/outliner_workflowtools";
    if (System_IO_Directory.Exists oldWfToolsDir) do
    (
       try (
          System_IO_Directory.delete workflowtoolsDir true;
-      ) catch 
+      ) catch
       (
          printException "removeWorkflowTools" (getCurrentException());
          success = false;
       )
    )
-   
+
    -- Remove icon files
    local iconFiles = getFiles ((GetDir #ui) + "/icons/*Outliner_wftools*");
    for ico in iconFiles do
    (
-      if (not (deleteFile ico)) do 
+      if (not (deleteFile ico)) do
          success = false;
    )
    iconFiles = getFiles (userIconsDir + "/*Outliner_wftools*");
    for ico in iconFiles do
    (
-      if (not (deleteFile ico)) do 
+      if (not (deleteFile ico)) do
          success = false;
    )
 
@@ -260,68 +315,65 @@ private function removeWorkflowTools =
    -- Remove user macros
    local userMacroDir = (GetDir #userMacros);
    local oldUserMacros = (getFiles (userMacroDir + "/*Outliner Workflow Tools*"));
-   for mcr in oldUserMacros do 
+   for mcr in oldUserMacros do
    (
       if (not (deleteFile mcr)) do success = false;
    )
-   
-   setIsWorkflowToolsInstalled false; 
+
+   setIsWorkflowToolsInstalled false;
 
    success;
 ),
-
-
-
 
 private function removePreferencesFile =
 (
    success = true
-   
+
    if (doesFileExist prefs_file) then
       if (not (deleteFile prefs_file)) then
          success = false
-   
+
    if (doesFileExist user_colors_file) then
       if (not (deleteFile user_colors_file)) then
          success = false
-         
+
    success
 ),
 
-
-
 private function removeHotkeys =
 (
-   local success = true;
-   try
-   (
-      local kbdFileClass = dotnetClass "ScriptCenter.Max.KbdFile";
-      local kbdFile      = dotnetObject "ScriptCenter.Max.KbdFile" \
-                                        (kbdFileClass.MaxGetActiveKbdFile());
-      
-      if ((kbdFile.RemoveAction "Outliner") > 0) do
-      (
-         kbdFile.Write();
-         kbdFile.MaxLoadKbdFile();
-      )
-   )
-   catch 
-   (
-      printException "removeHotkeys" (getCurrentException());
-      success = false;
-   )
-   
-   success;
+   local success = false;
+
+	-- Max2020+ do not use kbdx files any longer, so skip this all
+
+	if( canModifyHotkeys() ) do
+	(
+	   try
+	   (
+		  local kbdxFileClass = dotnetClass "Outliner.KbdxFile";
+		  local kbdxFile      = getActiveKbdFile(); --kbdxFileClass.MaxGetWriteableKbdxFile();
+		  local kbdxXml       = kdbxFileClass.FromXml kbdxFile;
+
+		  if ((kbdxXml.RemoveShortcut "Outliner") > 0) do
+		  (
+			 kbdxXml.ToXml(kbdxFile);
+			 actionMan.loadKeyboardFile kbdxFile;
+		  )
+		  success = true
+	   )
+	   catch
+	   (
+		  printException "removeHotkeys" (getCurrentException());
+		  success = false;
+	   )
+    )
+    success;
 ),
-
-
-
-
 
 /**
  * INSTALL FUNCTIONS
  */
- 
+
 --Returns true if this max version is equal to or above the required version.
 private function checkMaxVersion =
 (
@@ -332,10 +384,9 @@ private function checkMaxVersion =
                                       #Requirements \
                                       #maximum_MaxVersion) as float;
    local actual_version = 1998 + (maxVersion())[1] / 1000;
-    
+
    (actual_version >= min_version) AND (actual_version <= max_version)
 ),
-
 
 --Returns true if the .NET Framework 3.5 registry key could be opened.
 private function checkDotNetVersion =
@@ -346,7 +397,7 @@ private function checkDotNetVersion =
                                     key:&rKey accessright:#readonly;
    if (success) do
       registry.closeKey rKey;
-   
+
    if (not success) do
    (
       success = registry.openkey HKEY_LOCAL_MACHINE \
@@ -355,11 +406,9 @@ private function checkDotNetVersion =
       if (success) do
          registry.closeKey rKey;
    )
-   
+
    success;
 ),
-
-
 
 private function updatePreferencesFile =
 (
@@ -371,7 +420,7 @@ private function updatePreferencesFile =
    (
       delINISetting prefs_file #General #matModeFirstRun;
       delINISetting prefs_file #General #product_id;
-      if ((hasINISetting prefs_file #General #checkUpdatesInterval) AND 
+      if ((hasINISetting prefs_file #General #checkUpdatesInterval) AND
           (getINISetting prefs_file #General #checkUpdatesInterval) == "7") do
          setINISetting prefs_file #General #checkUpdatesInterval "1";
    )
@@ -381,35 +430,35 @@ private function updatePreferencesFile =
    if (oldVersion < 2.094) do
    (
       --Copy existing entries from prefs_file to product_info_file.
-      if (hasINISetting prefs_file #General #product_id_a) do 
+      if (hasINISetting prefs_file #General #product_id_a) do
       (
          setINISetting product_info_file \
                        #General \
                        #product_id_a \
                        (getINISetting prefs_file #General #product_id_a);
-      )                 
-      if (hasINISetting prefs_file #General #product_id_b) do 
+      )
+      if (hasINISetting prefs_file #General #product_id_b) do
       (
          setINISetting product_info_file \
                        #General \
                        #product_id_b \
                        (getINISetting prefs_file #General #product_id_b);
-      )                
-      if (hasINISetting prefs_file #General #workflowToolsInstalled) do 
+      )
+      if (hasINISetting prefs_file #General #workflowToolsInstalled) do
       (
          setINISetting product_info_file \
                        #General \
                        #workflowToolsInstalled \
                        (getINISetting prefs_file #General #workflowToolsInstalled);
-      )                
-      if (hasINISetting prefs_file #General #crashReportEmail) do 
+      )
+      if (hasINISetting prefs_file #General #crashReportEmail) do
       (
          setINISetting product_info_file \
                        #General \
                        #crashReportEmail \
                        (getINISetting prefs_file #General #crashReportEmail);
       )
-       
+
       --Remove old entries in prefs_file.
       delINISetting prefs_file #General #version;
       delINISetting prefs_file #General #versionString;
@@ -418,7 +467,7 @@ private function updatePreferencesFile =
       delINISetting prefs_file #General #workflowToolsInstalled;
       delINISetting prefs_file #General #crashReportEmail;
    )
-   
+
    --Pre 2.1
    if (oldVersion < 2.1) do
    (
@@ -437,9 +486,9 @@ private function updatePreferencesFile =
       )
    )
 
-   
+
    --Generate product id's if necessary.
-   if ((getINISetting product_info_file #General #product_id_a) == "" OR 
+   if ((getINISetting product_info_file #General #product_id_a) == "" OR
        (getINISetting product_info_file #General #product_id_b) == "") do
    (
       local class_id = genClassId returnValue:true;
@@ -448,17 +497,15 @@ private function updatePreferencesFile =
       setINISetting product_info_file #General #product_id_a (class_id[1] as string);
       setINISetting product_info_file #General #product_id_b (class_id[2] as string);
    )
-   
+
    --Write version and update settings.
    setINISetting product_info_file #General #version ((getVersion()) as string);
    setINISetting product_info_file #General #versionString (getVersion asString:true);
    setINISetting prefs_file #General #ignore_update_version "0.0";
    setINISetting prefs_file #General #lastUpdateCheck "0";
-   
+
    true;
 ),
-
-
 
 private function copyDirectory sourceDir targetDir =
 (
@@ -468,7 +515,7 @@ private function copyDirectory sourceDir targetDir =
    local allFiles = Directory.GetFiles sourceDir \
                                        "*.*" \
                                        SearchOption.AllDirectories;
-   
+
    for sourceFile in allFiles do
    (
       local targetFile = targetDir + (substring sourceFile (sourceDir.count + 1) -1);
@@ -479,49 +526,44 @@ private function copyDirectory sourceDir targetDir =
    )
 ),
 
-
-
-private function copyScriptFiles = 
+private function copyScriptFiles =
 (
    local success = true;
-   
+
    local Directory = dotNetClass "System.IO.Directory";
    local File      = dotNetClass "System.IO.File";
-   
-   try 
+
+   try
    (
       copyDirectory (tempDir + "/script") userScriptDir;
       copyDirectory (tempDir + "/startupScript") userStartupScriptDir;
-      
+
       local iconDir = tempDir + "/script/ui/icons_";
       local windowColor = (colorman.getcolor #window) * 255;
       if (windowColor[1] < 120 AND windowColor[2] < 120 AND windowColor[3] < 120) then
          iconDir += "dark";
       else
          iconDir += "light";
-         
+
       local iconFiles = Directory.getFiles iconDir "*.bmp";
       for ico in iconFiles do
       (
          local newIco = (userIconsDir + "/Outliner_" + (filenameFromPath ico));
          File.Move ico newIco;
       )
-      
+
       --Copy user color schemes file
       if (not (doesFileExist user_colors_file)) then
          copyFile (tempDir + "/user_files/outliner_user_colors.ini") user_colors_file
    )
-   catch 
+   catch
    (
       printException "copyScriptFiles" (getCurrentException());
       success = false;
    )
-   
+
    success;
 ),
-
-
-
 
 private function loadMacroScripts =
 (
@@ -529,7 +571,7 @@ private function loadMacroScripts =
    try
    (
       colorman.reInitIcons();
-      
+
       local files = GetFiles (tempDir + "/macroscripts/*.mcr");
       for file in files do
          fileIn file;
@@ -539,158 +581,26 @@ private function loadMacroScripts =
       printException "loadMacroScripts" (getCurrentException());
       success = false;
    )
-   
+
    success;
 ),
 
-
---Returns the currently active cui file if it can be written to,
---otherwise it saves a new config file in the userUI dir.
-private function getActiveCuiFile =
-(
-   local configFile = cui.getConfigFile();
-   if (not (doesFileExist configFile) OR 
-       not (getFileSecurityInfo configFile #write)) do
-   (
-      configFile = pathConfig.appendPath userUIDir (filenameFromPath configFile);
-   )
-   
-   cui.saveConfigAs configFile;
-   
-   configFile;
-),
-
-private function removeToolbars =
-(
-   local success = true;
-   
-   try
-   (
-      local cuiFileClass = dotnetClass "ScriptCenter.Max.CuiFile";
-      local cuiFile      = dotnetObject "ScriptCenter.Max.CuiFile" \
-                                        (getActiveCuiFile());
-      
-      local removedSortTb   = cuiFile.RemoveToolbar "Outliner SortMode";
-      local removedFilterTb = cuiFile.RemoveToolbar "Outliner Filters";
-      
-      if (removedSortTb OR removedFilterTb) do
-      (
-         cuiFile.Write();
-         cuiFile.MaxLoadCuiFile();
-      )
-   )
-   catch
-   (
-      printException "removeToolbars" (getCurrentException());
-      success = false;
-   )
-   
-   success;
-),
-
-private function createToolbars =
-(
-   local success = true;
-   
-   try
-   (
-      local cuiFileClass = dotnetClass "ScriptCenter.Max.CuiFile";
-      local cuiFile      = dotnetobject "ScriptCenter.Max.CuiFile" \
-                                        (getActiveCuiFile());
-      local mcrCat = "Outliner";
-      local writeCuiFile = false;
-
-      --Sortmode toolbar.
-      local tbName = "Outliner SortMode";
-      local sortmodes = #("Alphabetical", "Chronological", "Layer", \
-                          "Material", "Type", "Visibility");
-      
-      if (not cuiFile.ContainsToolbar tbName) do
-      (
-         local toolbar = cuiFile.AddToolbar tbName sortmodes.count 0;
-         toolbar.Hidden = true;
-         toolbar.Bounds.Y += 80;
-      
-         for s in sortmodes do
-            toolbar.AddButton ("outliner_sortmode_" + s) mcrCat;
-         
-         writeCuiFile = true;
-      )
-
-
-      --Filter toolbar.
-      tbName = "Outliner Filters";
-      local filters = #("Geometry", "Shapes", "Lights", "Cameras", "Helpers", \
-                        "SpaceWarps", "Bones", "Particles", "Xrefs", "Groups", \
-                        "Hidden", "Frozen");
-      
-      if (not cuiFile.ContainsToolbar tbName) do
-      (
-         local toolbar = cuiFile.AddToolbar tbName (2 + filters.count) 2;
-         toolbar.Hidden = true;
-      
-         toolbar.AddButton "outliner_filter_toggle" "Outliner";
-         toolbar.AddSeparator();
-      
-         for f in filters do
-            toolbar.AddButton ("outliner_filter_" + f) mcrCat;
-      
-         toolbar.AddSeparator();
-         toolbar.AddButton "outliner_filter_affectvpt" "Outliner";
-      
-         writeCuiFile = true;
-      )
-      
-      --Write and reload cui file.
-      if (writeCuiFile) do 
-      (
-         cuiFile.Write();
-         cuiFile.MaxLoadCuiFile();
-      )
-   )
-   catch
-   (
-      printException "createToolbars" (getCurrentException());
-      success = false;
-   )
-   
-   success;
-),
-
-
-
-
---Returns the currently active kbd file if it can be written to,
---otherwise it saves a new config file in the userUI dir.
-private function getActiveKbdFile =
-(
-   local configFile = actionMan.getKeyboardFile();
-   if (not (doesFileExist configFile) OR
-       not (getFileSecurityInfo configFile #write)) do
-   (
-      configFile = pathConfig.appendPath userUIDir (filenameFromPath configFile);
-   )
-   
-   actionMan.saveKeyboardFile configFile;
-   
-   configFile;
-),
 private function containsHotkeyAction macroName macroCategory =
 (
    local result = false;
    try
    (
-      local kbdFileClass = dotnetClass "ScriptCenter.Max.KbdFile";
-      local kbdFile      = dotnetObject "ScriptCenter.Max.KbdFile" \
-                                        (getActiveKbdFile());
-                                        
-      result = kbdFile.ContainsAction macroName macroCategory;
+      local kbdxFileClass = dotnetClass "Outliner.KbdxFile";
+      local kbdxFile      = getActiveKbdFile(); --kbdxFileClass.MaxGetWriteableKbdxFile();
+      local kbdxXml       = kbdxFileClass.FromXml kbdxFile;
+
+      result = kbdxXml.ContainsShortcut macroName macroCategory;
    )
-   catch 
+   catch
    (
       printException "getHotkeyAction" (getCurrentException());
    )
-   
+
    result;
 ),
 
@@ -699,44 +609,47 @@ private function getHotkeyAction =
    local action;
    try
    (
-      local keysClass    = dotnetClass "System.Windows.Forms.Keys";
-      local kbdFileClass = dotnetClass "ScriptCenter.Max.KbdFile";
-      local kbdFile      = dotnetObject "ScriptCenter.Max.KbdFile" \
-                                        (getActiveKbdFile());
-                                        
-      action = kbdFile.GetAction keysClass.H;
-   )
-   catch 
-   (
-      printException "getHotkeyAction" (getCurrentException());
-   )
-   
-   action;
-),
+      local keysClass     = dotnetClass "System.Windows.Forms.Keys";
+      local kbdxFileClass = dotnetClass "Outliner.KbdxFile";
+      local kbdxFile      = getActiveKbdFile(); --kbdxFileClass.MaxGetWriteableKbdxFile();
+      local kbdxXml       = kbdxFileClass.FromXml kbdxFile;
 
-
-private function assignHotkey = 
-(
-   local success = true;
-   try
-   (  
-      local keysClass    = dotnetClass "System.Windows.Forms.Keys";
-      local kbdFileClass = dotnetClass "ScriptCenter.Max.KbdFile";
-      local kbdFile      = dotnetObject "ScriptCenter.Max.KbdFile" \
-                                        (getActiveKbdFile());
-      
-      if (kbdFile.AddAction "toggleOutliner" "Outliner" keysClass.H) do
-      (
-         kbdFile.Write();
-         kbdFile.MaxLoadKbdFile();
-      )
+      action = kbdxXml.GetShortcut keysClass.H;
    )
    catch
    (
-      printException "assignHotkey" (getCurrentException());
-      success = false;
+      printException "getHotkeyAction" (getCurrentException());
    )
-   
+
+   action;
+),
+
+private function assignHotkey =
+(
+   local success = false;
+
+   if( canModifyHotkeys() ) do
+   (
+	   try
+	   (
+		  local keysClass     = dotnetClass "System.Windows.Forms.Keys";
+		  local kbdxFileClass = dotnetClass "Outliner.KbdxFile";
+		  local kbdxFile      = getActiveKbdFile(); --kbdxFileClass.MaxGetWriteableKbdxFile();
+		  local kbdxXml       = kbdxFileClass.FromXml kbdxFile;
+
+		  if (kbdxXml.AddShortcut "toggleOutliner" "Outliner" keysClass.H) do
+		  (
+			 kbdxXml.ToXml kbdxFile;
+			 actionMan.loadKeyboardFile kbdxFile;
+		  )
+		  success = true;
+	   )
+	   catch
+	   (
+		  printException "assignHotkey" (getCurrentException());
+		  success = false;
+	   )
+   )
    success;
 ),
 
@@ -747,13 +660,13 @@ private function assignHotkey =
 public function openInstallWindow height =
 (
    try ( destroyDialog outliner_install ) catch ()
-   
+
    createDialog outliner_install 300 \
                                  height \
                                  lockWidth:true \
                                  lockHeight:true \
                                  style:#(#style_sysmenu, #style_toolwindow)
-   
+
    outliner_install.progress_txt.height = height - 60;
    outliner_install.progress_bar.pos.y  = height - 48;
    outliner_install.close_btn.pos.y     = height - 28;
@@ -771,9 +684,9 @@ private function addStatusText txt newline:true progress:0 =
 (
    if (outliner_install.open) do
    (
-      if (newline AND outliner_install.progress_txt.text != "") do 
+      if (newline AND outliner_install.progress_txt.text != "") do
          txt = "\n" + txt;
-      
+
       outliner_install.progress_txt.text += txt;
       outliner_install.progress_bar.value += progress;
    )
@@ -786,17 +699,17 @@ private function installation_success inst silent:false showHowToUse:false =
    if (not silent) do
    (
       local inst_txt = (getString #instSuccess);
-      
+
       addStatusText "";
       addStatusText inst_txt progress:100;
-      
+
       outliner_install.close_btn.enabled = true;
-      
+
       if (showHowToUse) do
          inst_txt += (getString #howto);
       if (outliner_restart_required == true) do
          inst_txt += (getString #restartRequired);
-      
+
       local mb     = dotNetClass "System.Windows.Forms.MessageBox";
       local mbBtn  = dotNetClass "System.Windows.Forms.MessageBoxButtons";
       local mbIcon = dotNetClass "System.Windows.Forms.MessageBoxIcon";
@@ -814,7 +727,7 @@ private function uninstallation_success silent:false =
       addStatusText "";
       addStatusText (getString #uninstSuccess) progress:100;
       outliner_install.close_btn.enabled = true;
-      
+
       local mb     = dotNetClass "System.Windows.Forms.MessageBox";
       local mbBtn  = dotNetClass "System.Windows.Forms.MessageBoxButtons";
       local mbIcon = dotNetClass "System.Windows.Forms.MessageBoxIcon";
@@ -844,15 +757,15 @@ private function installation_failed inst msg silent:false =
 public function uninstall silent:false =
 (
    local progressDelta = ceil (100.0 / 5); --where 5 is the number of uninstallation steps.
-   
+
    if (not silent) do
    (
       openInstallWindow 170;
       setStatusTitle ((getString #title) + " " + (getString #uninst));
       addStatusText (getString #begUnInst);
    )
-   
-   
+
+
    --Remove script files.
    addStatusText (getString #remScriptFiles);
    if (removeScriptFiles()) then
@@ -865,8 +778,8 @@ public function uninstall silent:false =
                           silent:silent;
       return false;
    )
-   
-   
+
+
    --Remove workflow tools.
    if (getIsWorkflowToolsInstalled()) do
    (
@@ -888,35 +801,25 @@ public function uninstall silent:false =
       else
          addStatusText (getString #skipped) newline:false;
    )
-   
-   
-   --Remove toolbars.
-   addStatusText (getString #remToolbars);
-   if (removeToolbars()) then
-      addStatusText (getString #done) newline:false progress:progressDelta;
-   else
-   (
-      addStatusText (getString #failed) newline:false;
-      installation_failed (getString #uninst) \
-                          (getString #remToolbars section:#Error);
-      return false;
-   )
-   
-   
+
+
    --Remove hotkey.
-   addStatusText (getString #remHotkeys);
-   if (removeHotkeys()) then
-      addStatusText (getString #done) newline:false progress:progressDelta;
-   else
-   (
-      addStatusText (getString #failed) newline:false;
-      installation_failed (getString #uninst) \
-                          (getString #remHotkeys section:#Error) \
-                           silent:silent;
-      return false;
+   -- skip that on Max2020+, as they do not use kbdx files any longer
+	if ( ToLower (getFilenameType (actionMan.getKeyboardFile()) ) == ".kbdx") then
+	(
+	   addStatusText (getString #remHotkeys);
+	   if (removeHotkeys()) then
+		  addStatusText (getString #done) newline:false progress:progressDelta;
+	   else
+	   (
+		  addStatusText (getString #failed) newline:false;
+		  installation_failed (getString #uninst) \
+							  (getString #remHotkeys section:#Error) \
+							   silent:silent;
+		  return false;
+	   )
    )
-   
-   
+
    --Remove preferences.
    addStatusText (getString #remPrefsFile);
    if (not silent AND querybox (getString #remPrefsFile section:#Queries) \
@@ -937,11 +840,11 @@ public function uninstall silent:false =
       addStatusText (getString #skipped) newline:false;
 
 
-   
+
    setIsOutlinerInstalled false;
-   
+
    uninstallation_success silent:silent;
-   
+
    true;
 ),--End uninstall function.
 
@@ -961,7 +864,7 @@ public function install silent:false =
       setStatusTitle ((getString #title) + " " + (getString #inst));
       addStatusText (getString #begInst);
    )
-   
+
    addStatusText (getString #checkReq);
    if (not checkMaxVersion()) do
    (
@@ -971,7 +874,7 @@ public function install silent:false =
                           silent:silent;
       return false;
    )
-   
+
    if (not checkDotNetVersion()) do
    (
       addStatusText (getString #failed) newline:false;
@@ -981,8 +884,8 @@ public function install silent:false =
       return false;
    )
    addStatusText (getString #done) newline:false progress:progressDelta;
-   
-   
+
+
    --Uninstall previous version.
    addStatusText (getString #uninstPrevVer);
    if (removeScriptFiles()) then
@@ -995,9 +898,9 @@ public function install silent:false =
                           silent:silent;
       return false;
    )
-   
-   
-   
+
+
+
    --Update preferences.
    addStatusText (getString #updPrefFile);
    if (updatePreferencesFile()) then
@@ -1011,7 +914,7 @@ public function install silent:false =
       return false;
    )
 
-   
+
    --Copy new files.
    addStatusText (getString #cpNewFiles);
    if (copyScriptFiles()) then
@@ -1024,9 +927,9 @@ public function install silent:false =
                           silent:silent;
       return false;
    )
-      
-   
-   
+
+
+
    --Load macroscripts
    addStatusText (getString #loadMcr);
    if (loadMacroScripts()) then
@@ -1039,25 +942,13 @@ public function install silent:false =
                           silent:silent;
       return false;
    )
-      
-      
-   --Create toolbars.
-   addStatusText (getString #createToolbars);
-   if (createToolbars()) then
-      addStatusText (getString #done) newline:false progress:progressDelta;
-   else
-   (
-      addStatusText (getString #failed) newline:false;
-      installation_failed (getString #inst) \
-                          (getString #createToolbars section:#Error);
-      return false;
-   )
-      
-   
+
+
+
    --Assign hotkey.
    addStatusText (getString #assignHotkey);
    local showHelp = false;
-   if (not (containsHotkeyAction "toggleOutliner" "Outliner")) then
+   if ( canModifyHotkeys() AND not (containsHotkeyAction "toggleOutliner" "Outliner")) then
    (
       local queryStr   = getString #assignHotkey section:#Queries;
       local queryTitle = getString #assignHotkeyTitle section:#Queries
@@ -1077,10 +968,10 @@ public function install silent:false =
             queryStr += existingAction.MacroCategory + " - " + existingAction.MacroName;
          )
       )
-      
+
       local do_assignHotkey = queryBox queryStr title:queryTitle;
       showHelp = not do_assignHotkey;
-      
+
       if (not silent AND do_assignHotkey) then
       (
          if (assignHotkey()) then
@@ -1099,10 +990,10 @@ public function install silent:false =
    )
    else
       addStatusText (getString #skipped) newline:false progress:progressDelta;
-   
-   
-   
-   
+
+
+
+
    --Check if 3dsmax restart is required.
    addStatusText (getString #checkRestartReq);
    outliner_restart_required = restartRequired();
@@ -1110,23 +1001,32 @@ public function install silent:false =
       addStatusText "yes" newline:false progress:progressDelta;
    else
       addStatusText "no" newline:false progress:progressDelta;
-   
-   
+
+
    setIsOutlinerInstalled true;
-   
+
    installation_success (getString #inst) \
                         silent:silent \
                         showHowToUse:showHelp;
-                        
-   
+
+
    true;
 ),--End install function.
 
 
 on create do
 (
-   clearTempDir();
-   loadAssembly (tempDir + "/script/ScriptCenter.Max.dll");
+  clearTempDir();
+  local assembly = loadAssembly (tempDir + "/script/Outliner.dll");
+
+  if( assembly != undefined ) do
+  (
+    build_info = getAssemblyVersion assembly
+
+    local fDate =(dotNetObject "System.IO.FileInfo" (tempDir + "/script/Outliner.dll")).LastWriteTime;
+    append build_info ((fDate.Year as string) + formattedPrint fDate.Month format:"02d" + formattedPrint fDate.Day format:"02d")
+  )
+  assembly
 )
 
 

@@ -64,7 +64,7 @@ function SelectionChanged e =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -95,7 +95,7 @@ function NodeHidden e =
                   if (isValidNode n) then
                      n.isNodeHidden = e.newValue;
                   else if (isKindOf n Base_Layer) then
-                     outlinerNestedLayers.setLayerProperty n #isHidden e.newValue;
+                     layerTools.setLayerProperty n #isHidden e.newValue;
                )
             )
          )
@@ -103,7 +103,7 @@ function NodeHidden e =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -131,9 +131,9 @@ function NodeFrozen e =
                if (n != undefined AND not isDeleted n) do
                (
                   if (isValidNode n) then
-                     n.isNodeFrozen = e.newValue;
+                    n.isNodeFrozen = e.newValue;
                   else if (isKindOf n Base_Layer) then
-                     outlinerNestedLayers.setLayerProperty n #isFrozen e.newValue;
+                    layerTools.setLayerProperty n #isFrozen e.newValue;
                )
             )
          )
@@ -141,7 +141,7 @@ function NodeFrozen e =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -165,17 +165,17 @@ function NodeBoxModeChanged e =
             local n = GetAnimByHandle handle;
             if (n != undefined AND not isDeleted n) do
             (
-               if (isValidNode n) then
-                  n.boxMode = e.newValue;
-               else if (isKindOf n Base_Layer) then
-                  outlinerNestedLayers.setLayerProperty n #boxMode e.newValue;
+              if (isValidNode n) then
+                n.boxMode = e.newValue;
+              else if (isKindOf n Base_Layer) then
+                layerTools.setLayerProperty n #boxMode e.newValue;
             )
          )
       )
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -212,7 +212,7 @@ function NodeRenamed e =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -254,7 +254,7 @@ function ObjectMaterialChanged e =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -288,7 +288,7 @@ function SpaceWarpBound e =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -315,7 +315,7 @@ function ObjectAddedToContainer e =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -360,7 +360,7 @@ function ObjectLayerChanged e =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -418,7 +418,7 @@ function ObjectLinked e =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -493,7 +493,7 @@ function ObjectGrouped e =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -512,17 +512,19 @@ function LayerLinked e =
       local layerHandles = e.Handles;
       local targetLayer = if (targetHandle != -1) then (GetAnimByHandle targetHandle) \
                                                   else undefined;
-
       for h in layerHandles do
-      (
+      (     
          local layer = GetAnimByHandle h;
-         if (layer != undefined) do
-            outlinerNestedLayers.setParent layer targetLayer;
+      
+         if (layer != undefined ) do
+         (
+            layerTools.setParent layer targetLayer;
+         )
       )
    )
    catch
    (
-      fileIn "crash_report.ms";
+     fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -550,7 +552,7 @@ function LayerActiveChanged e =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -605,7 +607,7 @@ function setContextMenuMaterialSlotNames =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -723,7 +725,7 @@ function ContextMenuOpened e =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 ),
 
@@ -793,7 +795,7 @@ function ContextMenuItemClicked e =
                if (layer != undefined) do
                (
                   append layers layer;
-                  join layers (outlinerNestedLayers.getChildren layer recursive:true);
+                  join layers (layerTools.getChildren layer recursive:true);
                )
             )
             outliner.UI.openLayerProperties layers;
@@ -948,7 +950,7 @@ function ContextMenuItemClicked e =
    )
    catch
    (
-      fileIn "crash_report.ms";
+      fileIn (outliner.dir + "crash_report.ms")
    )
 )
 

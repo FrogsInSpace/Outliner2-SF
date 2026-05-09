@@ -11,19 +11,19 @@ namespace Outliner.NodeSorters
     public class AlphabeticalSorter : IComparer
     {
         [DllImport("shlwapi.dll", CharSet = CharSet.Unicode, ExactSpelling = true)]
-        static extern int StrCmpLogicalW(String x, String y);
+        static extern int StrCmpLogicalW(string x, string y);
 
         public int Compare(object x, object y)
         {
             if ((x is TreeNode) && (y is TreeNode))
             {
-                Object xTag = ((TreeNode)x).Tag;
-                Object yTag = ((TreeNode)y).Tag;
+                object xTag = ((TreeNode)x).Tag;
+                object yTag = ((TreeNode)y).Tag;
 
                 if ((xTag is OutlinerNode) && (yTag is OutlinerNode))
                 {
-                    Boolean xIsLayer = xTag is OutlinerLayer;
-                    Boolean yIsLayer = yTag is OutlinerLayer;
+                    bool xIsLayer = xTag is OutlinerLayer;
+                    bool yIsLayer = yTag is OutlinerLayer;
 
                     if (xIsLayer && !yIsLayer)
                         return -1;

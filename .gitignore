@@ -10,6 +10,11 @@ Thumbs.db
 *.user
 *.vsmdi
 *.testsettings
+*.vs
+
+# VS Code user files #
+############################
+.vscode
 
 # Compiled files #
 ##################
