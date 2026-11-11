@@ -757,6 +757,8 @@ function ContextMenuItemClicked e =
             )
             outliner.createNewLayer parentLayer;
          )
+         else if (clickedItem == menus.CleanEmptyLayersItem) then
+            outliner.cleanEmptyLayers();
          --Advanced rename.
          else if (clickedItem == menus.AdvancedRenameItem) then
             macros.run "Outliner Workflow Tools" "advancedRename";

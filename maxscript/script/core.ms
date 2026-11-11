@@ -453,6 +453,44 @@ struct outlinerCore
   ),
 
 
+  function cleanEmptyLayers =
+  (
+     fn deepestFirst left right = right[2] - left[2]
+     local ordered = for index = 0 to (LayerManager.count - 1) collect
+     (
+        local layer = LayerManager.getLayer index
+        local name = layer.name
+        local depth = 0
+        while layer != undefined do
+        (
+           depth += 1
+           layer = layer.getParent()
+        )
+        #(name, depth)
+     )
+     qsort ordered deepestFirst
+
+     local removed = 0
+     undo "Clean Empty Layers" on
+     (
+        with redraw off
+        (
+           for entry in ordered where entry[1] != "0" do
+           (
+              local layer = LayerManager.getLayerFromName entry[1]
+              if layer != undefined and not layer.current and layer.getNumChildren() == 0 and
+                 layer.getNumNodes() == 0 and layer.canDelete() and not layer.hasSceneXRefNodesInHierarchy() do
+              (
+                 if LayerManager.deleteLayerByName entry[1] do removed += 1
+              )
+           )
+        )
+     )
+     if removed > 0 do refresh()
+     format "Clean Empty Layers: % removed.\n" removed
+     removed
+  ),
+
   function deleteLayer layer =
   (
      try

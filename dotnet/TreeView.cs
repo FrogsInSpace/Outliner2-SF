@@ -2222,6 +2222,9 @@ namespace Outliner
             ContextMenus.SelectChildnodesItem.Enabled = selHasChildnodes;
             ContextMenus.SetActiveLayerItem.Enabled = selLayerCount == 1 && !selContainsActiveLayer;
             ContextMenus.CreateNewLayerItem.Visible = ListMode == OutlinerListMode.Layer;
+            ContextMenus.CleanEmptyLayersItem.Visible = ListMode == OutlinerListMode.Layer;
+            ContextMenus.ExpandAllItem.Enabled = Nodes.Count > 0;
+            ContextMenus.CollapseAllItem.Enabled = Nodes.Count > 0;
             ContextMenus.EditMaterialItem.Enabled = selMatCount == 1 && selCanEditMat;
             ContextMenus.RenameItem.Enabled = selCount == 1 && _selectedNodes.First().CanEditName;
             ContextMenus.DeleteItem.Enabled = selCanDelete;
@@ -2248,9 +2251,35 @@ namespace Outliner
 
 
 
+        private void ChangeAllBranches(bool expand)
+        {
+            bool previous = _internalExpandCollapse;
+            _internalExpandCollapse = true;
+            BeginUpdate();
+            try
+            {
+                if (expand)
+                    ExpandAll();
+                else
+                {
+                    CollapseAll();
+                    _expandedNodeHandles.Clear();
+                }
+            }
+            finally
+            {
+                EndUpdate();
+                _internalExpandCollapse = previous;
+            }
+        }
+
         private void ContextMenu_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-            if (e.ClickedItem == ContextMenus.SelectChildnodesItem)
+            if (e.ClickedItem == ContextMenus.ExpandAllItem)
+                ChangeAllBranches(true);
+            else if (e.ClickedItem == ContextMenus.CollapseAllItem)
+                ChangeAllBranches(false);
+            else if (e.ClickedItem == ContextMenus.SelectChildnodesItem)
                 SelectChildNodes();
             else if (e.ClickedItem == ContextMenus.RenameItem)
             {
