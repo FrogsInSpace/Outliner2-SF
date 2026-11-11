@@ -184,6 +184,9 @@ namespace Outliner
         public Keys ExpandHierarchyKey { get; set; }
         public MouseButtons DragMouseButton { get; set; }
         public DoubleClickAction DoubleClickAction { get; set; }
+        public bool KeepViewportSelectionOnLayerClick { get; set; }
+        public bool SelectLayerHierarchyOnDoubleClick { get; set; }
+        public event LayerDoubleClickedEventHandler LayerDoubleClicked;
 
         #region AutoExpand
 
@@ -331,6 +334,21 @@ namespace Outliner
 
             const int WM_KEYDOWN = 0x0100;
             const int WM_KEYUP = 0x0101;
+
+            const int WM_LBUTTONDBLCLK = 0x0203;
+            if (m.Msg == WM_LBUTTONDBLCLK && ListMode == OutlinerListMode.Layer && SelectLayerHierarchyOnDoubleClick)
+            {
+                int coordinates = m.LParam.ToInt32();
+                int x = unchecked((short)coordinates);
+                int y = unchecked((short)(coordinates >> 16));
+                TreeNode row = GetNodeAt(x, y);
+                if (row?.Tag is OutlinerLayer layer && GetTextBackgroundBounds(row, false).Contains(x, y))
+                {
+                    _nodeProcessedOnMouseDown = true;
+                    LayerDoubleClicked?.Invoke(this, new LayerDoubleClickedEventArgs(layer.Handle));
+                    return;
+                }
+            }
 
             if (m.Msg == WM_KEYDOWN || m.Msg == WM_KEYUP)
             {
@@ -1410,7 +1428,9 @@ namespace Outliner
                 }
             }
 
-            OnSelectionChanged();
+            if (!(KeepViewportSelectionOnLayerClick && ListMode == OutlinerListMode.Layer &&
+                  e.Button == MouseButtons.Left && node.Tag is OutlinerLayer))
+                OnSelectionChanged();
         }
 
         #endregion

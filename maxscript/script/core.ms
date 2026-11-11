@@ -453,6 +453,33 @@ struct outlinerCore
   ),
 
 
+  function selectLayerHierarchy handle =
+  (
+     local target = GetAnimByHandle handle
+     if not (isKindOf target Base_Layer) do return false
+     local layer = LayerManager.getLayerFromName target.name
+     if layer == undefined do return false
+
+     local pending = #(layer)
+     local nodes = #()
+     while pending.count > 0 do
+     (
+        local branch = pending[pending.count]
+        deleteItem pending pending.count
+        local directNodes = #()
+        branch.nodes &directNodes
+        for node in directNodes where isValidNode node do append nodes node
+        for index = 1 to branch.getNumChildren() do append pending (branch.getChild index)
+     )
+
+     undo "Select Layer Hierarchy" on
+     (
+        handleGroupOpeningClosing nodes true
+        if nodes.count > 0 then select nodes else clearSelection()
+     )
+     true
+  ),
+
   function cleanEmptyLayers =
   (
      fn deepestFirst left right = right[2] - left[2]

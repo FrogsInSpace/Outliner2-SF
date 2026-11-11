@@ -450,6 +450,8 @@ on outliner_main open do
 		tree.ListMode           = outliner.parseDotNetEnum "Outliner.OutlinerListMode" (getPrefFn #Tree #listMode);
 		tree.IconClickAction    = outliner.parseDotNetEnum "Outliner.IconClickAction" (getPrefFn #Tree #iconClickAction);
 		tree.DoubleClickAction  = outliner.parseDotNetEnum "Outliner.DoubleClickAction" (getPrefFn #Tree #doubleClickAction);
+		tree.KeepViewportSelectionOnLayerClick = getPrefFn #Tree #keepViewportSelectionOnLayerClick;
+		tree.SelectLayerHierarchyOnDoubleClick = getPrefFn #Tree #selectLayerHierarchyOnDoubleClick;
 		tree.DragMouseButton    = outliner.parseDotNetEnum "System.Windows.Forms.MouseButtons" (getPrefFn #Tree #dragMouseButton);
 		tree.ExpandHierarchyKey = outliner.parseDotNetEnum "System.Windows.Forms.Keys" (getPrefFn #Tree #expandHierarchyKey);
 
@@ -597,6 +599,7 @@ on tree KeyDown e do
 
 
 on tree SelectionChanged e do TreeEventHandlers_SelectionChanged e;
+on tree LayerDoubleClicked sender e do outliner.selectLayerHierarchy e.Handle;
 on tree NodeHidden e do TreeEventHandlers_NodeHidden e;
 on tree NodeFrozen e do TreeEventHandlers_NodeFrozen e;
 on tree NodeBoxModeChanged e do TreeEventHandlers_NodeBoxModeChanged e;
