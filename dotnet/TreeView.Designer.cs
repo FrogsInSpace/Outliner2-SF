@@ -22,9 +22,8 @@
             {
                 _dottedLinePen = null;
                 _backgroundBrush = null;
-                DetachTimerHandlers();
-                _updateTimer = null;
-                _sortTimer = null;
+                if (disposing)
+                    DisposeTimers();
             }
 
             base.Dispose(disposing);

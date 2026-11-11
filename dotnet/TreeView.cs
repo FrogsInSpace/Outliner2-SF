@@ -302,12 +302,26 @@ namespace Outliner
             container.Add(this);
         }
 
-        private void DetachTimerHandlers()
+        private void DisposeTimers()
         {
             if (_updateTimer != null)
+            {
                 _updateTimer.Tick -= new EventHandler(updateTimer_Tick);
+                _updateTimer.Dispose();
+                _updateTimer = null;
+            }
             if (_sortTimer != null)
+            {
                 _sortTimer.Tick -= new EventHandler(sortTimer_Tick);
+                _sortTimer.Dispose();
+                _sortTimer = null;
+            }
+            if (_ensureSelectionVisibleTimer != null)
+            {
+                _ensureSelectionVisibleTimer.Tick -= new EventHandler(_ensureSelectionVisibleTimer_Tick);
+                _ensureSelectionVisibleTimer.Dispose();
+                _ensureSelectionVisibleTimer = null;
+            }
         }
 
         protected override void WndProc(ref Message m)
@@ -2660,6 +2674,9 @@ namespace Outliner
 
         void _ensureSelectionVisibleTimer_Tick(object sender, EventArgs e)
         {
+            if (_ensureSelectionVisibleTimer == null || Disposing || IsDisposed)
+                return;
+
             _ensureSelectionVisibleTimer.Stop();
             if (!_sortTimer.Enabled)
             {
