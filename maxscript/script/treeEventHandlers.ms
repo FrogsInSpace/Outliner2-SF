@@ -9,6 +9,7 @@ function SelectionChanged e =
    (
       --Signal the outliner to ignore events fired by this method.
       append outliner_status.ignoreEvents #selectionChanged;
+      outliner_status.expectedSceneSelection = undefined;
       
       local listMode = outliner.prefs.getValue #Tree #listMode;
       
@@ -61,6 +62,7 @@ function SelectionChanged e =
             )
          )
       )
+      outliner_status.expectedSceneSelection = for node in selection collect GetHandleByAnim node
    )
    catch
    (

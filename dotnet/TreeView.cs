@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
@@ -2610,9 +2610,31 @@ namespace Outliner
 
         #region BeginTimedUpdate, BeginTimedSort, new TreeViewNodeSorter
 
+        private bool _layerUpdateQueued;
+
+        private void QueueLayerUpdate()
+        {
+            BeginTimedUpdate();
+            if (_layerUpdateQueued || !IsHandleCreated || Disposing || IsDisposed)
+                return;
+
+            // Presets create and reparent layers synchronously. Paint their final
+            // hierarchy together as soon as Max returns to its message loop.
+            _layerUpdateQueued = true;
+            BeginInvoke(new Action(() =>
+            {
+                _layerUpdateQueued = false;
+                if (Disposing || IsDisposed)
+                    return;
+
+                if (_updateTimer.Enabled && !_sortTimer.Enabled)
+                    updateTimer_Tick(this, EventArgs.Empty);
+            }));
+        }
+
         internal void BeginTimedUpdate()
         {
-            if (!_updateTimer.Enabled)
+            if (!_updateTimer.Enabled && !_updateWaitingForSort)
             {
                 this.BeginUpdate();
 
@@ -2837,6 +2859,11 @@ namespace Outliner
 
         public void AddObjectsToTreeNodeCollection(TreeNodeCollection col, List<OutlinerNode> nodes, bool addChildNodes)
         {
+            AddObjectsToTreeNodeCollection(col, nodes, addChildNodes, false);
+        }
+
+        private void AddObjectsToTreeNodeCollection(TreeNodeCollection col, List<OutlinerNode> nodes, bool addChildNodes, bool insertInOrder)
+        {
             if (nodes == null || nodes.Count == 0)
                 return;
 
@@ -2855,11 +2882,32 @@ namespace Outliner
 
                     // Recursively go through childnodes.
                     if ((addChildNodes && node.ChildNodesCount > 0) || !(node is OutlinerObject))
-                        AddObjectsToTreeNodeCollection(tn.Nodes, node.ChildNodes, addChildNodes);
+                        AddObjectsToTreeNodeCollection(tn.Nodes, node.ChildNodes, addChildNodes, insertInOrder);
                 }
             }
 
-            col.AddRange(newNodes.ToArray());
+            if (!insertInOrder || _treeViewNodeSorter == null)
+            {
+                col.AddRange(newNodes.ToArray());
+                return;
+            }
+
+            // The rest of the tree is already sorted. Insert into this sibling
+            // collection without sorting unrelated layers or their objects.
+            foreach (TreeNode node in newNodes)
+            {
+                int first = 0;
+                int last = col.Count;
+                while (first < last)
+                {
+                    int middle = first + (last - first) / 2;
+                    if (_treeViewNodeSorter.Compare(node, col[middle]) < 0)
+                        last = middle;
+                    else
+                        first = middle + 1;
+                }
+                col.Insert(first, node);
+            }
         }
 
 
@@ -2930,8 +2978,7 @@ namespace Outliner
             if (layer == null || ListMode != OutlinerListMode.Layer)
                 return;
 
-            BeginTimedUpdate();
-            BeginTimedSort();
+            QueueLayerUpdate();
 
             TreeNodeCollection parentCollection = null;
             OutlinerNode layerParent = layer.Parent;
@@ -2947,7 +2994,7 @@ namespace Outliner
 
             if (parentCollection != null)
             {
-                AddObjectsToTreeNodeCollection(parentCollection, new List<OutlinerNode>(1) { layer }, false);
+                AddObjectsToTreeNodeCollection(parentCollection, new List<OutlinerNode>(1) { layer }, false, true);
             }
         }
 
@@ -3545,6 +3592,64 @@ namespace Outliner
             BeginTimedEnsureSelectionVisible(EnsureSelectionVisibleAction.SelectionChanged);
         }
 
+        public void SynchronizeObjectSelection(int[] handles)
+        {
+            var next = new HashSet<OutlinerNode>();
+            TreeNode last = null;
+            OutlinerObject lastAdded = null;
+            foreach (int handle in handles)
+            {
+                OutlinerObject obj = Scene.GetObjectByHandle(handle);
+                if (obj == null || !_treeNodes.TryGetValue(obj, out TreeNode node))
+                    continue;
+                next.Add(obj);
+                last = node;
+                if (!_selectedNodes.Contains(obj))
+                    lastAdded = obj;
+            }
+            if (_selectedNodes.SetEquals(next))
+                return;
+
+            var affected = new HashSet<TreeNode>();
+            foreach (OutlinerNode node in _selectedNodes)
+                if (!next.Contains(node))
+                    AddSelectionPath(node, affected);
+            foreach (OutlinerNode node in next)
+                if (!_selectedNodes.Contains(node))
+                    AddSelectionPath(node, affected);
+
+            _selectedNodes.Clear();
+            _selectedNodes.UnionWith(next);
+            var parents = new HashSet<TreeNode>();
+            if (ListMode == OutlinerListMode.Hierarchy || ListMode == OutlinerListMode.Layer)
+                foreach (OutlinerNode node in next)
+                    for (TreeNode parent = _treeNodes[node].Parent; parent != null; parent = parent.Parent)
+                        if (!parents.Add(parent))
+                            break;
+
+            foreach (TreeNode node in affected)
+            {
+                NodeColor color = IsNodeSelected(node) ? NodeColor.Selected :
+                                  parents.Contains(node) ? NodeColor.ParentOfSelected : NodeColor.Default;
+                Style.SetNodeColor(node, color);
+            }
+
+            if (lastAdded != null)
+                _lastSelectedObject = lastAdded;
+            _mostRecentSelectedNode = last;
+            _selectionChanged = false;
+            if (next.Count > 0)
+                BeginTimedEnsureSelectionVisible(EnsureSelectionVisibleAction.SelectionChanged);
+        }
+
+        private void AddSelectionPath(OutlinerNode node, HashSet<TreeNode> affected)
+        {
+            if (_treeNodes.TryGetValue(node, out TreeNode treeNode))
+                for (; treeNode != null; treeNode = treeNode.Parent)
+                    if (!affected.Add(treeNode))
+                        break;
+        }
+
         public void SelectLayer(int handle, bool select)
         {
             OutlinerLayer layer = Scene.GetLayerByHandle(handle);
@@ -3995,8 +4100,7 @@ namespace Outliner
 
             if (ListMode == OutlinerListMode.Layer)
             {
-                BeginTimedUpdate();
-                BeginTimedSort();
+                QueueLayerUpdate();
                 SetLayerParent(layer, parentLayerHandle);
             }
             else
