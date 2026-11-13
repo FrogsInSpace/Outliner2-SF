@@ -2590,20 +2590,20 @@ namespace Outliner
 
         internal void RemoveParentHighlights(OutlinerNode n)
         {
-            if ((ListMode != OutlinerListMode.Hierarchy && ListMode != OutlinerListMode.Layer) || n == null)
-                return;
+            if ((ListMode == OutlinerListMode.Hierarchy || ListMode == OutlinerListMode.Layer) &&
+                n != null && _treeNodes.TryGetValue(n, out TreeNode node))
+                ClearUnusedParentHighlights(node.Parent);
+        }
 
-            TreeNode tn;
-            if (_treeNodes.TryGetValue(n, out tn))
+        private void ClearUnusedParentHighlights(TreeNode parent)
+        {
+            while (parent != null && !IsNodeSelected(parent) && !IsParentOfSelectedNode(parent, true))
             {
-                tn = tn.Parent;
-                while (tn != null && !IsNodeSelected(tn) && !IsParentOfSelectedNode(tn, true))
-                {
-                    Style.SetNodeColor(tn, NodeColor.Default);
-                    tn = tn.Parent;
-                }
+                Style.SetNodeColor(parent, NodeColor.Default);
+                parent = parent.Parent;
             }
         }
+
 
         #endregion
 
@@ -3040,8 +3040,12 @@ namespace Outliner
 
         private void RecursiveRemoveTreeNode(OutlinerNode n, TreeNode tn, bool removeReferences)
         {
+            TreeNode parent = tn.Parent;
             RecursiveRemoveTreeNodeIntern(n, tn, removeReferences);
             tn.Remove();
+
+            if (ListMode == OutlinerListMode.Hierarchy || ListMode == OutlinerListMode.Layer)
+                ClearUnusedParentHighlights(parent);
         }
         private void RecursiveRemoveTreeNodeIntern(OutlinerNode n, TreeNode tn, bool removeReferences)
         {
@@ -3052,7 +3056,6 @@ namespace Outliner
                 this._expandedNodeHandles.Remove(n.Handle);
                 _selectedNodes.Remove(n);
             }
-            RemoveParentHighlights(n);
             _treeNodes.Remove(n);
 
             foreach (TreeNode cn in tn.Nodes)
