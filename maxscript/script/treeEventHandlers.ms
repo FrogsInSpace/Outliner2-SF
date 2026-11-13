@@ -84,6 +84,7 @@ function NodeHidden e =
       append outliner_status.ignoreEvents #displayPropertiesChanged;
       
       local undoString = if (e.NewValue) then "Hide" else "Unhide";
+      local layerVisibilityChanged = false;
       
       undo undoString on
       (
@@ -97,11 +98,15 @@ function NodeHidden e =
                   if (isValidNode n) then
                      n.isNodeHidden = e.newValue;
                   else if (isKindOf n Base_Layer) then
+                  (
                      layerTools.setLayerProperty n #isHidden e.newValue;
+                     layerVisibilityChanged = true;
+                  )
                )
             )
          )
       )
+      if layerVisibilityChanged do redrawViews();
    )
    catch
    (
