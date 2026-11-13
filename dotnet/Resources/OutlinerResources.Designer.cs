@@ -160,6 +160,33 @@ namespace Outliner.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Expand All.
+        /// </summary>
+        internal static string ContextMenuExpandAll {
+            get {
+                return ResourceManager.GetString("ContextMenuExpandAll", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Collapse All.
+        /// </summary>
+        internal static string ContextMenuCollapseAll {
+            get {
+                return ResourceManager.GetString("ContextMenuCollapseAll", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Clean Empty Layers.
+        /// </summary>
+        internal static string ContextMenuCleanEmptyLayers {
+            get {
+                return ResourceManager.GetString("ContextMenuCleanEmptyLayers", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Create New Layer.
         /// </summary>
         internal static string ContextMenuCreateNewLayer {

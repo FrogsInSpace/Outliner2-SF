@@ -2,6 +2,7 @@ global outliner_callbacks;
 
 struct outlinerCallbacks (
 callbacksEnum = #(
+   (Pair key:#selectionSetChanged value:"outliner_callbacks.selectionChanged #selectionChanged #() updateGroups:false"),
    (Pair key:#nodePreDelete       value:"outliner_callbacks.nodePreDelete()"),
    (Pair key:#nodePostDelete      value:"outliner_callbacks.nodePostDelete()"),
    (Pair key:#nodePostMaterial    value:"outliner_callbacks.nodePostMaterial()"),
@@ -38,8 +39,7 @@ outliner_addMaterialToTreeFn,
 tree_beginUpdateFn,
 tree_endUpdateFn,
 tree_getNodeCountFn,
-tree_selectObjectRangeFn,
-tree_selectAllFn,
+tree_synchronizeObjectSelectionFn,
 tree_addObjectToTreeFn,
 tree_addLayerToTreeFn,
 tree_setObjectParentFn,
@@ -71,8 +71,7 @@ function createFunctionCache =
    tree_beginUpdateFn            = outliner.tree.BeginUpdate;
    tree_endUpdateFn              = outliner.tree.EndUpdate;
    tree_getNodeCountFn           = outliner.tree.GetNodeCount;
-   tree_selectObjectRangeFn      = outliner.tree.SelectObjectRange;
-   tree_selectAllFn              = outliner.tree.SelectAll;
+   tree_synchronizeObjectSelectionFn = outliner.tree.SynchronizeObjectSelection;
    tree_addObjectToTreeFn        = outliner.tree.AddObjectToTree;
    tree_addLayerToTreeFn         = outliner.tree.AddLayerToTree;
    tree_setObjectParentFn        = outliner.tree.SetObjectParent;
@@ -222,7 +221,10 @@ function callbackEnd evt handles =
    tree_endUpdateFn();
    
    if (outliner_status != undefined) do
+   (
       outliner_status.ignoreEvents = #();
+      outliner_status.expectedSceneSelection = undefined;
+   )
 ),
 
 
@@ -239,30 +241,22 @@ function processEvent evt =
 /*
  * SELECTION CHANGED
  */
-function selectionChanged evt handles = 
+function selectionChanged evt handles updateGroups:true =
 (
    try
    (  
-      if (processEvent evt) do
+      if not isMerging and not isMergingXrefs and not isOpening and outliner_status != undefined do
       (
-         -- A small shortcut to deselect all objects quickly.
-         if (selection.count == 0) then
-            tree_selectAllFn false;
-         else
+         local current = for o in selection collect GetHandleByAnim o
+         local expected = outliner_status.expectedSceneSelection
+         if not (processEvent evt) do
          (
-            tree_beginUpdateFn();
-         
-            --Deselect all nodes.
-            tree_selectAllFn false;
-   
-            --Iterate through selection, select each node.
-            tree_selectObjectRangeFn (for o in selection collect (GetHandleByAnim o)) true;
-         
-            tree_endUpdateFn();
+            if expected == undefined do return false
+            if current.count == expected.count and (for h in current where (findItem expected h) == 0 collect h).count == 0 do return false
          )
-         
+         tree_synchronizeObjectSelectionFn current
          -- Close any groups that are no longer required to be open.
-         outliner.handleGroupOpeningClosing selection false;
+         if updateGroups do outliner.handleGroupOpeningClosing selection false;
       )
    )
    catch
@@ -593,8 +587,8 @@ function layerDeletedIntern layer =
 
 function layerDeleted = 
 (
-   local deletedLayer = callbacks.notificationParam();
-   layerDeletedIntern deletedLayer;
+   if not outliner.cleaningEmptyLayers do
+      layerDeletedIntern (callbacks.notificationParam());
 ),
 
 

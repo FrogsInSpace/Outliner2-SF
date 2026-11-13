@@ -141,6 +141,8 @@ public function createPreferenceEntries =
    (outlinerPrefsEntry section:#Tree key:#dragMouseButton           default:"Left"),
    (outlinerPrefsEntry section:#Tree key:#expandHierarchyKey        default:"Control"),
    (outlinerPrefsEntry section:#Tree key:#doubleClickAction         default:"Rename"),
+   (outlinerPrefsEntry section:#Tree key:#keepViewportSelectionOnLayerClick default:true),
+   (outlinerPrefsEntry section:#Tree key:#selectLayerHierarchyOnDoubleClick default:true),
    (outlinerPrefsEntry section:#Tree key:#highlightLastSel          default:false),
    (outlinerPrefsEntry section:#Tree key:#hideGroupMembersLayerMode default:false),
    (outlinerPrefsEntry section:#Tree key:#editNewLayerName          default:true),

@@ -28,6 +28,21 @@ rollout outliner_options_general "General"
    dropdownlist doubleClickAction "" width:drpDwnW items:#("Expand", "Rename") pos:[marginX, marginY + chkbxDY * 6];
    label doubleClickActionLbl "Double-Click Action" pos:[drpDwnLblX, marginY + chkbxDY * 6 + 3];
 
+   checkbox keepViewportSelectionOnLayerClick "Keep viewport selection when clicking a layer" pos:[marginX, marginY + chkbxDY * 7];
+   checkbox selectLayerHierarchyOnDoubleClick "Select layer hierarchy on double-click" pos:[marginX, marginY + chkbxDY * 8];
+
+   on keepViewportSelectionOnLayerClick changed checked do
+   (
+      setPrefFn #Tree #keepViewportSelectionOnLayerClick checked;
+      outliner.tree.KeepViewportSelectionOnLayerClick = checked;
+   )
+
+   on selectLayerHierarchyOnDoubleClick changed checked do
+   (
+      setPrefFn #Tree #selectLayerHierarchyOnDoubleClick checked;
+      outliner.tree.SelectLayerHierarchyOnDoubleClick = checked;
+   )
+
    on checkForUpdates changed checked do
       setPrefFn #General #checkForUpdates checked;
 
@@ -85,6 +100,8 @@ rollout outliner_options_general "General"
       clearSearchFieldAfterSelect.checked = getPrefFn #General #clearSearchFieldAfterSelect;
       dragMouseButton.selection = findItem dragMouseButton.items (getPrefFn #Tree #dragMouseButton);
       doubleClickAction.selection = findItem doubleClickAction.items (getPrefFn #Tree #doubleClickAction);
+      keepViewportSelectionOnLayerClick.checked = getPrefFn #Tree #keepViewportSelectionOnLayerClick;
+      selectLayerHierarchyOnDoubleClick.checked = getPrefFn #Tree #selectLayerHierarchyOnDoubleClick;
    )
 )--End rollout.
 
