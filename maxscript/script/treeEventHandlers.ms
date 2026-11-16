@@ -9,6 +9,7 @@ function SelectionChanged e =
    (
       --Signal the outliner to ignore events fired by this method.
       append outliner_status.ignoreEvents #selectionChanged;
+      outliner_status.expectedSceneSelection = undefined;
       
       local listMode = outliner.prefs.getValue #Tree #listMode;
       
@@ -61,6 +62,7 @@ function SelectionChanged e =
             )
          )
       )
+      outliner_status.expectedSceneSelection = for node in selection collect GetHandleByAnim node
    )
    catch
    (
@@ -82,6 +84,7 @@ function NodeHidden e =
       append outliner_status.ignoreEvents #displayPropertiesChanged;
       
       local undoString = if (e.NewValue) then "Hide" else "Unhide";
+      local layerVisibilityChanged = false;
       
       undo undoString on
       (
@@ -95,11 +98,15 @@ function NodeHidden e =
                   if (isValidNode n) then
                      n.isNodeHidden = e.newValue;
                   else if (isKindOf n Base_Layer) then
+                  (
                      layerTools.setLayerProperty n #isHidden e.newValue;
+                     layerVisibilityChanged = true;
+                  )
                )
             )
          )
       )
+      if layerVisibilityChanged do redrawViews();
    )
    catch
    (
@@ -757,6 +764,8 @@ function ContextMenuItemClicked e =
             )
             outliner.createNewLayer parentLayer;
          )
+         else if (clickedItem == menus.CleanEmptyLayersItem) then
+            outliner.cleanEmptyLayers();
          --Advanced rename.
          else if (clickedItem == menus.AdvancedRenameItem) then
             macros.run "Outliner Workflow Tools" "advancedRename";

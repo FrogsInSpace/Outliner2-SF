@@ -26,6 +26,8 @@ namespace Outliner
 
         // Common items.
         public static ToolStripItem SelectChildnodesItem { get; private set; }
+        public static ToolStripItem ExpandAllItem { get; private set; }
+        public static ToolStripItem CollapseAllItem { get; private set; }
         public static ToolStripItem RenameItem { get; private set; }
         public static ToolStripItem AdvancedRenameItem { get; private set; }
         public static ToolStripItem DeleteItem { get; private set; }
@@ -42,6 +44,7 @@ namespace Outliner
         // Layer items.
         public static ToolStripItem SetActiveLayerItem { get; private set; }
         public static ToolStripItem CreateNewLayerItem { get; private set; }
+        public static ToolStripItem CleanEmptyLayersItem { get; private set; }
         public static ToolStripItem LayerPropertiesItem { get; private set; }
 
         // Material items.
@@ -220,6 +223,11 @@ namespace Outliner
 
             LayerPropertiesItem = MainMenu.Items.Add(OutlinerResources.ContextMenuLayerProperties, ContextMenuIcons.properties);
             ObjectPropertiesItem = MainMenu.Items.Add(OutlinerResources.ContextMenuObjectProperties, ContextMenuIcons.properties);
+
+            MainMenu.Items.Add(new ToolStripSeparator());
+            ExpandAllItem = MainMenu.Items.Add(OutlinerResources.ContextMenuExpandAll);
+            CollapseAllItem = MainMenu.Items.Add(OutlinerResources.ContextMenuCollapseAll);
+            CleanEmptyLayersItem = MainMenu.Items.Add(OutlinerResources.ContextMenuCleanEmptyLayers);
         }
 
         #endregion

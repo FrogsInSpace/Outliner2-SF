@@ -141,6 +141,15 @@
   <data name="ContextMenuBoxMode" xml:space="preserve">
     <value>Display As Box</value>
   </data>
+  <data name="ContextMenuExpandAll" xml:space="preserve">
+    <value>Expand All</value>
+  </data>
+  <data name="ContextMenuCollapseAll" xml:space="preserve">
+    <value>Collapse All</value>
+  </data>
+  <data name="ContextMenuCleanEmptyLayers" xml:space="preserve">
+    <value>Clean Empty Layers</value>
+  </data>
   <data name="ContextMenuCreateNewLayer" xml:space="preserve">
     <value>Create New Layer</value>
   </data>

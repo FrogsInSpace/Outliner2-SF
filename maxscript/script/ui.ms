@@ -7,6 +7,7 @@ struct outlinerStatus
    closingOutliner,
    
    ignoreEvents,
+   expectedSceneSelection,
    matChangedInOutliner,
    
    expandedNodeHandles,
@@ -19,6 +20,7 @@ struct outlinerStatus
       closingOutliner = false;
       matChangedInOutliner = false;
       ignoreEvents = #();
+      expectedSceneSelection = undefined;
    ),
    
    on create do 

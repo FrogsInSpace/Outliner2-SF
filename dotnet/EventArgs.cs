@@ -6,6 +6,17 @@ using System.Windows.Forms;
 
 namespace Outliner
 {
+    public delegate void LayerDoubleClickedEventHandler(object sender, LayerDoubleClickedEventArgs e);
+    public class LayerDoubleClickedEventArgs : EventArgs
+    {
+        public int Handle { get; private set; }
+
+        public LayerDoubleClickedEventArgs(int handle)
+        {
+            Handle = handle;
+        }
+    }
+
     public delegate void SelectionChangedEventHandler(object sender, SelectionChangedEventArgs e);
     public class SelectionChangedEventArgs : EventArgs
     {

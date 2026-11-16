@@ -10,6 +10,7 @@ struct outlinerCore
   tree,
   scene,
   kbdxXml,
+  cleaningEmptyLayers = false,
 
   --forward declaration
   function getDotNetVersion = (),
@@ -452,6 +453,90 @@ struct outlinerCore
         outliner.tree.EditNodeName (GetHandleByAnim layer);
   ),
 
+
+  function selectLayerHierarchy handle =
+  (
+     local target = GetAnimByHandle handle
+     if not (isKindOf target Base_Layer) do return false
+     local layer = LayerManager.getLayerFromName target.name
+     if layer == undefined do return false
+
+     local pending = #(layer)
+     local nodes = #()
+     while pending.count > 0 do
+     (
+        local branch = pending[pending.count]
+        deleteItem pending pending.count
+        local directNodes = #()
+        branch.nodes &directNodes
+        for node in directNodes where isValidNode node do append nodes node
+        for index = 1 to branch.getNumChildren() do append pending (branch.getChild index)
+     )
+
+     undo "Select Layer Hierarchy" on
+     (
+        handleGroupOpeningClosing nodes true
+        if nodes.count > 0 then select nodes else clearSelection()
+     )
+     true
+  ),
+
+  function cleanEmptyLayers =
+  (
+     if cleaningEmptyLayers do return 0
+
+     local pending = #()
+     for index = 0 to (LayerManager.count - 1) do
+     (
+        local layer = LayerManager.getLayer index
+        if layer != undefined and layer.getNumChildren() == 0 do append pending layer.name
+     )
+
+     local removed = #()
+     local failure = undefined
+     cleaningEmptyLayers = true
+     try
+     (
+        undo "Clean Empty Layers" on
+        (
+           with redraw off
+           (
+              while pending.count > 0 do
+              (
+                 local name = pending[pending.count]
+                 deleteItem pending pending.count
+                 local layer = LayerManager.getLayerFromName name
+                 if layer != undefined and name != "0" and not layer.current and layer.getNumChildren() == 0 and
+                    layer.getNumNodes() == 0 and layer.canDelete() and not layer.hasSceneXRefNodesInHierarchy() do
+                 (
+                    local handle = GetHandleByAnim layer.layerAsRefTarg
+                    local parent = layer.getParent()
+                    local parentName = if parent != undefined then parent.name else undefined
+                    if LayerManager.deleteLayerByName name do
+                    (
+                       append removed handle
+                       if parentName != undefined do
+                       (
+                          parent = LayerManager.getLayerFromName parentName
+                          if parent != undefined and parent.getNumChildren() == 0 do append pending parentName
+                       )
+                    )
+                 )
+              )
+           )
+        )
+     )
+     catch (failure = getCurrentException())
+     cleaningEmptyLayers = false
+
+     -- Remove the confirmed handles from the existing tree in leaf order.
+     -- The normal DeleteLayer method batches redraws and keeps other branches intact.
+     if tree != undefined and outliner_status != undefined and outliner_status.windowOpen do
+        for handle in removed do tree.DeleteLayer handle
+     if failure != undefined do format "Clean Empty Layers stopped: %\n" failure
+     format "Clean Empty Layers: % removed.\n" removed.count
+     removed.count
+  ),
 
   function deleteLayer layer =
   (
